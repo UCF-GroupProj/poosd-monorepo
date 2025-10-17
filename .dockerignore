@@ -1,0 +1,3 @@
+apps/mobile
+apps/mobile/**/*
+node_modules/
