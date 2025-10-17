@@ -11,9 +11,9 @@ RUN npx turbo prune backend --docker
 
 # Build the project
 FROM base AS builder
-COPY --from=setup /app/out/json/ .
+COPY --from=setup out/json/ .
 RUN pnpm install
-COPY --from=setup /app/out/full/ .
+COPY --from=setup out/full/ .
 RUN pnpm turbo run build
 
 # Run
