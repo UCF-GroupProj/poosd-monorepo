@@ -8,8 +8,8 @@ apps/backend/** @zhiyan114 @AlisaK13003 @Arqane-UCF
 packages/eslint-config/backend.mjs @zhiyan114 @AlisaK13003 @Arqane-UCF
 
 # Frontend
-apps/frontend/** @AlisaK13003 @ryanschlosbon
-packages/eslint-config/frontend.mjs @AlisaK13003 @ryanschlosbon
+apps/frontend/** @AlisaK13003
+packages/eslint-config/frontend.mjs @AlisaK13003
 
 # Mobile
 apps/mobile/** @Arqane-UCF
