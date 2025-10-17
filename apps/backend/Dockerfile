@@ -5,17 +5,19 @@ RUN npm install -g turbo
 RUN apt update && apt upgrade -y
 
 # Setup the minimal files
-FROM base as setup
+FROM base AS setup
+WORKDIR /app
 COPY . .
 RUN npx turbo prune backend --docker
 
 # Build the project
 FROM base AS builder
-COPY --from=setup out/pnpm-lock.yaml .
-COPY --from=setup out/json/ .
-RUN pnpm install --prod --frozen-lockfile
-COPY --from=setup out/full/ .
+WORKDIR /app
+COPY --from=setup /app/out/json/ .
+RUN pnpm install --frozen-lockfile
+COPY --from=setup /app/out/full/ .
 RUN pnpm turbo run build
+RUN pnpm prune --prod
 
 # Run
 CMD node apps/backend/dist/index.js
