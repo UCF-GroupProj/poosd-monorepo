@@ -1,0 +1,15 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "include": [
+    "src/"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "nodenext",
+    "target": "ESNext",
+    "sourceMap": true,
+  }
+}
