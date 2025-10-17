@@ -17,4 +17,4 @@ COPY --from=setup /app/out/full/ .
 RUN pnpm turbo run build
 
 # Run
-CMD apps/backend/dist/index.js
+CMD node apps/backend/dist/index.js
