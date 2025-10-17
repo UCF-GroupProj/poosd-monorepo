@@ -2,6 +2,7 @@
 /* @zhiyan114
 .github/** @zhiyan114
 packages/typescript-config/** @zhiyan114
+**/Dockerfile @zhiyan114
 
 # Backend
 apps/backend/** @zhiyan114 @AlisaK13003 @Arqane-UCF
