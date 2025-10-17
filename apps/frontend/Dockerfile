@@ -12,8 +12,9 @@ RUN npx turbo prune frontend --docker
  
 # Build the project
 FROM base AS builder
+COPY --from=setup out/pnpm-lock.yaml .
 COPY --from=setup out/json/ .
-RUN pnpm install
+RUN pnpm install --prod --frozen-lockfile
 COPY --from=setup out/full/ .
 RUN yarn turbo run build
 
