@@ -14,6 +14,7 @@ RUN npx turbo prune backend --docker
 FROM base AS builder
 ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG
+ARG ENVIRONMENT
 
 WORKDIR /app
 COPY --from=setup /app/out/json/ .
