@@ -100,6 +100,9 @@ importers:
 
   packages/eslint-config:
     devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3
+        version: 3.3.1
       '@eslint/js':
         specifier: ^9.34.0
         version: 9.34.0
