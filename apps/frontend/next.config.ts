@@ -49,8 +49,16 @@ export default withSentryConfig(nextConfig, {
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
   org: "furrynet",
-
   project: "frontend",
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // source mapping
+  sourcemaps: {
+    disable: false,
+    assets: ["**/*.js", "**/*.js.map"],
+    ignore: ["**/node_modules/**"],
+    deleteSourcemapsAfterUpload: true,
+  },
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
