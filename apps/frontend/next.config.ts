@@ -50,6 +50,7 @@ export default withSentryConfig(nextConfig, {
 
   org: "furrynet",
   project: "frontend",
+  authToken: process.env.SENTRY_AUTH_TOKEN,
   debug: true,
 
   // source mapping
