@@ -23,6 +23,7 @@ RUN apps/backend/scripts/preHook.sh
 RUN pnpm turbo run build
 RUN pnpm prune --prod
 RUN apps/backend/scripts/postHook.sh
+RUN find ./apps/backend/dist/ -type f -name '*.map' -delete
 
 # Run
 CMD node apps/backend/dist/index.js
