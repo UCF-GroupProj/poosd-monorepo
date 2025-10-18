@@ -12,12 +12,18 @@ RUN npx turbo prune backend --docker
 
 # Build the project
 FROM base AS builder
+ARG SENTRY_AUTH_TOKEN
+
 WORKDIR /app
 COPY --from=setup /app/out/json/ .
 RUN pnpm install --frozen-lockfile
 COPY --from=setup /app/out/full/ .
+
+RUN apps/backend/scripts/preHook.sh
 RUN pnpm turbo run build
 RUN pnpm prune --prod
+RUN apps/backend/scripts/postHook.sh
+RUN find ./apps/backend/dist/ -type f -name '*.map' -delete
 
 # Run
 CMD node apps/backend/dist/index.js
