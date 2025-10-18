@@ -2,7 +2,7 @@
 FROM node:22-bookworm-slim AS base
 RUN npm install -g pnpm
 RUN npm install -g turbo
-RUN apt-get update && aptapt-get upgrade -y
+RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y ca-certificates
 
 # Setup the minimal files
