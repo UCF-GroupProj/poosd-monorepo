@@ -2,6 +2,22 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import { createHash } from "crypto";
 
+// Type Bypass
+
+type fixType = {oneOf: object;}
+type fixType2 = {use: []}
+type fixType3 = {
+  use: {
+    loader: string;
+    options: {
+      modules: {
+        getLocalIdent: (context: {rootContext: string, resourcePath: string}, uhh: string, exportName: string, options: string) => string
+      }
+    }
+  }[]
+}[]
+
+
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
@@ -10,14 +26,14 @@ const nextConfig: NextConfig = {
     if(dev)
       return config;
     // Ignore any type error here, this is intentional
-    const rules = config.module.rules.find((rule) => typeof rule.oneOf === "object").oneOf.filter((rule) => Array.isArray(rule.use));
+    const rules = config.module.rules.find((rule: fixType) => typeof rule.oneOf === "object").oneOf.filter((rule: fixType2) => Array.isArray(rule.use)) as fixType3;
     rules.forEach((rule) => {
       rule.use.forEach((moduleLoader) => {
         if (moduleLoader.loader?.includes("css-loader") && !moduleLoader.loader?.includes("postcss-loader")) {
           const cssModule = moduleLoader.options.modules;
           if (cssModule) {
-            cssModule.getLocalIdent = (context, _, exportName, options) => {
-              return "uwu_"+createHash("sha256").update(context.rootContext+context.resourcePat+exportName).digest("hex").slice(0,8);
+            cssModule.getLocalIdent = (context, _, exportName) => {
+              return "uwu_"+createHash("sha256").update(context.rootContext+context.resourcePath+exportName).digest("hex").slice(0,8);
             };
           }
         }
