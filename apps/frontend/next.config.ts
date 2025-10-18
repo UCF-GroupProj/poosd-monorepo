@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
     if(dev)
       return config;
     // Ignore any type error here, this is intentional
-    const rules = config.module.rules.find((rule: ruleFind) => typeof rule.oneOf === "object").oneOf.filter((rule: ruleFilter) => Array.isArray(rule.use));
-    rules.forEach((rule: ruleFilter) => {
+    const rules = config.module.rules.find((rule) => typeof rule.oneOf === "object").oneOf.filter((rule) => Array.isArray(rule.use));
+    rules.forEach((rule) => {
       rule.use.forEach((moduleLoader) => {
         if (moduleLoader.loader?.includes("css-loader") && !moduleLoader.loader?.includes("postcss-loader")) {
           const cssModule = moduleLoader.options.modules;
