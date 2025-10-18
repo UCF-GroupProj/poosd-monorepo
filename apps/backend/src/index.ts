@@ -1,3 +1,4 @@
+import "./sentry"; // LOAD FIRST
 import Express from "express";
 import type { Request, Response } from "express";
 
