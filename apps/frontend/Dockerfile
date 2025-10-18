@@ -10,10 +10,10 @@ WORKDIR /app
 COPY . .
 RUN npx turbo prune frontend --docker
 
- 
 # Build the project
 FROM base AS builder
 ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
 
 WORKDIR /app
 COPY --from=setup /app/out/json/ .
