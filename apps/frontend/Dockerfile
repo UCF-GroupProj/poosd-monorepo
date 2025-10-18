@@ -13,6 +13,8 @@ RUN npx turbo prune frontend --docker
  
 # Build the project
 FROM base AS builder
+ARG SENTRY_AUTH_TOKEN
+
 WORKDIR /app
 COPY --from=setup /app/out/json/ .
 RUN pnpm install --frozen-lockfile
