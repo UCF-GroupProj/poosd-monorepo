@@ -24,7 +24,7 @@ if [ -n "$SENTRY_AUTH_TOKEN" ] && [ -n "$SENTRY_ORG" ]; then
 
   # Sentry Source Mapping
   npx sentry-cli sourcemaps inject ./apps/backend/dist
-  npx sentry-cli sourcemaps upload --release="$RELSTR" --dist="$RAILWAY_GIT_COMMIT_SHA" ./apps/backend/dist
+  npx sentry-cli sourcemaps upload --release="$RELSTR" --dist="$RAILWAY_GIT_COMMIT_SHA" --project backend ./apps/backend/dist
   echo "Successfully Deployed Source Map"
 else
   echo "Sentry Release and Source Mapping cannot be Finalized due to missing required Sentry-Cli variables";
