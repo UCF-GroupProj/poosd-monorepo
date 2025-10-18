@@ -1,6 +1,6 @@
 # Backend
-apps/backend/** @zhiyan114 @AlisaK13003 @Arqane-UCF
-packages/eslint-config/backend.mjs @zhiyan114 @AlisaK13003 @Arqane-UCF
+apps/backend/** @zhiyan114 @AlisaK13003 @Arqane-UCF @galvesbuddy
+packages/eslint-config/backend.mjs @zhiyan114 @AlisaK13003 @Arqane-UCF @galvesbuddy
 
 # Frontend
 apps/frontend/** @AlisaK13003
