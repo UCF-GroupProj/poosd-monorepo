@@ -1,9 +1,3 @@
-# Root Repo
-/* @zhiyan114
-.github/** @zhiyan114
-packages/typescript-config/** @zhiyan114
-**/Dockerfile @zhiyan114
-
 # Backend
 apps/backend/** @zhiyan114 @AlisaK13003 @Arqane-UCF
 packages/eslint-config/backend.mjs @zhiyan114 @AlisaK13003 @Arqane-UCF
@@ -14,3 +8,9 @@ packages/eslint-config/frontend.mjs @AlisaK13003
 
 # Mobile
 apps/mobile/** @Arqane-UCF @AlisaK13003
+
+# Root Repo
+/* @zhiyan114
+.github/** @zhiyan114
+packages/typescript-config/** @zhiyan114
+**/Dockerfile @zhiyan114
