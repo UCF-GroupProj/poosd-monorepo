@@ -20,6 +20,7 @@ COPY --from=setup /app/out/json/ .
 RUN pnpm install --frozen-lockfile
 COPY --from=setup /app/out/full/ .
 
+RUN chmod +x /app/apps/backend/scripts/*
 RUN /app/apps/backend/scripts/preHook.sh
 RUN pnpm turbo run build
 RUN pnpm prune --prod
