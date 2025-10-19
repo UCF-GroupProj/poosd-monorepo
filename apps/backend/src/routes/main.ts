@@ -5,6 +5,6 @@ import type { Request, Response } from "express";
 export class Main extends RouteHandle {
   public readonly path = "/";
   async get(req: Request, res: Response) {
-    return res.send("Hello World!");
+    return res.send("Hello World! :3");
   }
 }

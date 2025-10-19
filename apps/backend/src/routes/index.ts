@@ -17,11 +17,17 @@ export abstract class RouteHandle {
   }
 
   middlewares?: MidWareType;
-  get?(req: Request, res: Response): Promise<void | unknown>;
-  post?(req: Request, res: Response): Promise<void | unknown>;
-  put?(req: Request, res: Response): Promise<void | unknown>;
-  patch?(req: Request, res: Response): Promise<void | unknown>;
-  delete?(req: Request, res: Response): Promise<void | unknown>;
+  getParamPath?: string;
+  postParamPath?: string;
+  putParamPath?: string;
+  patchParamPath?: string;
+  deleteParamPath?: string;
+
+  get?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
+  post?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
+  put?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
+  patch?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
+  delete?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
 }
 
 
