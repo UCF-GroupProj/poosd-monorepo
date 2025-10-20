@@ -9,25 +9,43 @@ type MidWareType = {
     delete?: RequestHandler[],
 }
 
+type paramOptType = {
+  paramPath: string;
+  middlewares?: RequestHandler[];
+  handle(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
+}
+
+type paramMethodType = {
+  get?: paramOptType;
+  post?: paramOptType;
+  put?: paramOptType;
+  patch?: paramOptType;
+  delete?: paramOptType;
+}
+
+type mainOptType = {
+  middlewares?: RequestHandler[];
+  handle(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
+}
+
+type mainMethodType = {
+  path: string;
+  get?: mainOptType;
+  post?: mainOptType;
+  put?: mainOptType;
+  patch?: mainOptType;
+  delete?: mainOptType;
+}
+
 export abstract class RouteHandle {
-  abstract readonly path: string;
   protected coreSrv: CoreService;
   constructor(service: CoreService) {
     this.coreSrv = service;
   }
 
   middlewares?: MidWareType;
-  getParamPath?: string;
-  postParamPath?: string;
-  putParamPath?: string;
-  patchParamPath?: string;
-  deleteParamPath?: string;
-
-  get?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
-  post?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
-  put?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
-  patch?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
-  delete?(req: Request<unknown, void, unknown, unknown>, res: Response): Promise<void | unknown>;
+  paramRoutes?: paramMethodType;
+  mainRoutes?: mainMethodType;
 }
 
 

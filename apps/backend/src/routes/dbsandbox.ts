@@ -1,6 +1,7 @@
 /**
  * zhiyan114's Example Mongo Usage with express routes.
- * Please use this to learn and ask questions, not copy and pasting exactly what's here for the project
+ * Please use this to learn and ask questions, not copy and pasting exactly what's here for the project.
+ * This file WILL BE deleted before project is finalized
  */
 
 import { RouteHandle } from ".";
@@ -56,6 +57,5 @@ export class Main extends RouteHandle {
 
     return res.json(arrayID);
   }
-
 
 }

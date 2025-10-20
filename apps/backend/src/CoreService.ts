@@ -23,51 +23,76 @@ export class CoreService {
     // Handle Route Stuff
     for(const route of routes) {
       const routeObj = new route(this);
-      const router = this._webServer.route(routeObj.path);
 
-      // Setup get route
-      if(routeObj.get) {
-        const middleWare = routeObj?.middlewares?.get;
-        if(middleWare)
-          middleWare.push(routeObj.get);
-        if(!routeObj.getParamPath) router.get(...(routeObj?.middlewares?.get ?? [routeObj.get]));
-        else this._webServer.get(routeObj.getParamPath, ...(routeObj?.middlewares?.get ?? [routeObj.get]));
+      // Hook main routes
+      if(routeObj.mainRoutes) {
+        const mRoute = routeObj.mainRoutes;
+        const router = this._webServer.route(mRoute.path);
+
+        if(mRoute.get) {
+          if(mRoute.get.middlewares)
+            mRoute.get.middlewares.push(mRoute.get.handle);
+          router.get(...(mRoute.get.middlewares ?? [mRoute.get.handle]));
+        }
+
+        if(mRoute.post) {
+          if(mRoute.post.middlewares)
+            mRoute.post.middlewares.push(mRoute.post.handle);
+          router.post(...(mRoute.post.middlewares ?? [mRoute.post.handle]));
+        }
+
+        if(mRoute.put) {
+          if(mRoute.put.middlewares)
+            mRoute.put.middlewares.push(mRoute.put.handle);
+          router.put(...(mRoute.put.middlewares ?? [mRoute.put.handle]));
+        }
+
+        if(mRoute.patch) {
+          if(mRoute.patch.middlewares)
+            mRoute.patch.middlewares.push(mRoute.patch.handle);
+          router.patch(...(mRoute.patch.middlewares ?? [mRoute.patch.handle]));
+        }
+
+        if(mRoute.delete) {
+          if(mRoute.delete.middlewares)
+            mRoute.delete.middlewares.push(mRoute.delete.handle);
+          router.delete(...(mRoute.delete.middlewares ?? [mRoute.delete.handle]));
+        }
       }
 
-      // Setup post route
-      if(routeObj.post) {
-        const middleWare = routeObj?.middlewares?.post;
-        if(middleWare)
-          middleWare.push(routeObj.post);
-        if(!routeObj.postParamPath) router.post(...(routeObj?.middlewares?.post ?? [routeObj.post]));
-        else this._webServer.post(routeObj.postParamPath, ...(routeObj?.middlewares?.post ?? [routeObj.post]));
-      }
+      // Hook param routes
+      if(routeObj.paramRoutes) {
+        const pRoute = routeObj.paramRoutes;
 
-      // Setup put route
-      if(routeObj.put) {
-        const middleWare = routeObj?.middlewares?.put;
-        if(middleWare)
-          middleWare.push(routeObj.put);
-        if(!routeObj.putParamPath) router.put(...(routeObj?.middlewares?.put ?? [routeObj.put]));
-        else this._webServer.put(routeObj.putParamPath, ...(routeObj?.middlewares?.put ?? [routeObj.put]));
-      }
+        if(pRoute.get) {
+          if(pRoute.get.middlewares)
+            pRoute.get.middlewares.push(pRoute.get.handle);
+          this._webServer.get(pRoute.get.paramPath, ...(pRoute.get.middlewares ?? [pRoute.get.handle]));
+        }
 
-      // Setup patch route
-      if(routeObj.patch) {
-        const middleWare = routeObj?.middlewares?.patch;
-        if(middleWare)
-          middleWare.push(routeObj.patch);
-        if(!routeObj.patchParamPath) router.patch(...(routeObj?.middlewares?.patch ?? [routeObj.patch]));
-        else this._webServer.patch(routeObj.patchParamPath, ...(routeObj?.middlewares?.patch ?? [routeObj.patch]));
-      }
+        if(pRoute.post) {
+          if(pRoute.post.middlewares)
+            pRoute.post.middlewares.push(pRoute.post.handle);
+          this._webServer.post(pRoute.post.paramPath, ...(pRoute.post.middlewares ?? [pRoute.post.handle]));
+        }
 
-      // Setup delete route
-      if(routeObj.delete) {
-        const middleWare = routeObj?.middlewares?.delete;
-        if(middleWare)
-          middleWare.push(routeObj.delete);
-        if(!routeObj.patchParamPath) router.delete(...(routeObj?.middlewares?.delete ?? [routeObj.delete]));
-        else this._webServer.delete(routeObj.patchParamPath, ...(routeObj?.middlewares?.delete ?? [routeObj.delete]));
+        if(pRoute.put) {
+          if(pRoute.put.middlewares)
+            pRoute.put.middlewares.push(pRoute.put.handle);
+          this._webServer.put(pRoute.put.paramPath, ...(pRoute.put.middlewares ?? [pRoute.put.handle]));
+        }
+
+        if(pRoute.patch) {
+          if(pRoute.patch.middlewares)
+            pRoute.patch.middlewares.push(pRoute.patch.handle);
+          this._webServer.patch(pRoute.patch.paramPath, ...(pRoute.patch.middlewares ?? [pRoute.patch.handle]));
+        }
+
+        if(pRoute.delete) {
+          if(pRoute.delete.middlewares)
+            pRoute.delete.middlewares.push(pRoute.delete.handle);
+          this._webServer.delete(pRoute.delete.paramPath, ...(pRoute.delete.middlewares ?? [pRoute.delete.handle]));
+        }
       }
     }
 
