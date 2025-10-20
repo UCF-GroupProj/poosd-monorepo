@@ -4,78 +4,41 @@
 Inherit `RouteHandle` class and export it
 ```ts
 import { RouteHandle } from ".";
-export class someName {}
+export class someName extends RouteHandle {}
 ```
 
-## Class Type References
-For more details, visit `src/routes/index.ts`.
-
-### Difference between regular and param method
-In the abstract class, you may see methods like `get` and `getParam` (and so on for other HTTP methods). The difference is that, one uses parameter based URI and other dont.
-
+## Setup Method
+as part of the abstract requirement, all routes class requireds `setup` method, which just contains webserver URI binding.
 Example:
 ```ts
 import { RouteHandle } from ".";
 import type { Request, Response } from "express";
-export class someName {
-  public readonly path = "/groups";
-  public paramPath = {
-    get: ":gid"
-  };
 
-  get(req: Request, res: Response) {
-    // @Action: Pull all group details
+export class someName extends RouteHandle {
+  public setup() {
+    this.webServer.get("/", this.HelloWorld.bind(this))
   }
 
-  getParam(req: Request<{gid: string, uid: string}>, res: Response) {
-    const groupID = req.params.gid;
-    // @Action: Pull one specific group detail
+  private HelloWorld(req: Request, res: Response) {
+    res.send("Hello World! :3");
   }
 }
 ```
-In this case, assume you're authenticated, a `GET /groups/` would pull all the group detail owned by the user while `GET /groups/19` would only pull group 19 information (assuming the user has permission to do so)
+You may notice couple details:
+1. The route handle is set to private - the setup should bind all the calls to the web server (Express), so there's zero need for those methods to be accessed outside of the class
+2. the private method is called with `bind(this)` before being passed to the webServer - This is very important because once the function is passed, the parent context (this) will be gone and change to the webServer.get context. Binding it will force the parent context to stay.
 
-#### Limitation
-Only one type of param per method can be configured at a time. So if you configured `/groups/:gid` then you cant also configure `/groups/:gid/user/:uid`. You can, however, configure either one.
+## Available Class `coreSrv` methods/field for route operations
+The following fields CoreService `this.coreSrv` are available for your webserver route to use:
 
-For our use case, one should sufficient, but if we encounter exception, I'll design a seperate solution.
+1. `this.coreSrv.webServer` - This exposes the express webServer under CoreService directly. Use this to bind routes
+2. `this.coreSrv.database` - This exposes appropropriate mongoDB database for you to run operations on. It abstracts: `this._mongoCli.db(isProd ? 'Olympull' : 'Olympull_dev')` (which are not available outside of CoreService nor should it ever be needed)
+3. just kidding, **do not** use the `this.coreSrv.setup()` function anywhere outside of the one under `src/index.ts`
 
-### Middleware
-Middleware is the code that's executed before reaching your main handle code. This is useful for things like body decoding or user authentication/authorization.
-
-#### Limitation
-To reduce the class's complexity, routes will be shared by both the regular and parameter route.
-
-Example:
-```ts
-import { RouteHandle } from ".";
-import { SomeAuthMiddleWare } from "../SomeFakeAuthHandler"
-import type { Request, Response } from "express";
-export class someName {
-  public readonly path = "/groups";
-  public middlewares = {
-    get: [SomeAuthMiddleWare]
-  }
-  public paramPath = {
-    get: ":gid"
-  };
-
-  get(req: Request, res: Response) {
-    // @Action: Pull all group details
-  }
-
-  getParam(req: Request<{gid: string, uid: string}>, res: Response) {
-    const groupID = req.params.gid;
-    // @Action: Pull one specific group detail
-  }
-}
-```
-The middleware `SomeAuthMiddleWare` would be run before `get` and `getParam` would be run. This shouldn't be a big issue as well, but exceptional design can be made if needed.
-
-### Request/Response Generics
+## Request/Response Generics
 `import type { Request, Response } from "express";` both Request and Response from this export contains generic and should be customized based on what's used
 - For Request, the generics are `<Param, void, Body, Query, void>`
-    - Param - This is used to get the values for the URI parameters. This only applies to method functions with `Param` at the end.
+    - Param - This is used to get the values for the URI parameters. This only applies to method that uses URI parameter.
     - void - Do not use, these types are for Response, but somehow inherited in the Request object...
     - Body - The expected data to receive by the body. Remember, typescript only checks for type during transpiling step. It DOES NOT validate user input, so make sure the code do that. (ex: if the type is not optional, user may tamper with the request and leave it optional, which would break the execution logic)
     - Query - Query string in the URI `/Path?QueryA=ValueA&QueryB=ValueB`. Same thing as body, the user can tamper with the data and cause the runtime to break.

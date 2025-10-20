@@ -27,27 +27,27 @@ type IcontactPatch = {
 // Index route '/db'
 
 export class DBSandbox extends RouteHandle {
-  public readonly path = "/db";
   private sandboxDocName = "dbsandbox";
 
-  public readonly middlewares = {
-    post: [json({ strict: true })]
-  };
+  public setup() {
+    const webSRV = this.coreSrv.webServer;
+    webSRV.route("/db")
+      .get(this.get.bind(this))
+      .post(json({ strict: true }), this.post.bind(this));
+    webSRV.route("/db/:id")
+      .get(this.getParam.bind(this))
+      .patch(this.patchParam.bind(this))
+      .delete(this.deleteParam.bind(this));
+  }
 
-  public readonly paramPath = {
-    get: ":id",
-    patch: ":id",
-    delete: ":id"
-  };
-
-  async get(req: Request<unknown, void, void>, res: Response<IcontactInfo[]>) {
+  private async get(req: Request<unknown, void, void>, res: Response<IcontactInfo[]>) {
     const dbDoc = this.coreSrv.database.collection<IcontactInfo>(this.sandboxDocName);
 
     // Returns everything from the collection
     return res.json(await dbDoc.find().toArray());
   }
 
-  async getParam(req: Request<{id: string}>, res: Response<IcontactInfo | string>) {
+  private async getParam(req: Request<{id: string}>, res: Response<IcontactInfo | string>) {
     const dbDoc = this.coreSrv.database.collection<IcontactInfo>(this.sandboxDocName);
     const item = await dbDoc.findOne({ _id: new ObjectId(req.params.id) });
     if(!item)
@@ -55,7 +55,7 @@ export class DBSandbox extends RouteHandle {
     return res.json(item);
   }
 
-  async post(req: Request<unknown, void, IPOSTReqBody>, res: Response<string[]>) {
+  private async post(req: Request<unknown, void, IPOSTReqBody>, res: Response<string[]>) {
     // Allow adding an arrays of items to collection
     const body = req.body;
     const dbDoc = this.coreSrv.database.collection<IcontactInfo>(this.sandboxDocName);
@@ -68,7 +68,7 @@ export class DBSandbox extends RouteHandle {
     return res.json(arrayID);
   }
 
-  async patchParam(req: Request<{id: string}, void, IcontactPatch>, res: Response<string>) {
+  private async patchParam(req: Request<{id: string}, void, IcontactPatch>, res: Response<string>) {
     const dbDoc = this.coreSrv.database.collection<IcontactInfo>(this.sandboxDocName);
     const pRES = await dbDoc.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body }, { upsert: false });
 
@@ -81,7 +81,7 @@ export class DBSandbox extends RouteHandle {
     return res.send("DONE");
   }
 
-  async deleteParam(req: Request<{id: string}, void, void>, res: Response<string>) {
+  private async deleteParam(req: Request<{id: string}, void, void>, res: Response<string>) {
     const dbDoc = this.coreSrv.database.collection<IcontactInfo>(this.sandboxDocName);
     const dRes = await dbDoc.deleteOne({ _id: new ObjectId(req.params.id) });
 
