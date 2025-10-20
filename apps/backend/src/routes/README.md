@@ -93,7 +93,7 @@ Example:
 ```ts
 // Some top code...
 import {
-  Main.
+  Main,
   ...,
   YourNewClassName
 } from "./routes";
