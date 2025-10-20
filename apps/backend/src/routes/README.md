@@ -48,7 +48,7 @@ The following fields CoreService `this.coreSrv` are available for your webserver
 
 
 ## Final setup
-Make sure to expot it and load the route in the main file.
+Make sure to export it and load the route in the main file.
 1. Add `export { ClassName } from "./FileName";` under and on the bottom of `src/routes/index.ts`
 2. Add the exported class name to `src/index.ts` where it imports from `./routes` and add the imported name under `MainService.setup` array.
 
