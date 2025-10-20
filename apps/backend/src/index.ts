@@ -1,12 +1,14 @@
 import "./sentry"; // LOAD FIRST
 import { CoreService } from "./CoreService";
 import {
-  Main
+  Main,
+  DBSandbox
 } from "./routes";
 
 
 // Main Runner
 const MainService = new CoreService();
 MainService.setup([
-  Main
+  Main,
+  DBSandbox
 ]);
