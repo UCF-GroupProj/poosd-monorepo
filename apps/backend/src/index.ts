@@ -1,14 +1,14 @@
 import "./sentry"; // LOAD FIRST
-import Express from "express";
-import type { Request, Response } from "express";
+import { CoreService } from "./CoreService";
+import {
+  Main,
+  DBSandbox
+} from "./routes";
 
-const app = Express();
 
-app.get("/", async (req: Request, res: Response)=>{
-  res.send("Hello World!");
-});
-
-const port = process.env["PORT"] ?? 8080;
-app.listen(port, ()=>{
-  console.log(`Running on http://localhost:${port}`);
-});
+// Main Runner
+const MainService = new CoreService();
+MainService.setup([
+  Main,
+  DBSandbox
+]);
