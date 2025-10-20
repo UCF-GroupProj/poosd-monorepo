@@ -36,7 +36,7 @@ export class DBSandbox extends RouteHandle {
       .post(json({ strict: true }), this.post.bind(this));
     webSRV.route("/db/:id")
       .get(this.getParam.bind(this))
-      .patch(this.patchParam.bind(this))
+      .patch(json({ strict: true }), this.patchParam.bind(this))
       .delete(this.deleteParam.bind(this));
   }
 
