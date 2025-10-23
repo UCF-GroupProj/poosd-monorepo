@@ -75,7 +75,7 @@ Listed are the most likely status code we'll encounter. The remaining status (su
 
 ## URI Parameters vs Query Usages
 When searching or updating certain data, there must be a way to correctly identify which resource is needed to be looked up or updated, and those two are the most common way to achieve it.
-- Paramter (`/path/:Param/more/:Data`) - In this case, `:Param` and `:Data` is the paramter. This is commonly used to supply a unique identifier to the server to perform operation (such as index key or `_id`, in mongo).
+- Parameter (`/path/:Param/more/:Data`) - In this case, `:Param` and `:Data` is the paramter. This is commonly used to supply a unique identifier to the server to perform operation (such as index key or `_id`, in mongo).
   - For example, when performing a `GET /user/0000-000000-0000000-000000000`, the server will pull up user information based on the given user id: `0000-000000-0000000-000000000`. When performing a `PATCH` request, the changes will be modify on that user. Same applies with `DELETE` method
 - Query (`/path?Key=Value&Key2=Value2`)  - In this case, `Key` and `Key2` is the query. This usually serves as a filter for user data lookup.
   - For example, when performing a `GET /user?minCredits=10`, the server will return all the users that have at least `10` credits on their account.
@@ -84,6 +84,43 @@ When searching or updating certain data, there must be a way to correctly identi
   - Using the query directly under the parameter is also possible (ex: `/users/:id?query=value`), but not recommended in most cases.
 
 ## Logging
+It's generally recommended to implement logging in order to better observe the software state in production, which improves debugging experience. If you're interested to access the logs, please head over to [sentry](https://sentry.io) to get an account and send @zhiyan114 your email. It's also available for frontend team. While I don't have one setup for mobile, it is possible for them to make a request and setup the SDK themselves. For additional usages, visit [sentry's official doc](https://docs.sentry.io/platforms/javascript/guides/node/logs/#usage) page for more information.
+
+Examples:
+```ts
+// Import the component
+import { logger } from "@sentry/node";
+
+// Use debug when logging the state of a function operation and use log when logging the main action of the function
+function login(req: LoginData) {
+  //@ACTION: Validing the req data
+  logger.debug(logger.fmt`Validation given login request: ${req}`);
+  //@ACTION: MongoDB pulling user data
+  logger.debug(logger.fmt`Attempt to Fetched ${req.userID} from database`);
+
+  logger.info(logger.fmt`Successfully logged ${req.email} in`);
+}
+
+// Use warn if certain state is considered invalid but does not affect the overall software functionality. Use error if it does.
+
+function async checkAccount(req: UserData) {
+  if(req.balance < 0) {
+    //@ACTION: Do something about it
+    logger.error(logger.fmt`Account ${req.userID} detected negative balance of ${req.balance}`); // In this case, user's negative balance will affect their gameplay
+  }
+}
+
+// This import is unrelated to logging, but is related to the example below
+import type { Request, Response } from "express";
+function async HTTPCardPullReq(req: Request) {
+  //@ACTION: Database pull stuff going on
+  const res = await this.fetchUnpullCard(req);
+  if(res.cardCount === 0) {
+    logger.warn(logger.fmt`Account ${res.user.id} attempts to pull cards with empty inventory`); // In this case, server rejected the request, so nothing happened. But, user shouldn't be able to make a card pull request from the frontend, so just let the frontend fix this lmao.
+    //@ACTION: Let user know they cant pull
+  }
+}
+```
 
 
 ## Final setup
