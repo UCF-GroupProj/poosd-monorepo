@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "exports": {
-    "./MailService.ts": "./MailService.ts",
-    "./JWTManaget.ts": "./JWTManaget.ts"
+    "./MailService.ts": "./src/MailService.ts",
+    "./JTWManager.ts": "./src/JTWManager.ts"
   },
   "scripts": {
     "lint": "eslint"

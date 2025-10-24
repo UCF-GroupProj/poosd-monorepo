@@ -23,6 +23,9 @@ importers:
 
   apps/backend:
     dependencies:
+      '@repo/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@sentry/node':
         specifier: ^10.20.0
         version: 10.20.0
