@@ -33,7 +33,9 @@ The following fields CoreService `this.coreSrv` are available for your webserver
 
 1. `this.coreSrv.webServer` - This exposes the express webServer under CoreService directly. Use this to bind routes
 2. `this.coreSrv.database` - This exposes appropropriate mongoDB database for you to run operations on. It abstracts: `this._mongoCli.db(isProd ? 'Olympull' : 'Olympull_dev')` (which are not available outside of CoreService nor should it ever be needed)
-3. just kidding, **do not** use the `this.coreSrv.setup()` function anywhere outside of the one under `src/index.ts`
+3. `this.coreSrv.JWTMGR` - This exposes abstracted JWT token manager
+4. `this.coreSrv.emailAPI` - This exposes zhiyan114's personal email API service (for sending verification and pwd reset mails)
+5. just kidding, **do not** use the `this.coreSrv.setup()` function anywhere outside of the one under `src/index.ts`
 
 ## Request/Response Generics
 `import type { Request, Response } from "express";` both Request and Response from this export contains generic and should be customized based on what's used
