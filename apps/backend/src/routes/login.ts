@@ -31,10 +31,19 @@ export class LogIn extends RouteHandle {
 
      private async postLogIn(req: Request<unknown, void, ILogInReqBody>, res: Response<string>) {
         const body = req.body;
+
+        if(!body.email || !body.password) 
+            return res.status(400).send("Missing required fields");
+
         const logInDoc = this.coreSrv.database.collection<IUserInfo>(this.logInDocName);
-        const item = await logInDoc.findOne({ email : body.email, password : body.password });
-        if(!item)
-            return res.status(404).json("No Response");
-        return res;
+        const user = await logInDoc.findOne({ email : body.email, password : body.password });
+
+        if(!user)
+            return res.status(401).send("Invalid email or password");
+
+        if(!user.verified)
+            return res.status(403).send("Email verification required")
+        
+        return res.status(200).send("Login successful");
      }
 }
