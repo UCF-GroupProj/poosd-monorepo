@@ -12,14 +12,16 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@repo/utils": "workspace:*",
     "@sentry/node": "^10.20.0",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
-    "mongodb": "^6.20.0",
-    "@repo/utils": "workspace:*"
+    "mongodb": "^6.20.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.8.1",
     "eslint": "^9.38.0",
