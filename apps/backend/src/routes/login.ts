@@ -42,13 +42,22 @@ export class LogIn extends RouteHandle {
     webSRV.post('/register', json({ strict: true }), this.registerHandle.bind(this));
   }
 
-  private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string>) {
-    const body = req.body;
-    const logInDoc = this.coreSrv.database.collection<IUserInfo>(this.logInDocName);
-    const item = await logInDoc.findOne({ email : body.email, password : body.password });
-    if(!item)
-      return res.status(404).json("No Response");
-    return res;
+  private async postLogIn(req: Request<unknown, void, ILogInReqBody>, res: Response<string>) {
+        const body = req.body;
+
+        if(!body.email || !body.password) 
+            return res.status(400).send("Missing required fields");
+
+        const logInDoc = this.coreSrv.database.collection<IUserInfo>(this.logInDocName);
+        const user = await logInDoc.findOne({ email : body.email, password : body.password });
+
+        if(!user)
+            return res.status(401).send("Invalid email or password");
+
+        if(!user.verified)
+            return res.status(403).send("Email verification required")
+        
+        return res.status(200).send("Login successful");
   }
 
   private async registerHandle(req: Request<unknown, unknown, IUserCred>, res: Response<string> ) {
@@ -103,9 +112,9 @@ export class LogIn extends RouteHandle {
       logger.error(`For account ${req.body.email}, database failed to acknowledged the insert request`);
       return res.status(502).send("An error occured with edatabase service, please try again later");
     }
-
     // Done
     logger.info(`account ${req.body.email} successfully registered`);
     return res.send("Registered successfully, please review your inbox to verify your account");
   }
+
 }
