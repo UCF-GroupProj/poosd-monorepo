@@ -4,6 +4,7 @@ import type { RouteHandle } from "./routes";
 import { logger, setupExpressErrorHandler } from "@sentry/node";
 import { JWTManager } from "@repo/utils/JTWManager.ts";
 import { MailService } from "@repo/utils/MailService.ts";
+import cors from "cors";
 
 export class CoreService {
   private _webServer: ExpType;
@@ -29,6 +30,9 @@ export class CoreService {
   public async setup(routes: (new(service: CoreService) => RouteHandle)[]) {
     // Setup MongoDB conns
     await this._mongoCli.connect();
+
+    // CORS Related fixes
+    this._webServer.use(cors({ origin: "*" }));
 
     // Handle Route Stuff
     for(const route of routes)

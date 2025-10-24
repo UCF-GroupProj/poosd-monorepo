@@ -11,9 +11,10 @@ export class JWTManager {
      * Please use JTW_KEY env instead
      */
   constructor(key?: string) {
-    this.signKey = process.env["JWT_KEY"] ?? key;
-    if(!this.signKey)
+    key = process.env["JWT_KEY"] ?? key;
+    if(!key)
       throw new JWTError("Missing JTW signing key ENVIRONMENT 'JWT_KEY' or construction param.");
+    this.signKey = key;
   }
 
   public signUserKey(user: userData) {

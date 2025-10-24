@@ -80,7 +80,7 @@ export class LogIn extends RouteHandle {
     }
 
     // Verify if email is aleady used
-    logger.debug(logger.fmt`Verying if user ${req.body.email} already existed in the database`);
+    logger.debug(logger.fmt`Verifying if user ${req.body.email} already existed in the database`);
     const userFetch = await userColl.findOne({ email: req.body.email });
     if(userFetch !== null) {
       logger.info(logger.fmt`${req.body.email} already existed in the database`);
