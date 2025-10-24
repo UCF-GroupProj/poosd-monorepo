@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { json } from "express";
 import type { ObjectId } from "mongodb";
 import { logger } from "@sentry/node";
-import { scryptSync } from "node:crypto";
+import { scryptSync, timingSafeEqual } from "node:crypto";
 
 type IUserCred = {
     email: string;
@@ -31,6 +31,10 @@ type IUserDBInfo = {
     }
 }
 
+type ITokenRes = {
+  token: string;
+}
+
 export class LogIn extends RouteHandle {
 
   private logInDocName = "Users";
@@ -41,27 +45,40 @@ export class LogIn extends RouteHandle {
     webSRV.post('/register', json({ strict: true }), this.registerHandle.bind(this));
   }
 
-  private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string>) {
-        const logInDoc = this.coreSrv.database.collection<IUserInfo>(this.logInDocName);
+  private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string | ITokenRes>) {
+    const logInDoc = this.coreSrv.database.collection<IUserDBInfo & IUserCred>(this.logInDocName);
 
-        if(!req.body.email || !req.body.password) {
-            logger.warn(logger.fmt`Received missing body request -> isEmail: ${req.body.email === undefined} | isPassword ${req.body.password === undefined}`);
-            return res.status(400).send("Missing required field(s)");
-        }
+    if(!req.body.email || !req.body.password) {
+      logger.warn(logger.fmt`Received missing body request -> isEmail: ${req.body.email === undefined} | isPassword ${req.body.password === undefined}`);
+      return res.status(400).send("Missing required field(s)");
+    }
+    if(req.headers.authorization) {
+      logger.warn(logger.fmt`User ${req.body.email} authorization header presented, which could indicates that user is already logged in`);
+      return res.status(403).send("You're already logged in!");
+    }
 
-        const authToken = req.headers.authorization
-        
-        const userFetch = await logInDoc.findOne({ email : req.body.email});
-        if(userFetch === null) {
-            logger.warn(logger.fmt`Failed to locate user ${req.body.email} in the database`);
-            return res.status(401).send("Invalid email or password");
-        }
-            
-        if(!userFetch.verified) {
-            logger.warn(logger.fmt`User ${req.body.email} attempted login but email is not verified`);
-            return res.status(403).send("Email verification required")
-        }
-        return res.status(200).send("Login successful");
+    const userFetch = await logInDoc.findOne({ email : req.body.email });
+    if(!userFetch) {
+      logger.info(logger.fmt`Failed to locate user ${req.body.email} in the database`);
+      return res.status(401).send("Invalid email or password");
+    }
+
+    const inputHashPwd = scryptSync(req.body.password, req.body.password, 64);
+    const dbHashPwd = Buffer.from(userFetch.password, "base64");
+
+    if(inputHashPwd.length !== dbHashPwd.length && !timingSafeEqual(inputHashPwd, dbHashPwd)) {
+      logger.info(logger.fmt`${req.body.email} password mismatched!`);
+      return res.status(401).send("Invalid email or password");
+    }
+
+    if(!userFetch.verified) {
+      logger.warn(logger.fmt`User ${req.body.email} attempted login but email is not verified`);
+      return res.status(403).send("Email verification required");
+    }
+    //@TODO: Add token to session collections
+    return res.status(200).send({
+      token: "JWT_TOKEN"
+    });
   }
 
   private async registerHandle(req: Request<unknown, unknown, IUserCred>, res: Response<string> ) {
