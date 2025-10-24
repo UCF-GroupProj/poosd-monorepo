@@ -4,6 +4,20 @@
   "type": "module",
   "private": true,
   "exports": {
-    "./MailService.ts": "./MailService.ts"
+    "./MailService.ts": "./MailService.ts",
+    "./JWTManaget.ts": "./JWTManaget.ts"
+  },
+  "scripts": {
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.9.1",
+    "eslint": "^9.38.0"
   }
 }

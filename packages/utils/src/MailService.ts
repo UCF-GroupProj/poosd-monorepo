@@ -46,21 +46,21 @@ export class MailService {
 
     // Email Validation
     if(!opt.from || !this.validateEmail(opt.from))
-      throw new MailServiceExcept("'from' field failed validation")
+      throw new MailServiceExcept("'from' field failed validation");
     for(const to of opt.to)
       if(!this.validateEmail(to))
-        throw new MailServiceExcept("one of the (only) 'to' field failed validation")
+        throw new MailServiceExcept("one of the (only) 'to' field failed validation");
     if(opt.replyto)
       for(const RT of opt.replyto)
         if(!this.validateEmail(RT))
-          throw new MailServiceExcept("one of the (only) 'replyTo' field failed validation")
+          throw new MailServiceExcept("one of the (only) 'replyTo' field failed validation");
 
-    const res = await this.transport("/requests", "POST", JSON.stringify(opt))
+    const res = await this.transport("/requests", "POST", JSON.stringify(opt));
     return [200,422,503].includes(res.status) ? await res.json() : await res.text();
   }
 
   async getMailStat(reqID: string): Promise<mailGETResType | string> {
-    const res = await this.transport(`/requests/${reqID}`, "GET")
+    const res = await this.transport(`/requests/${reqID}`, "GET");
     return [200,422,503].includes(res.status) ? await res.json() : await res.text();
   }
 
