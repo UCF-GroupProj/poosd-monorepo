@@ -1,15 +1,9 @@
-swagger: '2.0'
+openapi: 3.1.0
 info:
-  version: '1.0.0'
   title: POOSD - Group 1
-  description: ''
   contact:
     url: https://github.com/UCF-GroupProj/poosd-monorepo
-host: api.poosd.zhiyan114.com
-basePath: /
-schemes:
-  - https
-  - http
+  version: '1.0.0'
 servers:
   - url: http://localhost:8080
   - url: https://api.poosd.zhiyan114.com
@@ -17,71 +11,92 @@ paths:
   /login:
     post:
       summary: Log in a user
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: credentials
-          required: true
-          schema:
-            type: object
-            required:
-              - email
-              - password
-            properties:
-              email:
-                type: string
-                format: email
-              password:
-                type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
       responses:
-        200:
+        '200':
           description: User logged in successfully
-          schema:
-            type: object
-            properties:
-              token:
-                type: string
-                description: JWT token
-        401:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token
+        '401':
           description: Invalid credentials
-        403:
+          content:
+            text/plain: 
+              schema:
+                type: string
+        '403':
           description: Account Not Enabled
-          schema:
-            type: string
-        500:
+          content:
+            text/plain: 
+              schema:
+                type: string
+        '500':
           description: Server error
+          content:
+            text/plain: 
+              schema:
+                type: string
   /register:
     post:
       summary: Register a new user
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: user
-          required: true
-          schema:
-            type: object
-            required:
-              - username
-              - email
-              - password
-            properties:
-              username:
-                type: string
-              email:
-                type: string
-                format: email
-              password:
-                type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
       responses:
-        201:
+        '200':
           description: User registered successfully
-        400:
-          description: Invalid input
-        500:
+          content:
+            text/plain: 
+              schema:
+                type: string
+        '400':
+          description: Malformed Body
+          content:
+            text/plain: 
+              schema:
+                type: string
+        '409':
+          description: Duplicate Records (such as email)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
           description: Server error
+          content:
+            text/plain: 
+              schema:
+                type: string
