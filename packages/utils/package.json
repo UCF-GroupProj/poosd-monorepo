@@ -1,7 +1,6 @@
 {
   "name": "@repo/utils",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
   "exports": {
     "./MailService.ts": "./src/MailService.ts",

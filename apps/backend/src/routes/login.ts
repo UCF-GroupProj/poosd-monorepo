@@ -42,7 +42,7 @@ export class LogIn extends RouteHandle {
     webSRV.post('/register', json({ strict: true }), this.registerHandle.bind(this));
   }
 
-  private async postLogIn(req: Request<unknown, void, ILogInReqBody>, res: Response<string>) {
+  private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string>) {
         const body = req.body;
 
         if(!body.email || !body.password) 
