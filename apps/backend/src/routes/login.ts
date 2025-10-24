@@ -33,30 +33,34 @@ type IUserDBInfo = {
 
 export class LogIn extends RouteHandle {
 
-  private logInDocName = "login";
+  private logInDocName = "Users";
 
   public setup() {
     const webSRV = this.coreSrv.webServer;
-    webSRV.route("/login")
-      .post(json({ strict: true }), this.postLogIn.bind(this));
+    webSRV.route("/login").post(json({ strict: true }), this.postLogIn.bind(this));
     webSRV.post('/register', json({ strict: true }), this.registerHandle.bind(this));
   }
 
-  private async postLogIn(req: Request<unknown, void, ILogInReqBody>, res: Response<string>) {
-        const body = req.body;
-
-        if(!body.email || !body.password) 
-            return res.status(400).send("Missing required fields");
-
+  private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string>) {
         const logInDoc = this.coreSrv.database.collection<IUserInfo>(this.logInDocName);
-        const user = await logInDoc.findOne({ email : body.email, password : body.password });
 
-        if(!user)
-            return res.status(401).send("Invalid email or password");
+        if(!req.body.email || !req.body.password) {
+            logger.warn(logger.fmt`Received missing body request -> isEmail: ${req.body.email === undefined} | isPassword ${req.body.password === undefined}`);
+            return res.status(400).send("Missing required field(s)");
+        }
 
-        if(!user.verified)
-            return res.status(403).send("Email verification required")
+        const authToken = req.headers.authorization
         
+        const userFetch = await logInDoc.findOne({ email : req.body.email});
+        if(userFetch === null) {
+            logger.warn(logger.fmt`Failed to locate user ${req.body.email} in the database`);
+            return res.status(401).send("Invalid email or password");
+        }
+            
+        if(!userFetch.verified) {
+            logger.warn(logger.fmt`User ${req.body.email} attempted login but email is not verified`);
+            return res.status(403).send("Email verification required")
+        }
         return res.status(200).send("Login successful");
   }
 
