@@ -1,5 +1,5 @@
 import { RouteHandle } from ".";
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
 import type { ObjectId } from "mongodb";
 import { logger } from "@sentry/node";
@@ -34,13 +34,19 @@ export class LogIn extends RouteHandle {
 
   public setup() {
     const webSRV = this.coreSrv.webServer;
-    webSRV.route("/login").post(json({ strict: true }), this.postLogIn.bind(this));
+    webSRV.route("/login").post(json({ strict: true }), this.skipInprod.bind(this), this.postLogIn.bind(this));
     webSRV.post('/register', json({ strict: true }), this.registerHandle.bind(this));
   }
 
-  private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string | ITokenRes>) {
+  private skipInprod(req: Request, res: Response, next: NextFunction) {
+    // Endpoint that aren't ready yet won't be available in prod via this middleman
+    if(process.env["ENVIRONMENT"] !== "prod")
+      return res.status(503).send("Endpoint is current in development");
 
-    return res.status(503).send("Endpoint is current in development"); // Remove during development and when finish
+    next();
+  }
+
+  private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string | ITokenRes>) {
     const logInDoc = this.coreSrv.database.collection<IUserDBObject>(this.logInDocName);
 
     if(!req.body.email || !req.body.password) {
