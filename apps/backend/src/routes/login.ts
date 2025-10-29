@@ -1,5 +1,5 @@
 import { RouteHandle } from ".";
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
 import type { ObjectId } from "mongodb";
 import { logger } from "@sentry/node";
@@ -11,25 +11,18 @@ type IUserCred = {
 }
 
 type IUserInfo = {
-    _id : ObjectId,
     verified : boolean,
     collection : Array<string>,
     level : number,
     exp : number,
     currency : {
       gems: number
-    }
+    },
+    favorites: ObjectId[]
 }
 
-type IUserDBInfo = {
-    verified : boolean,
-    collection : Array<string>,
-    level : number,
-    exp : number,
-    currency : {
-      gems: number
-    }
-}
+type IUserDBObject = IUserInfo & IUserCred;
+// type IFulluserInfo = IUserInfo & {_id : ObjectId} // Uncomment when needed
 
 type ITokenRes = {
   token: string;
@@ -41,12 +34,20 @@ export class LogIn extends RouteHandle {
 
   public setup() {
     const webSRV = this.coreSrv.webServer;
-    webSRV.route("/login").post(json({ strict: true }), this.postLogIn.bind(this));
+    webSRV.route("/login").post(json({ strict: true }), this.skipInprod.bind(this), this.postLogIn.bind(this));
     webSRV.post('/register', json({ strict: true }), this.registerHandle.bind(this));
   }
 
+  private skipInprod(req: Request, res: Response, next: NextFunction) {
+    // Endpoint that aren't ready yet won't be available in prod via this middleman
+    if(process.env["ENVIRONMENT"] !== "prod")
+      return res.status(503).send("Endpoint is current in development");
+
+    next();
+  }
+
   private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string | ITokenRes>) {
-    const logInDoc = this.coreSrv.database.collection<IUserDBInfo & IUserCred>(this.logInDocName);
+    const logInDoc = this.coreSrv.database.collection<IUserDBObject>(this.logInDocName);
 
     if(!req.body.email || !req.body.password) {
       logger.warn(logger.fmt`Received missing body request -> isEmail: ${req.body.email === undefined} | isPassword ${req.body.password === undefined}`);
@@ -82,7 +83,7 @@ export class LogIn extends RouteHandle {
   }
 
   private async registerHandle(req: Request<unknown, unknown, IUserCred>, res: Response<string> ) {
-    const userColl = this.coreSrv.database.collection<IUserDBInfo & IUserCred>("Users");
+    const userColl = this.coreSrv.database.collection<IUserDBObject>(this.logInDocName);
 
     if(!req.body.email || !req.body.password) {
       logger.warn(logger.fmt`Received missing body request -> isEmail: ${req.body.email === undefined} | isPassword ${req.body.password === undefined}`);
@@ -127,7 +128,8 @@ export class LogIn extends RouteHandle {
       collection: [],
       level: 0,
       exp: 0,
-      currency: { gems: 0 }
+      currency: { gems: 0 },
+      favorites: [],
     });
     if(!userInsert.acknowledged) {
       logger.error(`For account ${req.body.email}, database failed to acknowledged the insert request`);

@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@repo/utils": "workspace:*",
-    "@sentry/node": "^10.20.0",
+    "@sentry/node": "^10.22.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "mongodb": "^6.20.0"
@@ -22,8 +22,8 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/node": "^24.8.1",
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.9.2",
     "eslint": "^9.38.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
