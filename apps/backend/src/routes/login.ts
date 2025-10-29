@@ -11,25 +11,18 @@ type IUserCred = {
 }
 
 type IUserInfo = {
-    _id : ObjectId,
     verified : boolean,
     collection : Array<string>,
     level : number,
     exp : number,
     currency : {
       gems: number
-    }
+    },
+    favorites: ObjectId[]
 }
 
-type IUserDBInfo = {
-    verified : boolean,
-    collection : Array<string>,
-    level : number,
-    exp : number,
-    currency : {
-      gems: number
-    }
-}
+type IUserDBObject = IUserInfo & IUserCred;
+// type IFulluserInfo = IUserInfo & {_id : ObjectId} // Uncomment when needed
 
 type ITokenRes = {
   token: string;
@@ -46,7 +39,7 @@ export class LogIn extends RouteHandle {
   }
 
   private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string | ITokenRes>) {
-    const logInDoc = this.coreSrv.database.collection<IUserDBInfo & IUserCred>(this.logInDocName);
+    const logInDoc = this.coreSrv.database.collection<IUserDBObject>(this.logInDocName);
 
     if(!req.body.email || !req.body.password) {
       logger.warn(logger.fmt`Received missing body request -> isEmail: ${req.body.email === undefined} | isPassword ${req.body.password === undefined}`);
@@ -75,14 +68,14 @@ export class LogIn extends RouteHandle {
       logger.warn(logger.fmt`User ${req.body.email} attempted login but email is not verified`);
       return res.status(403).send("Email verification required");
     }
-    //@TODO: Add token to session collections
+    // @TODO: Add token to session collections
     return res.status(200).send({
       token: "JWT_TOKEN"
     });
   }
 
   private async registerHandle(req: Request<unknown, unknown, IUserCred>, res: Response<string> ) {
-    const userColl = this.coreSrv.database.collection<IUserDBInfo & IUserCred>("Users");
+    const userColl = this.coreSrv.database.collection<IUserDBObject>(this.logInDocName);
 
     if(!req.body.email || !req.body.password) {
       logger.warn(logger.fmt`Received missing body request -> isEmail: ${req.body.email === undefined} | isPassword ${req.body.password === undefined}`);
@@ -127,7 +120,8 @@ export class LogIn extends RouteHandle {
       collection: [],
       level: 0,
       exp: 0,
-      currency: { gems: 0 }
+      currency: { gems: 0 },
+      favorites: [],
     });
     if(!userInsert.acknowledged) {
       logger.error(`For account ${req.body.email}, database failed to acknowledged the insert request`);
