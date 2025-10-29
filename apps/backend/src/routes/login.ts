@@ -39,6 +39,8 @@ export class LogIn extends RouteHandle {
   }
 
   private async postLogIn(req: Request<unknown, void, IUserCred>, res: Response<string | ITokenRes>) {
+
+    return res.status(503).send("Endpoint is current in development"); // Remove during development and when finish
     const logInDoc = this.coreSrv.database.collection<IUserDBObject>(this.logInDocName);
 
     if(!req.body.email || !req.body.password) {
