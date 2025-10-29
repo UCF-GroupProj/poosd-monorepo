@@ -75,7 +75,7 @@ export class LogIn extends RouteHandle {
       logger.warn(logger.fmt`User ${req.body.email} attempted login but email is not verified`);
       return res.status(403).send("Email verification required");
     }
-    //@TODO: Add token to session collections
+    // @TODO: Add token to session collections
     return res.status(200).send({
       token: "JWT_TOKEN"
     });
