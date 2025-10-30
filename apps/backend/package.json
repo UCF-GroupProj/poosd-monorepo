@@ -15,6 +15,7 @@
     "@repo/utils": "workspace:*",
     "@sentry/node": "^10.22.0",
     "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.0",
     "express": "^5.1.0",
     "mongodb": "^6.20.0"
   },
@@ -26,6 +27,7 @@
     "@types/node": "^24.9.2",
     "eslint": "^9.38.0",
     "ts-node-dev": "^2.0.0",
+    "@types/jsonwebtoken": "^9.0.0",
     "typescript": "^5.9.3"
   }
 }

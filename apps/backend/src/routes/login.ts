@@ -4,6 +4,7 @@ import { json } from "express";
 import type { ObjectId } from "mongodb";
 import { logger } from "@sentry/node";
 import { scryptSync, timingSafeEqual } from "node:crypto";
+import * as jwt from "jsonwebtoken";
 
 type IUserCred = {
     email: string;
@@ -23,6 +24,8 @@ type IUserInfo = {
 
 type IUserDBObject = IUserInfo & IUserCred;
 // type IFulluserInfo = IUserInfo & {_id : ObjectId} // Uncomment when needed
+
+type IStoredUser = IUserDBObject & { _id: ObjectId };
 
 type ITokenRes = {
   token: string;
@@ -57,8 +60,7 @@ export class LogIn extends RouteHandle {
       logger.warn(logger.fmt`User ${req.body.email} authorization header presented, which could indicates that user is already logged in`);
       return res.status(403).send("You're already logged in!");
     }
-
-    const userFetch = await logInDoc.findOne({ email : req.body.email });
+    const userFetch = await logInDoc.findOne({ email : req.body.email }) as IStoredUser | null;
     if(!userFetch) {
       logger.info(logger.fmt`Failed to locate user ${req.body.email} in the database`);
       return res.status(401).send("Invalid email or password");
@@ -76,10 +78,32 @@ export class LogIn extends RouteHandle {
       logger.warn(logger.fmt`User ${req.body.email} attempted login but email is not verified`);
       return res.status(403).send("Email verification required");
     }
-    // @TODO: Add token to session collections
-    return res.status(200).send({
-      token: "JWT_TOKEN"
-    });
+
+    const jwtEnv = process.env["JWT_KEY"];
+    let jwtSecret: string | undefined = undefined;
+    if (jwtEnv) {
+      try {
+        const parsed = JSON.parse(jwtEnv);
+        if (parsed && typeof parsed === "object" && typeof parsed.token === "string") jwtSecret = parsed.token;
+      } catch {
+        // not JSON, treat as raw secret
+        jwtSecret = jwtEnv;
+      }
+    }
+
+    if (!jwtSecret) {
+      logger.error("JWT_KEY is not configured");
+      return res.status(500).send("JWT secret not configured");
+    }
+
+    const payload = {
+      sub: userFetch._id.toString(),
+      email: req.body.email,
+    };
+
+    const token = jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
+
+    return res.status(200).send({ token });
   }
 
   private async registerHandle(req: Request<unknown, unknown, IUserCred>, res: Response<string> ) {
