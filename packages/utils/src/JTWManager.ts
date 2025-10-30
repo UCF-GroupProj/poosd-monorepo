@@ -2,7 +2,8 @@ import { sign, verify } from "jsonwebtoken";
 
 
 type userData = {
-    id: string
+    id: string;
+    email: string;
 }
 
 export class JWTManager {
@@ -18,7 +19,7 @@ export class JWTManager {
   }
 
   public signUserKey(user: userData) {
-    return sign({ id: user.id }, this.signKey, { algorithm: "HS512" });
+    return sign({ id: user.id, email: user.email }, this.signKey, { algorithm: "HS512" });
   }
 
   public verifyUserKey(token: string) {
