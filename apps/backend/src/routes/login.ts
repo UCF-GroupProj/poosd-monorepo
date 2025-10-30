@@ -4,7 +4,7 @@ import { json } from "express";
 import type { ObjectId } from "mongodb";
 import { logger } from "@sentry/node";
 import { scryptSync, timingSafeEqual } from "node:crypto";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 type IUserCred = {
     email: string;
