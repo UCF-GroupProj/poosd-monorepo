@@ -3,8 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
 import type { ObjectId } from "mongodb";
 import { logger } from "@sentry/node";
-import { scryptSync, timingSafeEqual } from "node:crypto";
-import jwt from "jsonwebtoken";
+import { scryptSync, timingSafeEqual, createHash } from "node:crypto";
 
 type IUserCred = {
     email: string;
@@ -79,29 +78,17 @@ export class LogIn extends RouteHandle {
       return res.status(403).send("Email verification required");
     }
 
-    const jwtEnv = process.env["JWT_KEY"];
-    let jwtSecret: string | undefined = undefined;
-    if (jwtEnv) {
-      try {
-        const parsed = JSON.parse(jwtEnv);
-        if (parsed && typeof parsed === "object" && typeof parsed.token === "string") jwtSecret = parsed.token;
-      } catch {
-        // not JSON, treat as raw secret
-        jwtSecret = jwtEnv;
-      }
-    }
+    // Generate JWT Token
+    const token = this.coreSrv.JWTMGR.signUserKey({ id: userFetch._id.toString(), email: req.body.email });
 
-    if (!jwtSecret) {
-      logger.error("JWT_KEY is not configured");
-      return res.status(500).send("JWT secret not configured");
-    }
-
-    const payload = {
-      sub: userFetch._id.toString(),
-      email: req.body.email,
-    };
-
-    const token = jwt.sign(payload, jwtSecret, { expiresIn: "1h" });
+    // Insert session state
+    const sessionColl = this.coreSrv.database.collection("SessionState");
+    const userToken = createHash("sha256").update(token).digest("hex");
+    await sessionColl.insertOne({
+      userId: userFetch._id,
+      userToken,
+      lastLogin: new Date(),
+    });
 
     return res.status(200).send({ token });
   }
