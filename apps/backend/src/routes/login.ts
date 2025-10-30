@@ -84,12 +84,18 @@ export class LogIn extends RouteHandle {
     // Insert session state
     const sessionColl = this.coreSrv.database.collection("SessionState");
     const userToken = createHash("sha256").update(token).digest("hex");
-    await sessionColl.insertOne({
+    const DBRes = await sessionColl.insertOne({
       userId: userFetch._id,
       userToken,
       lastLogin: new Date(),
     });
 
+    if(!DBRes.acknowledged) {
+      logger.error("DB Fail to acknowlege when adding hashed user token to DB's SessionState");
+      return res.status(503).send("Database Unavailable when registering session :(");
+    }
+
+    logger.info(logger.fmt`Successfully authenticated ${req.body.email} with sessionID: ${DBRes.insertedId.toString("hex")}`);
     return res.status(200).send({ token });
   }
 
