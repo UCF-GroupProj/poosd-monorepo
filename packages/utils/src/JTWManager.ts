@@ -1,4 +1,4 @@
-import { sign, verify } from "jsonwebtoken";
+import { type JwtPayload, sign, verify } from "jsonwebtoken";
 
 
 type userData = {
@@ -19,11 +19,15 @@ export class JWTManager {
   }
 
   public signUserKey(user: userData) {
-    return sign({ id: user.id, email: user.email }, this.signKey, { algorithm: "HS512" });
+    return sign({ sub: user.id, email: user.email }, this.signKey, { algorithm: "HS512" });
   }
 
   public verifyUserKey(token: string) {
-    return verify(token, this.signKey, { algorithms: ["HS512"] });
+    const keyContent = verify(token, this.signKey, { algorithms: ["HS512"] }) as JwtPayload & {email: string};
+    return {
+      id: keyContent.sub,
+      email: keyContent.email,
+    };
   }
 }
 
