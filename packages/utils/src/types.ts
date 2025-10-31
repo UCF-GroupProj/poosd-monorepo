@@ -21,3 +21,10 @@ export type IUserInfo = {
 export type IUserDBObject = IUserInfo & IUserCred;
 export type IFulluserInfo = IUserInfo & {_id : ObjectId}
 export type IStoredUser = IUserDBObject & { _id: ObjectId };
+
+
+/* JWT Token Data */
+export type tokenData = {
+    id: string;
+    email: string;
+}

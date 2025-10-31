@@ -1,11 +1,6 @@
 import { type JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
-
-
-type userData = {
-    id: string;
-    email: string;
-}
+import type { tokenData } from "./types";
 
 export class JWTManager {
   private signKey: string;
@@ -19,7 +14,7 @@ export class JWTManager {
     this.signKey = key;
   }
 
-  public signUserKey(user: userData) {
+  public signUserKey(user: tokenData) {
     return jwt.sign({ sub: user.id, email: user.email }, this.signKey, { algorithm: "HS512" });
   }
 
