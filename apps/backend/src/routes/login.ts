@@ -36,7 +36,7 @@ export class LogIn extends RouteHandle {
 
   public setup() {
     const webSRV = this.coreSrv.webServer;
-    webSRV.route("/login").post(json({ strict: true }), this.skipInprod.bind(this), this.postLogIn.bind(this));
+    webSRV.route("/login").post(json({ strict: true }), this.postLogIn.bind(this));
     webSRV.post('/register', json({ strict: true }), this.registerHandle.bind(this));
   }
 
