@@ -1,30 +1,11 @@
 import { RouteHandle } from ".";
 import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
-import type { ObjectId } from "mongodb";
 import { logger } from "@sentry/node";
 import { scryptSync, timingSafeEqual, createHash } from "node:crypto";
+import type { IUserCred, IUserDBObject, IStoredUser } from "@repo/utils/types";
 
-type IUserCred = {
-    email: string;
-    password: string;
-}
 
-type IUserInfo = {
-    verified : boolean,
-    collection : Array<string>,
-    level : number,
-    exp : number,
-    currency : {
-      gems: number
-    },
-    favorites: ObjectId[]
-}
-
-type IUserDBObject = IUserInfo & IUserCred;
-// type IFulluserInfo = IUserInfo & {_id : ObjectId} // Uncomment when needed
-
-type IStoredUser = IUserDBObject & { _id: ObjectId };
 
 type ITokenRes = {
   token: string;

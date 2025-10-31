@@ -4,13 +4,15 @@
   "private": true,
   "exports": {
     "./MailService.ts": "./src/MailService.ts",
-    "./JTWManager.ts": "./src/JTWManager.ts"
+    "./JTWManager.ts": "./src/JTWManager.ts",
+    "./types": "./src/types.ts"
   },
   "scripts": {
     "lint": "eslint"
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.20.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
