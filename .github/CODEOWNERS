@@ -1,5 +1,5 @@
 # Backend
-apps/backend/** @zhiyan114 @AlisaK13003 @Arqane-UCF @galvesbuddy @Lepro-C
+apps/backend/** @zhiyan114 @AlisaK13003 @galvesbuddy @Lepro-C
 packages/eslint-config/backend.mjs @zhiyan114 @AlisaK13003 @galvesbuddy @Lepro-C
 
 # Frontend
@@ -14,5 +14,6 @@ apps/mobile/** @Arqane-UCF @AlisaK13003
 .github/** @zhiyan114
 packages/typescript-config/** @zhiyan114
 **/Dockerfile @zhiyan114
+
 
 
