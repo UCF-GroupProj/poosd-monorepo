@@ -4,10 +4,5 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  },
-  "compilerOptions": {
-    "outDir": "dist"
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  }
 }
