@@ -2,6 +2,7 @@
 import type { ObjectId } from "mongodb";
 
 /* Database Types */
+export type mongoID = {_id : ObjectId};
 
 // Users Collection
 export type IUserCred = {
@@ -19,9 +20,23 @@ export type IUserInfo = {
     favorites: ObjectId[]
 }
 export type IUserDBObject = IUserInfo & IUserCred;
-export type IFulluserInfo = IUserInfo & {_id : ObjectId}
-export type IStoredUser = IUserDBObject & { _id: ObjectId };
+export type IFulluserInfo = IUserInfo & mongoID
+export type IStoredUser = IUserDBObject & mongoID;
 
+// Session State
+export type ISessionState = {
+  userId: ObjectId;
+  userToken: string; // SHA256 hashed
+  lastLogin: Date;
+}
+
+// Account Requests
+export type IAccountRequest = {
+  userId: ObjectId,
+  requestId: string; // Random hex string
+  createdAt: Date;
+  requestType: "password" | "email";
+}
 
 /* JWT Token Data */
 export type tokenData = {

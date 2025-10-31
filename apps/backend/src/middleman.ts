@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 export function checkAuth(req: Request, res: Response, next: NextFunction) {
-  // Validate Token
+  // Validate Token Header
   if(!req.headers.authorization)
     return res.status(401).send("Missing Authorization Header");
 
