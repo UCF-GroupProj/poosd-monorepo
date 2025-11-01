@@ -1,3 +1,4 @@
+/* 2022-2025 © zhiyan114 Licensed under MIT or whatever the project is currently using */
 const esbuild = require('esbuild');
 const fs = require('fs');
 const path = require('path');
@@ -25,7 +26,7 @@ function getAllFilesInFolder(folderPath) {
 }
 
 // Get Commit Hash (using git)
-const commitHash = cProcess
+const commitHash = process.env["RAILWAY_GIT_COMMIT_SHA"] ?? cProcess
   .execSync('git rev-parse HEAD')
   .toString()
   .trim();
