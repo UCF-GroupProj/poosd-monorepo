@@ -19,6 +19,8 @@ type fixType3 = {
 
 
 const nextConfig: NextConfig = {
+  /* Skip checks that's already done by PR CI */
+  typescript: { ignoreBuildErrors: true },
   /* config options here */
   reactStrictMode: true,
   output: "standalone",
