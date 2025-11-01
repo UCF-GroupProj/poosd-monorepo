@@ -9,5 +9,5 @@ sentry.init({
   ],
   enableLogs: true,
   beforeSendLog: (log) => console.log(`[${log.level}]: ${log.message} (Ref ID: ${log.attributes?.referenceID})`) ?? log,
-  ignoreErrors: ["SyntaxError"]
+  ignoreErrors: ["SyntaxError", "ReferenceError"]
 });
