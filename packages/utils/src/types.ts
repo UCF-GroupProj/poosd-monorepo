@@ -37,9 +37,3 @@ export type IAccountRequest = {
   createdAt: Date;
   requestType: "password" | "email";
 }
-
-/* JWT Token Data */
-export type tokenData = {
-    id: string;
-    email: string;
-}

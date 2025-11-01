@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
 import { logger } from "@sentry/node";
 import { scryptSync, timingSafeEqual, createHash } from "node:crypto";
-import type { IUserCred, IUserDBObject, IStoredUser } from "@repo/utils/types";
+import type { IUserCred, IUserDBObject, IStoredUser, ISessionState } from "@repo/utils/types";
 
 
 
@@ -63,7 +63,7 @@ export class LogIn extends RouteHandle {
     const token = this.coreSrv.JWTMGR.signUserKey({ id: userFetch._id.toString(), email: req.body.email });
 
     // Insert session state
-    const sessionColl = this.coreSrv.database.collection("SessionState");
+    const sessionColl = this.coreSrv.database.collection<ISessionState>("SessionState");
     const userToken = createHash("sha256").update(token).digest("hex");
     const DBRes = await sessionColl.insertOne({
       userId: userFetch._id,

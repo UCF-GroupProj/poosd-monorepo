@@ -1,6 +1,10 @@
 import { type JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
-import type { tokenData } from "./types";
+
+export type tokenData = {
+    id: string;
+    email: string;
+}
 
 export class JWTManager {
   private signKey: string;
@@ -24,7 +28,7 @@ export class JWTManager {
       return;
 
     return {
-      id: keyContent.sub,
+      id: keyContent.sub!,
       email: keyContent.email,
     };
   }
