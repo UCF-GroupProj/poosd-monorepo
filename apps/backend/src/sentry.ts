@@ -8,6 +8,6 @@ sentry.init({
     consoleLoggingIntegration({ levels: ["error"] })
   ],
   enableLogs: true,
-  beforeSendLog: (log) => console.log(`[${log.level}: ${log.message}]`) ?? log,
+  beforeSendLog: (log) => console.log(`[${log.level}]: ${log.message} (Ref ID: ${log.attributes?.referenceID})`) ?? log,
   ignoreErrors: ["SyntaxError"]
 });
