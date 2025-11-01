@@ -150,6 +150,7 @@ export class CoreService {
           }
         }
       });
+      return res.status(500).send(`Unknown error occurred. Developer Ref ID: ${referenceID}`);
 
     }
   }
