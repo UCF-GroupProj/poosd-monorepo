@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev src/index.ts",
     "lint": "eslint",
-    "build": "tsc"
+    "build": "tsc",
+    "build:check": "npx tsc --noEmit"
   },
   "keywords": [],
   "author": "",

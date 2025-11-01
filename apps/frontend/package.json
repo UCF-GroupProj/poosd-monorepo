@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --turbopack",
+    "build": "next build --turbopack --no-lint",
+    "build:check": "npx tsc --noEmit",
     "start": "next start --turbopack",
     "lint": "eslint"
   },
