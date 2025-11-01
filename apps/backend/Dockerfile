@@ -31,4 +31,4 @@ RUN /app/apps/backend/scripts/postHook.sh
 RUN find ./apps/backend/dist/ -type f -name '*.map' -delete
 
 # Run
-CMD node apps/backend/dist/index.js
+CMD node -r ./apps/backend/dist/sentry.js ./apps/backend/dist/index.js

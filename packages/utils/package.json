@@ -8,7 +8,8 @@
     "./types": "./src/types.ts"
   },
   "scripts": {
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:check": "tsc --noEmit"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.2",

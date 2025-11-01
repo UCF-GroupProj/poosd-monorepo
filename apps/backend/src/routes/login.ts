@@ -1,4 +1,4 @@
-import { RouteHandle } from ".";
+import { RouteHandle } from "./baseHandle";
 import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
 import { logger } from "@sentry/node";

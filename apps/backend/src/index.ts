@@ -1,4 +1,3 @@
-import "./sentry"; // LOAD FIRST
 import { CoreService } from "./CoreService";
 import {
   Main,

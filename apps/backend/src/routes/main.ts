@@ -1,4 +1,4 @@
-import { RouteHandle } from ".";
+import { RouteHandle } from "./baseHandle";
 import type { Request, Response } from "express";
 
 // Index route '/'
