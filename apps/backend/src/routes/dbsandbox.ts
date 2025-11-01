@@ -4,7 +4,7 @@
  * This file WILL BE deleted before project is finalized
  */
 
-import { RouteHandle } from ".";
+import { RouteHandle } from "./baseHandle";
 import type { Request, Response } from "express";
 import { json } from "express";
 import { ObjectId } from "mongodb";

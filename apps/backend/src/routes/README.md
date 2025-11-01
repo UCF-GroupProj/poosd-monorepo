@@ -3,7 +3,7 @@
 ## Initial Setup
 Inherit `RouteHandle` class and export it
 ```ts
-import { RouteHandle } from ".";
+import { RouteHandle } from "./baseHandle";
 export class someName extends RouteHandle {}
 ```
 
@@ -11,7 +11,7 @@ export class someName extends RouteHandle {}
 as part of the abstract requirement, all routes class requireds `setup` method, which just contains webserver URI binding.
 Example:
 ```ts
-import { RouteHandle } from ".";
+import { RouteHandle } from "./baseHandle";
 import type { Request, Response } from "express";
 
 export class someName extends RouteHandle {
