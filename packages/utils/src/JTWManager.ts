@@ -20,9 +20,23 @@ export class JWTManager {
 
   public verifyUserKey(token: string) {
     const keyContent = jwt.verify(token, this.signKey, { algorithms: ["HS512"] }) as JwtPayload & {email: string};
+    if(typeof(keyContent) === "string")
+      return;
+
     return {
       id: keyContent.sub,
       email: keyContent.email,
+    };
+  }
+
+  public decodeUserKey(token: string) {
+    const keyContent = jwt.decode(token) as JwtPayload & {email: string};
+    if(!keyContent || typeof(keyContent) === "string")
+      return;
+
+    return {
+      id: keyContent.sub,
+      email: keyContent.email
     };
   }
 }
