@@ -4,20 +4,22 @@
   "private": true,
   "exports": {
     "./MailService.ts": "./src/MailService.ts",
-    "./JTWManager.ts": "./src/JTWManager.ts"
+    "./JTWManager.ts": "./src/JTWManager.ts",
+    "./types": "./src/types.ts"
   },
   "scripts": {
     "lint": "eslint",
     "build:check": "tsc --noEmit"
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.20.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.9.2",
-    "eslint": "^9.38.0"
+    "eslint": "^9.39.0"
   }
 }
