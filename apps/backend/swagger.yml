@@ -14,6 +14,10 @@ tags:
     description: Password Reset Endpoint
   - name: Email Verification
     description: Email Verification Endpoint
+  - name: Card Info
+    description: Get Information about user's card collections
+  - name: User Profile
+    description: Get Information about non-card related user stats
 paths:
   /login:
     post:
@@ -46,13 +50,7 @@ paths:
                 properties:
                   token:
                     type: string
-                    description: JWT token
-        '401':
-          description: Invalid credentials
-          content:
-            text/plain:
-              schema:
-                type: string
+                    description: JWT token 
         '403':
           description: Account Not Enabled
           content:
@@ -377,6 +375,131 @@ paths:
                 type: string
                 examples:
                   - "Database is experiencing issues"
+  /card/{cardID}:
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - Card Info
+      summary: Get information about a specific card by ID
+      parameters:
+        - name: cardID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Card identifier
+      responses:
+        '200':
+          description: Card information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  owned:
+                    type: boolean
+                  imgURI:
+                    type: string
+                description: Card information object
+        '401':
+          description: Bad Authorization Token
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Bad Authorization Token"
+        '404':
+          description: Card not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Server error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /card/summary:
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - Card Info
+      summary: Get summary information about user's card collections
+      responses:
+        '200':
+          description: Card collection summary retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Summary of user's card collections
+                properties:
+                  totalUniqueCards:
+                    type: integer
+                  commonOwned:
+                    type: integer
+                  rareOwned:
+                    type: integer
+                  epicOwned:
+                    type: integer
+                  legendaryOwned:
+                    type: integer
+        '401':
+          description: Bad Authorization Token
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Bad Authorization Token"
+        '500':
+          description: Server error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /profile/:
+    get:
+      tags:
+        - User Profile
+      security:
+        - BearerAuth: []
+      summary:  Get user account's stats (non-card related)
+      responses:
+        '200':
+          description: User profile information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currency:
+                    type: integer
+                description: User profile information
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Bad Authorization Token"
+        '500':
+          description: Server error
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   securitySchemes:
     BearerAuth:
