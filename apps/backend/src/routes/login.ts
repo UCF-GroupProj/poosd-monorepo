@@ -1,30 +1,11 @@
 import { RouteHandle } from "./baseHandle";
 import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
-import type { ObjectId } from "mongodb";
 import { logger } from "@sentry/node";
 import { scryptSync, timingSafeEqual, createHash } from "node:crypto";
+import type { IUserCred, IUserDBObject, IStoredUser, ISessionState } from "@repo/utils/types";
 
-type IUserCred = {
-    email: string;
-    password: string;
-}
 
-type IUserInfo = {
-    verified : boolean,
-    collection : Array<string>,
-    level : number,
-    exp : number,
-    currency : {
-      gems: number
-    },
-    favorites: ObjectId[]
-}
-
-type IUserDBObject = IUserInfo & IUserCred;
-// type IFulluserInfo = IUserInfo & {_id : ObjectId} // Uncomment when needed
-
-type IStoredUser = IUserDBObject & { _id: ObjectId };
 
 type ITokenRes = {
   token: string;
@@ -82,7 +63,7 @@ export class LogIn extends RouteHandle {
     const token = this.coreSrv.JWTMGR.signUserKey({ id: userFetch._id.toString(), email: req.body.email });
 
     // Insert session state
-    const sessionColl = this.coreSrv.database.collection("SessionState");
+    const sessionColl = this.coreSrv.database.collection<ISessionState>("SessionState");
     const userToken = createHash("sha256").update(token).digest("hex");
     const DBRes = await sessionColl.insertOne({
       userId: userFetch._id,
