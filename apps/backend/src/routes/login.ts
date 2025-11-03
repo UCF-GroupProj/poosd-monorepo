@@ -2,8 +2,8 @@ import { RouteHandle } from "./baseHandle";
 import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
 import { logger } from "@sentry/node";
-import { scryptSync, timingSafeEqual, createHash } from "node:crypto";
-import type { IUserCred, IUserDBObject, IStoredUser, ISessionState } from "@repo/utils/types";
+import { scryptSync, timingSafeEqual, createHash, randomUUID } from "node:crypto";
+import type { IUserCred, IUserDBObject, IStoredUser, ISessionState, IAccountRequest } from "@repo/utils/types";
 
 
 
@@ -82,6 +82,7 @@ export class LogIn extends RouteHandle {
 
   private async registerHandle(req: Request<unknown, unknown, IUserCred>, res: Response<string> ) {
     const userColl = this.coreSrv.database.collection<IUserDBObject>(this.logInDocName);
+    const ReqDBColl = this.coreSrv.database.collection<IAccountRequest>("ResetRequest");
 
     if(!req.body.email || !req.body.password) {
       logger.warn(logger.fmt`Received missing body request -> isEmail: ${req.body.email === undefined} | isPassword ${req.body.password === undefined}`);
@@ -104,18 +105,6 @@ export class LogIn extends RouteHandle {
     }
 
     // Send Email
-    const mailRes = await this.coreSrv.emailAPI.sendMail({
-      from: "Olympull <noreply@zhiyan114.com>",
-      to: req.body.email,
-      subject: "Account Verification",
-      text: "An account registeration was made on this email. If this is you, please verify the account here: <PLACEHOLDER LINK>"
-    });
-    if(typeof(mailRes) === "string" || mailRes.success === false) {
-      // User account isnt register if email fails
-      const ErrMSG = typeof(mailRes) === "string" ? mailRes : mailRes.message;
-      logger.error(`${req.body.email} verification email failed: ${ErrMSG}`);
-      return res.status(502).send("An error occured with email service, please try again later");
-    }
 
     // Add user and send verification email
     logger.debug(logger.fmt`adding ${req.body.email} to database`);
@@ -133,6 +122,33 @@ export class LogIn extends RouteHandle {
       logger.error(`For account ${req.body.email}, database failed to acknowledged the insert request`);
       return res.status(502).send("An error occured with edatabase service, please try again later");
     }
+
+    // Send verification emails
+    const reqID = randomUUID();
+    const newReq = await ReqDBColl.insertOne({
+      userId: userInsert.insertedId,
+      requestId: reqID,
+      createdAt: new Date(),
+      requestType: "email",
+    });
+    if(!newReq.acknowledged) {
+      logger.error(logger.fmt`User ${res.locals.id} verification request cannot be submitted to database`, { reqID });
+      return res.status(503).send("Verification cannot be saved :(");
+    }
+
+    const mailRes = await this.coreSrv.emailAPI.sendMail({
+      from: "Olympull <noreply@zhiyan114.com>",
+      to: req.body.email,
+      subject: "Account Verification",
+      text: `Please verify your email at https://poosd.zhiyan114.com/verify/${reqID}`
+    });
+    if(typeof(mailRes) === "string" || mailRes.success === false) {
+      // User account isnt register if email fails
+      const ErrMSG = typeof(mailRes) === "string" ? mailRes : mailRes.message;
+      logger.error(`${req.body.email} verification email failed: ${ErrMSG}`);
+      return res.status(503).send("An error occured with email service, please try again later");
+    }
+
     // Done
     logger.info(`account ${req.body.email} successfully registered`);
     return res.send("Registered successfully, please review your inbox to verify your account");

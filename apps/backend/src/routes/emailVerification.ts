@@ -65,12 +65,19 @@ export class emailVerification extends RouteHandle {
       return res.status(503).send("Verification cannot be saved :(");
     }
 
-    await this.coreSrv.emailAPI.sendMail({
+    const mailRes = await this.coreSrv.emailAPI.sendMail({
       from: "Olympull <noreply@zhiyan114.com>",
       to: res.locals.email,
-      subject: "Email Verification Request",
+      subject: "Account Verification",
       text: `Please verify your email at https://poosd.zhiyan114.com/verify/${reqID}`
     });
+
+    if(typeof(mailRes) === "string" || mailRes.success === false) {
+      // User account isnt register if email fails
+      const ErrMSG = typeof(mailRes) === "string" ? mailRes : mailRes.message;
+      logger.error(`${req.body.email} verification email failed: ${ErrMSG}`);
+      return res.status(503).send("An error occured with email service, please try again later");
+    }
 
     logger.info(logger.fmt`Request ${reqID} Successfully submitted!`);
     return res.send("An email verification link has been resent");
