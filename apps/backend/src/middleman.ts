@@ -5,6 +5,7 @@ import type { NextFunction, Request, Response } from "express";
 import { JWTManager, type tokenData } from "@repo/utils/JTWManager.ts";
 import { captureException, logger } from "@sentry/node";
 import type { Db } from "mongodb";
+import { getIsolationScope } from "@sentry/node";
 
 export function AuthMWGen(database: Db) {
   return async function checkAuthMW(req: Request, res: Response<unknown, tokenData>, next: NextFunction) {
@@ -62,6 +63,11 @@ export function AuthMWGen(database: Db) {
       }
 
       // Set the session stuff and move on
+      getIsolationScope()
+        .setUser({
+          id: data.id,
+          email: data.email
+        });
       Object.assign(res.locals, data);
       next();
 
