@@ -17,7 +17,7 @@
     "@sentry/node": "^10.22.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.20.0"
   },
   "devDependencies": {
@@ -26,8 +26,8 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/node": "^24.9.2",
+    "eslint": "^9.39.0",
     "esbuild": "^0.25.11",
-    "eslint": "^9.38.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }
