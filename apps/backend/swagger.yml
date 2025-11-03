@@ -274,14 +274,6 @@ paths:
                 type: string
                 examples:
                   - "Generic backend error"
-        '503':
-          description: Server error
-          content:
-            text/plain:
-              schema:
-                type: string
-                examples:
-                  - "Database communication error"
     patch:
       tags:
         - Email Verification
