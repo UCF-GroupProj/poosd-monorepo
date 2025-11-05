@@ -10,14 +10,16 @@ export type IUserCred = {
     password: string;
 }
 export type IUserInfo = {
-    verified : boolean,
-    collection : Array<string>,
-    level : number,
-    exp : number,
-    currency : {
+    verified: boolean,
+    collection: Array<string>,
+    level: number,
+    exp: number,
+    currency: {
       gems: number
     },
-    favorites: ObjectId[]
+    favorites: ObjectId[],
+    pullsSinceEpic: number,
+    lastPullTime: Date,
 }
 export type IUserDBObject = IUserInfo & IUserCred;
 export type IFulluserInfo = IUserInfo & mongoID
