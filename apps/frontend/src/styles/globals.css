@@ -4,7 +4,15 @@
 
 @font-face {
   font-family: 'GFS Neohellenic';
-  src: url('@/GFSNeohellenic-Regular.woff2') format('woff2');
+  src: url('@/assets/GFSNeohellenic-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Elms Sans';
+  src: url('@/assets/ElmsSans-VariableFont_wght.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -31,20 +39,22 @@ input[type='text'] {
 }
 
 body {
-    background-image: url("@/app/ui/BKG.png");
-    font-family: 'Noto Sans';
+    background-image: url('@/assets/BKG.png');
+    font-family: 'Elms Sans';
     font-size: 12px;
+    margin: 0;
+    padding: 0;
   }
 
 .topBar {
     background-color: white;
-    size: 30px;
     padding: 5px;
     padding-left: 45px;
 }
 
 .buttons {
     background-color: #163E4E;
+    border-color: #163E4E;
     border-radius: 25px;
     color: white;
     width: 150px;
@@ -52,6 +62,11 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 16px;
+}
+
+.buttons:hover {
+  background-color: white;
+  color: #163E4E;
 }
 
 .mainBox {
@@ -83,12 +98,87 @@ h2 {
 .input {
   width: 95%;
   border-radius: 15px;
+  height: 30px;
+  padding: 8px;
 }
 
-.spacer {
-  margin-right: 25px;
+.navBar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: white;
+}
+
+.navBar li {
+  float: right;
+  vertical-align: bottom;
+}
+
+.navBar li a {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 16px;
+  vertical-align: bottom;
+}
+
+.navBar li a:hover {
+  text-decoration: underline;
 }
 
 #signUp {
   text-decoration: underline;
+}
+
+#navTitle {
+  float: left;
+}
+
+.dash {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: white;
+  width: 20%;
+}
+
+.dash li {
+  float: top;
+
+}
+
+.dash li button {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 16px;
+  vertical-align: bottom;
+}
+
+.dash li button:hover {
+  text-decoration: underline;
+}
+
+.side {
+  flex: 0 0 50%; 
+  background-color: #f0f0f0;
+  padding: 15px;
+}
+
+.dash {
+  flex: 1; 
+  padding: 15px;
+}
+
+#dashboardCont {
+  display: flex;
+  width: 50%; 
+  margin: 0 auto; 
+  border: 1px solid #ccc; 
 }
