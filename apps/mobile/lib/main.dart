@@ -34,7 +34,7 @@ class ImageLayoutPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Olympull'),
+        title: const Text('Olympull 2'),
         centerTitle: true,
       ),
       body: Column(
