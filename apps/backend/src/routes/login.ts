@@ -128,6 +128,8 @@ export class LogIn extends RouteHandle {
       exp: 0,
       currency: { gems: 0 },
       favorites: [],
+      pullsSinceEpic: 0,
+      lastPullTime: new Date(),
     });
     if(!userInsert.acknowledged) {
       logger.error(`For account ${req.body.email}, database failed to acknowledged the insert request`);
