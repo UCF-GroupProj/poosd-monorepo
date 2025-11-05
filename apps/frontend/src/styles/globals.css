@@ -1,26 +1,94 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: 'GFS Neohellenic';
+  src: url('@/GFSNeohellenic-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='text'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-image: url("@/app/ui/BKG.png");
+    font-family: 'Noto Sans';
+    font-size: 12px;
+  }
+
+.topBar {
+    background-color: white;
+    size: 30px;
+    padding: 5px;
+    padding-left: 45px;
+}
+
+.buttons {
+    background-color: #163E4E;
+    border-radius: 25px;
+    color: white;
+    width: 150px;
+    margin: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+}
+
+.mainBox {
+    background-color: white;
+    padding: 25px;
+    border: white;
+    display: block;
+    border-radius: 25px;
+    border-width: 5px;
+    margin: auto;
+    margin-top: 10%;
+    text-align: center;
+    width: 40%;
+    color: #163E4E;
+    opacity: 0.8;
+}
+
+h1 {
+    font-size: 36px;
+    font-family: 'GFS Neohellenic';
+}
+
+h2 {
+  font-size: 24px;
+  font-family: 'GFS Neohellenic';
+  text-align: left;
+}
+
+.input {
+  width: 95%;
+  border-radius: 15px;
+}
+
+.spacer {
+  margin-right: 25px;
+}
+
+#signUp {
+  text-decoration: underline;
 }
