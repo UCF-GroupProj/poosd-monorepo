@@ -15,8 +15,8 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.amber[400],
       body: Center(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 24),
-          padding: const EdgeInsets.all(24),
+          margin: EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: .8),
             borderRadius: BorderRadius.circular(24),
@@ -24,14 +24,14 @@ class _LoginPageState extends State<LoginPage> {
               BoxShadow(
                 color: Colors.black.withValues(alpha: .2),
                 blurRadius: 10,
-                offset: const Offset(0, 5),
+                offset: Offset(0, 5),
               ),
             ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 "Welcome, Traveler!",
                 style: TextStyle(
                   fontSize: 20,
@@ -39,8 +39,8 @@ class _LoginPageState extends State<LoginPage> {
                   color: Color.fromARGB(255, 17, 11, 75), 
                 ),
               ),
-              const SizedBox(height: 20),
-              const Align(
+              SizedBox(height: 20),
+              Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   "Username",
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               TextField(
                 decoration: InputDecoration(
                   hintText: "Type your username",
@@ -64,8 +64,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Align(
+              SizedBox(height: 16),
+              Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   "Password",
@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
@@ -90,16 +90,16 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
                   onPressed: () {},
                   style: TextButton.styleFrom(
-                    foregroundColor: const Color.fromARGB(255, 17, 11, 75),
+                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
                     padding: EdgeInsets.zero,
                   ),
-                  child: const Text(
+                  child: Text(
                     "Forgot your password?",
                     style: TextStyle(
                       decoration: TextDecoration.underline,
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               SizedBox(
                 width: 150,
                 height: 50,
@@ -119,9 +119,9 @@ class _LoginPageState extends State<LoginPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Login",
                     style: TextStyle(
                       fontSize: 16,
