@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 //import 'package:large_project_dart/page_login.dart';
-import 'package:large_project_dart/page_collections.dart';
+import 'package:large_project_dart/page_login.dart';
 
 // This library and code below allows us to preview the looks on many device without much configuration. Just plug the code in runApp rather than MyApp.
 /* import 'package:device_preview/device_preview.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Olympull',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const CollectionsPage(),
+      home: const LoginPage(),
     );
   }
 }
