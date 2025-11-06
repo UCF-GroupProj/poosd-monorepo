@@ -47,17 +47,17 @@ class FavoritesBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly, // space images evenly
         children: const [
           Image(
-            image: AssetImage('assets/images/taco.png'),
+            image: AssetImage('images/taco.png'),
             width: 100,
             height: 100,
           ),
           Image(
-            image: AssetImage('assets/images/taco.png'),
+            image: AssetImage('images/taco.png'),
             width: 100,
             height: 100,
           ),
           Image(
-            image: AssetImage('assets/images/taco.png'),
+            image: AssetImage('images/taco.png'),
             width: 100,
             height: 100,
           ),
@@ -121,21 +121,21 @@ class CardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<String> images = [
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
     ];
 
     return Container(
