@@ -79,6 +79,14 @@ export class CoreService {
   get emailAPI() {
     return this._emailSRV;
   }
+
+  /**
+   * MAKE SURE TO TERMINATE THE SESSION
+   * @returns MongoDB ClientSession
+   */
+  public createDBSession() {
+    return this._mongoCli.startSession();
+  }
 }
 
 class CoreServiceExcept extends Error {

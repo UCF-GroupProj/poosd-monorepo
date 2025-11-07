@@ -32,7 +32,7 @@ export class PWDReset extends RouteHandle {
 
     const ReqColl = this.coreSrv.database.collection<IAccountRequest>("ResetRequest");
     const logInDoc = this.coreSrv.database.collection<IUserDBObject>("Users");
-    // Due to our design case, we wont use transaction for this operations :(
+    // Could be replaced with transaction but dont want to atm
     const userPro = await logInDoc.findOne({ email:req.body.email });
     if(!userPro) {
       logger.info(logger.fmt`No User account (${req.body.email}) was found when requesting password reset`);
@@ -74,7 +74,7 @@ export class PWDReset extends RouteHandle {
     return res.send("Verification email has been sent, if there's an account associated with this email");
   }
 
-  async patchHandle(req: Request<{ ResetCode: string; }>, res: Response) {
+  async patchHandle(req: Request<{ResetCode: string;}, unknown, {newPassword: string}>, res: Response) {
 
   }
 }
