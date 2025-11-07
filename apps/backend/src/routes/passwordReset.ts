@@ -1,7 +1,8 @@
 import { logger } from "@sentry/node";
 import { RouteHandle } from "./baseHandle";
 import { json, type Request, type Response } from "express";
-import type { IAccountRequest } from "@repo/utils/types";
+import type { IAccountRequest, IUserDBObject } from "@repo/utils/types";
+import { randomUUID } from "crypto";
 
 export class PWDReset extends RouteHandle {
   public setup() {
@@ -25,8 +26,52 @@ export class PWDReset extends RouteHandle {
     return res.send(ResColl._id.toHexString());
   }
 
-  async postHandle(req: Request, res: Response) {
+  async postHandle(req: Request<unknown, unknown, {email: string}>, res: Response) {
+    if(!req.body.email || req.body.email.trim())
+      return res.send(400).send("Missing Email Field");
 
+    const ReqColl = this.coreSrv.database.collection<IAccountRequest>("ResetRequest");
+    const logInDoc = this.coreSrv.database.collection<IUserDBObject>("Users");
+    // Due to our design case, we wont use transaction for this operations :(
+    const userPro = await logInDoc.findOne({ email:req.body.email });
+    if(!userPro) {
+      logger.info(logger.fmt`No User account (${req.body.email}) was found when requesting password reset`);
+      return res.send("Verification email has been sent, if there's an account associated with this email");
+    }
+
+    const reqID = randomUUID();
+    const record = await ReqColl.findOneAndUpdate({ userId: userPro._id }, {
+      $set: {
+        requestId: reqID,
+        createdAt: new Date()
+      },
+      $setOnInsert: {
+        userId: userPro._id,
+        requestId: reqID,
+        createdAt: new Date(),
+        requestType: "password"
+      }
+    }, { upsert: true, returnDocument: "before" });
+
+    if(record)
+      logger.debug(logger.fmt`Updated Existing password reset request for ${record._id.toHexString()}`);
+
+    // Send Email and complete request
+    const mailRes = await this.coreSrv.emailAPI.sendMail({
+      from: "Olympull <noreply@zhiyan114.com>",
+      to: req.body.email,
+      subject: "Password Reset Request",
+      text: `Please follow the link to reset your password: https://poosd.zhiyan114.com/pwdreset/${reqID}`
+    });
+    if(typeof(mailRes) === "string" || mailRes.success === false) {
+      // User account isnt register if email fails
+      const ErrMSG = typeof(mailRes) === "string" ? mailRes : mailRes.message;
+      logger.error(`${req.body.email} verification email failed: ${ErrMSG}`);
+      return res.status(503).send("An error occured with email service, please try again later");
+    }
+
+    logger.info(logger.fmt`Issued new password request: ${reqID} successfully!`);
+    return res.send("Verification email has been sent, if there's an account associated with this email");
   }
 
   async patchHandle(req: Request<{ ResetCode: string; }>, res: Response) {

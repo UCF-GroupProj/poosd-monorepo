@@ -221,6 +221,14 @@ paths:
                 type: string
                 examples:
                   - "Verification email has been sent, if there's an account associated with this email"
+        '400':
+          description: Invalid Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Missing Email Field"
         '500':
           description: Server error
           content:
