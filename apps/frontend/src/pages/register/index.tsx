@@ -1,11 +1,7 @@
+'use client'
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
-function MyButton({ title }: { title: string }) {
-  return (
-    <button>{title}</button>
-  );
-}
 
 
 export default function MyApp() {
@@ -30,15 +26,9 @@ export default function MyApp() {
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
-  
-      const result = await response.json();
-      console.log(result);
-  
-      if (result.ok){
-        router.push('/login');
-      } else {
-        throw new Error('Result not ok');
-      }
+      
+      console.log(response);
+      router.push('/verify-email');
   
     } catch (error) {
       console.log(error);
@@ -49,9 +39,9 @@ export default function MyApp() {
       <div className="topBar">
         <ul className="navBar">
           <li id="navTitle"><h1>OLYMPULL</h1></li>
-          <li><a href="/account/page">Account</a></li>
-          <li><a href="/support/page">Support</a></li>
-          <li><a href="/about/page">About</a></li>
+          <li><a href="/account">Account</a></li>
+          <li><a href="/support">Support</a></li>
+          <li><a href="/dashboard">About</a></li>
         </ul>
       </div>
       <div className="mainBox">
@@ -62,10 +52,6 @@ export default function MyApp() {
           Email
         </h2>
         <input type="email" className="input" name="Email" placeholder="Type your email" />
-        <h2>
-          Username
-        </h2>
-        <input type="text" className="input" name="UName" placeholder="Type your username" />
         <h2>
           Password
         </h2>

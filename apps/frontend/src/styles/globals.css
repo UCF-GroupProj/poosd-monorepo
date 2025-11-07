@@ -141,24 +141,22 @@ h2 {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  overflow: hidden;
-  background-color: white;
-  width: 20%;
+  width: 30%;
 }
 
-.dash li {
-  float: top;
-
-}
 
 .dash li button {
   display: inline-block;
-  color: black;
+  color: white;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
   font-size: 16px;
   vertical-align: bottom;
+  width: 120px;
+  background-color: #81A2AC;
+  border-color: white;
+  height: 70px;
 }
 
 .dash li button:hover {
@@ -166,20 +164,24 @@ h2 {
 }
 
 .side {
-  flex: 0 0 50%; 
-  background-color: #f0f0f0;
-  padding: 15px;
+  flex: 0 0 10%; 
+  background-color: #ADC1C1;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
 }
 
-.dash {
-  flex: 1; 
-  padding: 15px;
-}
 
 #dashboardCont {
   display: flex;
-  width: 50%; 
-  margin: 0 auto; 
-  border: 1px solid #ccc; 
-  height: 50%;
+  padding: 0;
+  width: 70%;
+  height: 400px;
+}
+
+.activeDB {
+  background-color: #163E4E;
+}
+
+#button1 {
+  border-top-left-radius: 25px;
 }
