@@ -2,7 +2,8 @@ import { CoreService } from "./CoreService";
 import {
   Main,
   DBSandbox,
-  LogIn
+  LogIn,
+  emailVerification
 } from "./routes";
 
 
@@ -11,5 +12,6 @@ const MainService = new CoreService();
 MainService.setup([
   Main,
   DBSandbox,
-  LogIn
+  LogIn,
+  emailVerification
 ]);

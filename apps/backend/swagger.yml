@@ -274,30 +274,10 @@ paths:
                 type: string
                 examples:
                   - "Generic backend error"
-        '503':
-          description: Server error
-          content:
-            text/plain:
-              schema:
-                type: string
-                examples:
-                  - "Database communication error"
     patch:
       tags:
         - Email Verification
       summary: Complete email verification by updating the verification status
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - token
-              properties:
-                token:
-                  type: string
-                  description: Email verification token
       responses:
         '200':
           description: Email verified successfully
@@ -305,12 +285,16 @@ paths:
             text/plain:
               schema:
                 type: string
+                examples:
+                  - "Email Successfully Verified"
         '404':
-          description: Expired/Invalid token
+          description: Verification Code Doesn't exist
           content:
             text/plain:
               schema:
                 type: string
+                examples:
+                  - "Verification code isn't valid"
         '500':
           description: Server error
           content:
