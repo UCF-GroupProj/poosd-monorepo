@@ -1,7 +1,8 @@
 import { RouteHandle } from "./baseHandle";
 import { json, type Request, type Response } from "express";
 
-// Index route '/'
+type param = { ResetCode: string; }
+
 export class PWDReset extends RouteHandle {
   public setup() {
     this.coreSrv.webServer.route("/pwdreset/:ResetCode")
@@ -10,7 +11,7 @@ export class PWDReset extends RouteHandle {
     this.coreSrv.webServer.post("/pwdreset", json({strict: true}), this.postHandle.bind(this));
   }
 
-  async getHandle(req: Request, res: Response) {
+  async getHandle(req: Request<{ ResetCode: string; }>, res: Response) {
     return res.send("Hello World! :3");
   }
 
@@ -18,7 +19,7 @@ export class PWDReset extends RouteHandle {
 
   }
 
-  async patchHandle(req: Request, res: Response) {
+  async patchHandle(req: Request<{ ResetCode: string; }, res: Response) {
 
   }
 }
