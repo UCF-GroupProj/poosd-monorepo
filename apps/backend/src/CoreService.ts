@@ -7,11 +7,19 @@ import { JWTManager } from "@repo/utils/JTWManager.ts";
 import { MailService } from "@repo/utils/MailService.ts";
 import cors from "cors";
 
+import {
+  Main,
+  DBSandbox,
+  LogIn,
+  emailVerification
+} from "./routes";
+
 export class CoreService {
   private _webServer: ExpType;
   private _mongoCli: MongoClient;
   private _JWTMGR: JWTManager;
   private _emailSRV: MailService;
+  private routes: RouteHandle[];
 
   constructor() {
     this._webServer = Express();
@@ -26,9 +34,17 @@ export class CoreService {
     this._mongoCli = new MongoClient(mongoConnStr, { serverApi: ServerApiVersion.v1 });
     this._JWTMGR = new JWTManager();
     this._emailSRV = new MailService(emailAPIStr);
+
+    // Add Routes
+    this.routes = [
+      new Main(this),
+      new DBSandbox(this),
+      new LogIn(this),
+      new emailVerification(this),
+    ];
   }
 
-  public async setup(routes: (new(service: CoreService) => RouteHandle)[]) {
+  public async setup() {
     // Setup MongoDB conns
     await this._mongoCli.connect();
 
@@ -36,8 +52,8 @@ export class CoreService {
     this._webServer.use(cors({ origin: "*" }));
 
     // Handle Route Stuff
-    for(const route of routes)
-      new route(this).setup();
+    for(const route of this.routes)
+      route.setup();
 
     // Prepare startup
     setupExpressErrorHandler(this._webServer);
