@@ -11,7 +11,7 @@ export type IUserCred = {
 }
 export type IUserInfo = {
     verified: boolean,
-    collection: Array<ObjectId>,
+    collection: ObjectId[],
     level: number,
     exp: number,
     currency: {
@@ -43,7 +43,7 @@ export type IAccountRequest = {
 // Card Data
 export type ICardData = {
   name: string,
-  rarity: string,
+  rarity: "common" | "rare" | "epic" | "legendary",
   description: string,
   imageUrl: string,
 }

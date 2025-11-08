@@ -468,7 +468,7 @@ paths:
         - User Profile
       security:
         - BearerAuth: []
-      summary:  Get user account's stats (non-card related)
+      summary: Get user account's stats (non-card related)
       responses:
         '200':
           description: User profile information retrieved successfully
@@ -476,10 +476,36 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  currency:
-                    type: integer
                 description: User profile information
+                properties:
+                  id:
+                    type: string
+                  verified:
+                    type: boolean
+                  collection:
+                    type: array
+                    items:
+                      type: string
+                      description: ObjectId
+                  level:
+                    type: integer
+                  exp:
+                    type: integer
+                  currency:
+                    type: object
+                    properties:
+                      gems:
+                        type: integer
+                  favorites:
+                    type: array
+                    items:
+                      type: string
+                      description: ObjectId
+                  pullsSinceEpic:
+                    type: integer
+                  lastPullTime:
+                    type: string
+                    format: date-time
         '401':
           description: Unauthorized
           content:
