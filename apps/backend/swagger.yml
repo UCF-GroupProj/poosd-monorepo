@@ -177,6 +177,8 @@ paths:
             text/plain:
               schema:
                 type: string
+                examples:
+                  - "Password Successfully Updated!"
         '400':
           description: Malformed Body or invalid token
           content:
