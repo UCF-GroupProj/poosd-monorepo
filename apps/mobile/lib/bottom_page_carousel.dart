@@ -8,9 +8,9 @@ class BottomPageCarousel extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final List<String> images = [
-      'assets/images/taco.png',
-      'assets/images/taco.png',
-      'assets/images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
+      'images/taco.png',
     ];
 
 return Center(
