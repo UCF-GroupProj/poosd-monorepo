@@ -11,7 +11,7 @@ export type IUserCred = {
 }
 export type IUserInfo = {
     verified: boolean,
-    collection: Array<string>,
+    collection: Array<ObjectId>,
     level: number,
     exp: number,
     currency: {
@@ -38,4 +38,12 @@ export type IAccountRequest = {
   requestId: string; // Random hex string
   createdAt: Date;
   requestType: "password" | "email";
+}
+
+// Card Data
+export type ICardData = {
+  name: string,
+  rarity: string,
+  description: string,
+  imageUrl: string,
 }
