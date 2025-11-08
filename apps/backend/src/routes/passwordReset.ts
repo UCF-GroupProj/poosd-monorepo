@@ -1,8 +1,8 @@
-import { logger } from "@sentry/node";
+import { captureException, logger } from "@sentry/node";
 import { RouteHandle } from "./baseHandle";
 import { json, type Request, type Response } from "express";
 import type { IAccountRequest, IUserDBObject } from "@repo/utils/types";
-import { randomUUID } from "crypto";
+import { randomUUID, scryptSync } from "crypto";
 
 export class PWDReset extends RouteHandle {
   public setup() {
@@ -75,6 +75,81 @@ export class PWDReset extends RouteHandle {
   }
 
   async patchHandle(req: Request<{ResetCode: string;}, unknown, {newPassword: string}>, res: Response) {
+    if(!req.body.newPassword || req.body.newPassword.trim())
+      return res.send(400).send("Missing newPassword Field");
 
+    const DBSession = this.coreSrv.createDBSession();
+    try {
+      await DBSession.withTransaction(async()=>{
+        const db = this.coreSrv.database;
+        const userColl = db.collection<IUserDBObject>("Users");
+        const reqColl = db.collection<IAccountRequest>("ResetRequest");
+
+        // Check code existance
+        const codeData = await reqColl.findOne({ requestId: req.params.ResetCode, requestType: "password" });
+        if(!codeData)
+          throw new pwdPatchErr(logger.fmt`Attempt to reset user password but invalid code provided: ${req.params.ResetCode}`, PatchErrCode.badResetCode);
+
+        // Update password
+        const pwdUpdateState = await userColl.updateOne({ _id: codeData.userId }, {
+          $set: {
+            password: scryptSync(req.body.newPassword, req.body.newPassword, 64).toString("base64")
+          }
+        });
+        if(!pwdUpdateState.acknowledged)
+          throw new pwdPatchErr(logger.fmt`Database failed to respond to a password update request`, PatchErrCode.noDBResponse);
+        if(pwdUpdateState.modifiedCount === 0)
+          throw new pwdPatchErr(logger.fmt`No user account had their password updated: ${codeData.userId.toHexString()}`, PatchErrCode.genericErr);
+
+        // Delete request code
+        const rmPwdReqState = await reqColl.deleteMany({ userId: codeData.userId, requestType: "password" });
+        if(!rmPwdReqState.acknowledged)
+          throw new pwdPatchErr(logger.fmt`Database failed to respond to a user request deletion request`, PatchErrCode.noDBResponse);
+        if(rmPwdReqState.deletedCount > 1)
+          logger.warn(logger.fmt`User ${codeData.userId.toHexString()} found multiple password reset request in the database`);
+        if(rmPwdReqState.deletedCount === 0)
+          throw new pwdPatchErr(logger.fmt`Request code existed before the deletion were called?? Did DBA tempered with records??: ${codeData.userId.toHexString()}`, PatchErrCode.genericErr);
+
+        logger.info(logger.fmt`Successfully updated ${codeData.userId.toHexString()} password`);
+        return res.send("Password Successfully Updated!");
+      });
+    } catch(ex) {
+      if(ex instanceof pwdPatchErr) {
+        if(ex.code === PatchErrCode.badResetCode)
+          return res.status(404).send("Invalid Reset Code");
+        if(ex.code === PatchErrCode.noDBResponse)
+          return res.status(503).send("Database not responding...");
+        if(ex.code === PatchErrCode.genericErr)
+          return res.status(500).send("Something bad happen with santization check, review sentry log for more info");
+      }
+
+      // Unhandled errors
+      captureException(ex);
+      return res.status(500).send("Unknown Server Error Occured");
+    } finally {
+      await DBSession.endSession();
+    }
+  }
+}
+
+type sentryParamType = string & {
+    __sentry_template_string__?: string;
+    __sentry_template_values__?: unknown[];
+};
+
+enum PatchErrCode {
+  badResetCode,
+  noDBResponse,
+  genericErr, // Failed internal santization check (SHOULDNT HAPPEN BTW)
+}
+
+class pwdPatchErr extends Error {
+  public code: PatchErrCode;
+  constructor(msg: sentryParamType, status: PatchErrCode) {
+    super(msg);
+    if(status === PatchErrCode.genericErr) logger.error(msg);
+    else logger.warn(msg);
+    this.name = "pwdPatchErr";
+    this.code = status;
   }
 }
