@@ -2,19 +2,13 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
 
-async function checkCookie() {
-  if (false){
-    return false;
-  }
-  return true;
-}
-
 export default function MyApp() {
   const router = useRouter();
-  
+
   useEffect(() => {
-    if (!checkCookie()){
-      router.push('/login');
+    const token = localStorage.getItem("loginToken"); // Gets the login token
+    if (!token){
+      router.push('/login'); // If no token, push to the login page.
     }
   }, []);
   return (
