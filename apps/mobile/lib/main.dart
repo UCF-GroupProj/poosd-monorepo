@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:large_project_dart/page_login.dart';
-import 'package:large_project_dart/page_login.dart';
-import 'package:large_project_dart/page_collections.dart';
-import 'package:large_project_dart/page_pw_reset.dart';
+import 'package:large_project_dart/routes/routes.dart';
 
 
 // This library and code below allows us to preview the looks on many device without much configuration. Just plug the code in runApp rather than MyApp.
@@ -23,13 +20,9 @@ class MyApp extends StatelessWidget {
 
       title: 'Olympull',
       theme: ThemeData(primarySwatch: Colors.blue),
-      
-      routes:{
-        '/': (context) => const LoginPage(),
-        '/collections': (context) => const CollectionsPage(),
-        '/reset': (context) => const ResetPage(),
-      },
-      initialRoute: '/reset',
+
+      routes: Routes.getRoutes(),
+      initialRoute: '/store',
     );
   }
 }
