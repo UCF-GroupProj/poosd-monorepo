@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:large_project_dart/custom_menu_bar.dart';
-import 'package:large_project_dart/bottom_page_carousel.dart';
+import 'package:large_project_dart/pages/custom_menu_bar.dart';
+import 'package:large_project_dart/pages/bottom_page_carousel.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
