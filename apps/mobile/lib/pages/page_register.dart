@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 //import 'package:large_project_dart/page_collections.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Welcome, Traveler!",
+                "Sign Up!",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                  "Username",
+                  "Email",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color.fromARGB(255, 17, 11, 75),
@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 8),
               TextField(
                 decoration: InputDecoration(
-                  hintText: "Type your username",
+                  hintText: "Type your email",
                   hintStyle: TextStyle(color: Colors.grey),
                   filled: true,
                   fillColor: Colors.white,
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                  "Password",
+                  "Username",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color.fromARGB(255, 17, 11, 75),
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  hintText: "Type your password",
+                  hintText: "Type your username",
                   hintStyle: TextStyle(color: Colors.grey),
                   filled: true,
                   fillColor: Colors.white,
@@ -90,39 +90,53 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    "or Sign Up",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w600,
-                    ),
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  "Password",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color.fromARGB(255, 17, 11, 75),
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              Align(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
-                    padding: EdgeInsets.zero,
+              SizedBox(height: 8),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Type your password",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),    
+                    borderSide: BorderSide.none,
                   ),
-                  child: Text(
-                    "Forgot your password?",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w600,
-                    ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  "Password",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color.fromARGB(255, 17, 11, 75),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Confirm your password",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),    
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
@@ -140,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
-                    "Login",
+                    "Sign Up",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
