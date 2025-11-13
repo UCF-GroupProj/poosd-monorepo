@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:large_project_dart/pages/page_login.dart';
 import 'package:large_project_dart/pages/page_register.dart';
+import 'package:large_project_dart/pages/page_register.dart';
 import 'package:large_project_dart/pages/page_collections.dart';
 import 'package:large_project_dart/pages/page_pw_reset.dart';
 import 'package:large_project_dart/pages/page_store.dart';
@@ -19,6 +20,7 @@ class Routes{
     return {
         '/': (context) => LoginPage(),
         LOGINPAGE: (context) => LoginPage(),
+        REGISTERPAGE: (context) => RegisterPage(),
         REGISTERPAGE: (context) => RegisterPage(),
         COLLECTIONSPAGE: (context) => CollectionsPage(),
         PASSWORDRESETPAGE: (context) => ResetPage(),
