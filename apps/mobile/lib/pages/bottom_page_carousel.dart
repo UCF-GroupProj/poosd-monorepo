@@ -12,7 +12,9 @@ class BottomPageCarousel extends StatelessWidget {
       'images/taco.png',
       'images/taco.png',
     ];
-
+//TODO Pop navigation stack until it is not current route (Gabe).
+// For example, if on store page and press "Go to Store" it pushes another store route on to stack and if you scroll away with carousel it will only pop one if we dont implement popUntil.
+// Or maybe not since this is on webbrowser maybe? I dont know.
 return Center(
       child: CarouselSlider(
         options: CarouselOptions(
