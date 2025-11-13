@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:large_project_dart/routes/routes.dart';
 //import 'package:large_project_dart/page_collections.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Welcome, Traveler!",
+                "Sign Up!",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 20),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
@@ -78,7 +78,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 8),
               TextField(
-                obscureText: true,
                 decoration: InputDecoration(
                   hintText: "Type your password",
                   hintStyle: TextStyle(color: Colors.grey),
@@ -86,11 +85,37 @@ class _LoginPageState extends State<LoginPage> {
                   fillColor: Colors.white,
                   contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(18),    
                     borderSide: BorderSide.none,
                   ),
                 ),
               ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  "Password",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color.fromARGB(255, 17, 11, 75),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Confirm your password",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),    
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
               Align(
                 alignment: Alignment.center,
                 child: 
@@ -98,53 +123,14 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: (){
                     Navigator.of(context).pop();
 
-                    Navigator.pushNamed(context, Routes.REGISTERPAGE);
+                    Navigator.pushNamed(context, Routes.LOGINPAGE);
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: Color.fromARGB(255, 17, 11, 75),
                     padding: EdgeInsets.zero,
                   ),
                   child: Text(
-                    "or Sign Up",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    "or Sign Up",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Align(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                  onPressed: (){
-                    Navigator.of(context).pop();
-
-                    Navigator.pushNamed(context, Routes.PASSWORDRESETPAGE);
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    "Forgot your password?",
+                    "or Log In",
                     style: TextStyle(
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.w600,
@@ -157,11 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                 width: 150,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: (){
-                    Navigator.of(context).pop();
-
-                    Navigator.pushNamed(context, Routes.COLLECTIONSPAGE); //TEMPORARY
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 17, 11, 75),
                     shape: RoundedRectangleBorder(
@@ -170,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
-                    "Login",
+                    "Sign Up",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

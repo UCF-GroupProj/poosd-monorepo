@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:large_project_dart/routes/routes.dart';
 
 class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
-  const GlobalAppbar({super.key});
+  final PageController pageController;
+
+  const GlobalAppbar({super.key, required this.pageController});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -10,7 +11,7 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
   void _getMoreGems(BuildContext context){
     showDialog(
       context: context,
-      builder: (BuildContext context){
+      builder: (BuildContext diaglogContext){
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: const Text("Purchase More Currency?"),
@@ -18,15 +19,19 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
           actions: [
             TextButton(
               onPressed: (){
-                Navigator.of(context).pop();
+                Navigator.of(diaglogContext).pop();
               },
               child: const Text("Not Now")
             ),
             TextButton(
               onPressed: (){
-                Navigator.of(context).pop();
+                Navigator.of(diaglogContext).pop();
 
-                Navigator.pushNamed(context, Routes.STOREPAGE);
+                pageController.animateToPage(
+                  1, 
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                );
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
               child: const Text("Go to Store")
