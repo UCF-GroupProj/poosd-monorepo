@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:large_project_dart/pages/custom_menu_bar.dart';
+//import 'package:large_project_dart/pages/custom_menu_bar.dart'; TEST Previous app bar config
 import 'package:large_project_dart/pages/bottom_page_carousel.dart';
+import 'package:large_project_dart/pages/global_appbar.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -8,10 +9,11 @@ class CollectionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: GlobalAppbar(),
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          CustomMenuBar(),
+          //CustomMenuBar(), TEST Previous app bar config
           FavoritesBar(),
           Divider(
             color: Colors.white,   // Line color

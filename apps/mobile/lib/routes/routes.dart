@@ -12,7 +12,6 @@ class Routes{
   static const String STOREPAGE = '/store';
   static const String CAROUSELPAGE = '/carousel';
   static const String SUMMONSPAGE = '/summons';
-  //TODO static const String APPBARPAGE = '/appbar'; In case of puttin the app bar screen 
 
   static Map<String, Widget Function(BuildContext)> getRoutes(){
     return {
@@ -24,7 +23,6 @@ class Routes{
         // SETTINGSPAGE: (context) => SettingsPage(),
         // CAROUSELPAGE: (context) => CarouselPage(),
         // SUMMONSPAGE: (context) => SummonsPage(),
-        // APPBARPAGE: (context) => AppbarPage(),
     };
   }
 }
