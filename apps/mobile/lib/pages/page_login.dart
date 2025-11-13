@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                  "Username",
+                  "Email",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color.fromARGB(255, 17, 11, 75),
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 8),
               TextField(
                 decoration: InputDecoration(
-                  hintText: "Type your username",
+                  hintText: "Type your email",
                   hintStyle: TextStyle(color: Colors.grey),
                   filled: true,
                   fillColor: Colors.white,

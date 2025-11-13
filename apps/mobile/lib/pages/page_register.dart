@@ -65,32 +65,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  "Username",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Color.fromARGB(255, 17, 11, 75),
-                  ),
-                ),
-              ),
-              SizedBox(height: 8),
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Type your username",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
               SizedBox(height: 20),
               Align(
                 alignment: Alignment.bottomLeft,
