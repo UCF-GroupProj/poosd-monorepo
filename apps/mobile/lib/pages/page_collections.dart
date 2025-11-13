@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 //import 'package:large_project_dart/pages/custom_menu_bar.dart'; TEST Previous app bar config
-import 'package:large_project_dart/pages/bottom_page_carousel.dart';
-import 'package:large_project_dart/pages/global_appbar.dart';
+//import 'package:large_project_dart/pages/bottom_page_carousel.dart'; TEST Previous nav bar config
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -9,7 +8,6 @@ class CollectionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GlobalAppbar(),
       backgroundColor: Colors.black,
       body: Column(
         children: [
@@ -27,9 +25,9 @@ class CollectionsPage extends StatelessWidget {
 
           CardList(),
 
-          const SizedBox(height: 20),
+          //const SizedBox(height: 20), TEST Previous nav bar config
 
-          BottomPageCarousel(),
+          //BottomPageCarousel(), TEST Previous nav bar config
         ],
       ),
     );
@@ -141,9 +139,9 @@ class CardList extends StatelessWidget {
     ];
 
     return Container(
-      height: 500, // ✅ fixed height
+      height: 500, // ✅ fixed height //TODO Fixed height doesnt touch the bottom of the nav bar
       padding: const EdgeInsets.all(10),
-      child: Scrollbar(
+      child: Scrollbar( //TODO Another exception was thrown: The PrimaryScrollController is attached to more than one ScrollPosition. Might be the cause for exception?
         thumbVisibility: true, // shows vertical scrollbar
         child: GridView.builder(
           itemCount: images.length,
