@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: (){
                     Navigator.of(context).pop();
 
-                    Navigator.pushNamed(context, Routes.COLLECTIONSPAGE); //TEMPORARY
+                    Navigator.pushNamed(context, Routes.MAINAPPPAGE); //TEMPORARY
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 17, 11, 75),
