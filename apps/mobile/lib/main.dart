@@ -22,7 +22,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
 
       routes: Routes.getRoutes(),
+<<<<<<< HEAD
+      initialRoute: Routes.MAINAPPPAGE,
+=======
       initialRoute: Routes.LOGINPAGE,
+>>>>>>> df91b92bc3ce002057637982ebce6f0498a91511
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:large_project_dart/pages/global_appbar.dart';
 
 class StorePage extends StatefulWidget{
   const StorePage({super.key});
@@ -137,9 +136,8 @@ class _StorePageState extends State<StorePage>{
             //backgroundColor: const Color.fromARGB(255, 48, 47, 47), // If we want a darker look
             backgroundColor: Color.fromARGB(255, 177, 177, 177),
             //backgroundColor: Colors.transparent,
-            appBar: GlobalAppbar(),
       
-            body: SingleChildScrollView(
+            body: SingleChildScrollView( //TODO Another exception was thrown: The PrimaryScrollController is attached to more than one ScrollPosition. Might be the cause for exception?
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Column(
