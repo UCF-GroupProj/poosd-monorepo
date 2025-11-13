@@ -4,7 +4,7 @@ import 'package:large_project_dart/routes/routes.dart';
 
 // This library and code below allows us to preview the looks on many device without much configuration. Just plug the code in runApp rather than MyApp.
 /* import 'package:device_preview/device_preview.dart';
-DevicePreview(builder: (context) => MyApp()) */
+ */
 
 void main() {
   runApp(MyApp());
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
 
       routes: Routes.getRoutes(),
-      initialRoute: Routes.COLLECTIONSPAGE,
+      initialRoute: Routes.LOGINPAGE,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/routes/routes.dart';
 //import 'package:large_project_dart/page_collections.dart';
 
 class LoginPage extends StatefulWidget {
@@ -90,11 +91,15 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
               Align(
                 alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {},
+                child: 
+                TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+
+                    Navigator.pushNamed(context, Routes.REGISTERPAGE);
+                  },
                   style: TextButton.styleFrom(
                     foregroundColor: Color.fromARGB(255, 17, 11, 75),
                     padding: EdgeInsets.zero,
@@ -108,11 +113,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: (){
+                    Navigator.of(context).pop();
+
+                    Navigator.pushNamed(context, Routes.PASSWORDRESETPAGE);
+                  },
                   style: TextButton.styleFrom(
                     foregroundColor: Color.fromARGB(255, 17, 11, 75),
                     padding: EdgeInsets.zero,
@@ -131,7 +139,11 @@ class _LoginPageState extends State<LoginPage> {
                 width: 150,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: (){
+                    Navigator.of(context).pop();
+
+                    Navigator.pushNamed(context, Routes.COLLECTIONSPAGE); //TEMPORARY
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 17, 11, 75),
                     shape: RoundedRectangleBorder(

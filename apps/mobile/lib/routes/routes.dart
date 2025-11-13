@@ -7,7 +7,7 @@ import 'package:large_project_dart/pages/page_store.dart';
 
 class Routes{
   static const String LOGINPAGE = '/login';
-  static const String REGISTERPAGE = '/login';
+  static const String REGISTERPAGE = '/register';
   static const String PASSWORDRESETPAGE = '/reset';
   static const String COLLECTIONSPAGE = '/collections';
   static const String SETTINGSPAGE = '/settings';

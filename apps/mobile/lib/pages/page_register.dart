@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/routes/routes.dart';
 //import 'package:large_project_dart/page_collections.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -137,6 +138,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(18),    
                     borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Align(
+                alignment: Alignment.center,
+                child: 
+                TextButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+
+                    Navigator.pushNamed(context, Routes.LOGINPAGE);
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: Text(
+                    "or Log In",
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
