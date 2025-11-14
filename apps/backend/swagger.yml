@@ -472,6 +472,105 @@ paths:
             text/plain:
               schema:
                 type: string
+    patch:
+      tags:
+        - User Profile
+      security:
+        - BearerAuth: []
+      summary: Update user profile information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Fields to update in user profile
+              properties:
+                collection:
+                  type: array
+                  items:
+                    type: string
+                    description: ObjectId
+                incCurrency:
+                  type: integer
+      responses:
+        '200':
+          description: User profile updated successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Profile updated successfully"
+        '400':
+          description: Malformed Body or invalid data
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Bad Authorization Token"
+        '500':
+          description: Server error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /pull/{count}:
+    get:
+      tags:
+        - Card Info
+      security:
+        - BearerAuth: []
+      summary: Pull a specified number of cards for the user
+      parameters:
+        - name: count
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Number of cards to pull
+      responses:
+        '200':
+          description: Cards pulled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collections:
+                    type: array
+                    items:
+                      type: string
+                  dupCredits:
+                    type: integer
+        '400':
+          description: Invalid count parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Bad Authorization Token"
+        '500':
+          description: Server error
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   securitySchemes:
     BearerAuth:
