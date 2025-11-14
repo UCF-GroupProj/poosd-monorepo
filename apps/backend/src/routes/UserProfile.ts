@@ -6,7 +6,7 @@ import type { IUserInfo } from "@repo/utils/types";
 import { logger } from "@sentry/node";
 import { ObjectId } from "mongodb";
 
-type returnType = string | {
+type getReturnType = string | {
   id: string,
   verified: boolean,
   collection: string[], // ObjectID
@@ -20,12 +20,20 @@ type returnType = string | {
   lastPullTime: string, // Date
 }
 
+type patchReqType = {
+  collections?: string[],
+  incCurrency?: number
+}
+
 export class UserProfile extends RouteHandle {
   public setup() {
-    this.coreSrv.webServer.get("/profile", AuthMWGen(this.coreSrv.database), this.profileHandle.bind(this));
+    this.coreSrv.webServer.route("/profile")
+      .all(AuthMWGen(this.coreSrv.database))
+      .get(this.getHandle.bind(this))
+      .patch(this.patchHandle.bind(this));
   }
 
-  async profileHandle(req: Request, res: Response<returnType, tokenData>) {
+  private async getHandle(req: Request, res: Response<getReturnType, tokenData>) {
     const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
 
     logger.debug(logger.fmt`Pulling user data for ${res.locals.id}`);
@@ -55,5 +63,9 @@ export class UserProfile extends RouteHandle {
 
     logger.info(logger.fmt`User ${res.locals.id} data request successfully processed`);
     return res.send(responseData);
+  }
+
+  private async patchHandle(req: Request<unknown, unknown, patchReqType>, res: Response<string, tokenData>) {
+    
   }
 }
