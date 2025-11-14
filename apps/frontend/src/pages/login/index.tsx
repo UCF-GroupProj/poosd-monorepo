@@ -1,12 +1,13 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/router'; // Used for automatic routing
-import React, { useEffect } from 'react'; // Used to call a function immediately, in this case reading login tokens for user convenience.
+import React, { useEffect, useState } from 'react'; // Used to call a function immediately, in this case reading login tokens for user convenience.
 
 
 
 export default function MyApp() {
   const router = useRouter();
+  const [outputContent, setOutputText] = useState(<span></span>);
 
   useEffect(() => { // Reads the login token to see if it exists
     const token = localStorage.getItem("loginToken");
@@ -31,12 +32,30 @@ export default function MyApp() {
       throw new Error(`Response status: ${response.status}`);
     }
 
+    const newToken = await response.text();
+
     console.log(response);
-    localStorage.setItem("loginToken", formData.get('Email') as string); // Sets the login token
+    localStorage.setItem("loginToken", newToken); // Sets the login token
     router.push('/dashboard'); // Pushes the user to the dashboard on login
 
   } catch (error) {
     console.log(error);
+    let bodyText = "Unknown Error Occurred";
+    if (error instanceof Error){
+      if (error.message == "Response status: 400"){
+        bodyText = "Missing required field(s).";
+      } else if (error.message == "Response status: 403"){
+        bodyText = "This account is not enabled. Please verify your email to unlock this account.";
+      } else if (error.message == "Response status: 500") {
+        bodyText = "A server error occurred, please try again later.";
+      } else if (error.message == "Response status: 401"){
+        bodyText = "Invalid email or password."
+      }
+    }
+     
+    setOutputText(
+      <h3>{bodyText}</h3>
+    );
   }
 }
   return (
@@ -65,6 +84,9 @@ export default function MyApp() {
       <button className="buttons" type='submit'>Login</button><br></br><br></br>
       <p>Or <Link href="/register" id="ulText">Sign Up!</Link></p>
       </form>
+      <div>
+        {outputContent}
+      </div>
       </div>
     </div>
   );

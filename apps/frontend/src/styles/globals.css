@@ -95,6 +95,10 @@ h2 {
   text-align: left;
 }
 
+h3 {
+  font-size: 16px;
+}
+
 .input {
   width: 95%;
   border-radius: 15px;
@@ -106,13 +110,16 @@ h2 {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: auto;
   background-color: white;
 }
 
 .navBar li {
   float: right;
-  vertical-align: bottom;
+  vertical-align: center;
+  height: 90px;
+  border-width: 5px;
+  border-color: #163E4E;
 }
 
 .navBar li a {
@@ -122,7 +129,8 @@ h2 {
   padding: 14px 16px;
   text-decoration: none;
   font-size: 16px;
-  vertical-align: bottom;
+  vertical-align: top;
+  margin-top: 15px;
 }
 
 .navBar li a:hover {
@@ -178,7 +186,7 @@ h2 {
   height: 400px;
 }
 
-.activeDB {
+.dash li .activeDB {
   background-color: #163E4E;
 }
 

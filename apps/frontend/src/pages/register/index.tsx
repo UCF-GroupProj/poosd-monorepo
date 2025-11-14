@@ -2,10 +2,14 @@
 
 import Link from 'next/link'; 
 import { useRouter } from 'next/router'; // Used for automatic navigation
+import React, { useState } from 'react';
+
 
 
 export default function MyApp() {
   const router = useRouter();
+  const [outputContent, setOutputText] = useState(<span></span>);
+  
   
     const tryRegister = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -28,12 +32,33 @@ export default function MyApp() {
       }
       
       console.log(response);
+      const bodyText = await response.text();
+      setOutputText(
+      <><h3>{bodyText}</h3><p>Be sure to check your spam filters.</p></>
+    );
       localStorage.setItem("verifyToken", formData.get('Email') as string); // Sets a token tracking the email that needs to be verified. Might be depreciated.
   
     } catch (error) {
       console.log(error);
+      let bodyText = "Unknown Error Occurred";
+    if (error instanceof Error){
+      if (error.message == "Response status: 400"){
+        bodyText = "Missing required field(s).";
+      } else if (error.message == "Response status: 409"){
+        bodyText = "This account already exists.";
+      } else if (error.message == "Response status: 500") {
+        bodyText = "A server error occurred, please try again later.";
+      } else if (error.message == "Passwords do not match"){
+        bodyText = "Ensure your password is spelled correctly on both inputs!";
+      }
+    }
+     
+    setOutputText(
+      <h3>{bodyText}</h3>
+    );
     }
   }
+
   return (
     <div>
       <div className="topBar">
@@ -65,6 +90,9 @@ export default function MyApp() {
         <br></br><br></br>
         <p>Or <Link href="/login" id="ulText">Login</Link></p>
         </form>
+        <div>
+          {outputContent}
+        </div>
         </div>
     </div>
   );
