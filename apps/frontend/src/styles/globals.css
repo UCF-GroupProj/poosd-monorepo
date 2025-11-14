@@ -40,6 +40,8 @@ input[type='text'] {
 
 body {
     background-image: url('@/assets/BKG.png');
+    background-size: cover;
+    background-attachment: fixed;
     font-family: 'Elms Sans';
     font-size: 12px;
     margin: 0;
