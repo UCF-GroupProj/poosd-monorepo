@@ -14,20 +14,61 @@ export default function MyApp() {
   
 
   useEffect(() => { 
-    const token = localStorage.getItem("loginToken"); // Gets the login token
-    if (!token){
-      router.push('/login'); // If no token, push to the login page.
-    }
-      
-    updateCont1();
+    // DEV BYPASS: ignore loginToken for now
+    // const token = localStorage.getItem("loginToken"); // Gets the login token
+    // if (!token){
+    //   router.push('/login'); // If no token, push to the login page.
+    // }
+
+    updateCont1();  // just load the first tab
   }, []);
+
 
 
   // Everything within these updateCont functions follows a similar pattern. You can write whatever HTML you'd like in these functions within the <> </>.
   const updateCont1 = () => {
     setConent(
     <>
-    <p>This is a Test 1</p>
+    {/* outer wrapper for the whole profile tab */}
+    <div className="profile-container">
+      {/* avatar */}
+      <section className="profile-header">
+        {/* placeholder circle for profile picture */}
+        <div className="profile-avatar">
+          { /*later will become an /img based on chosen card */}
+        </div>
+      </section>
+      <section className="profile-fields">
+        {/* email row */}
+        <div className="profile-field-row">
+          <label className="profile-label">Email:</label>
+          <input
+            type="email"
+            className="profile-input"
+            value="loading@email.com" //placeholder
+            readOnly
+          />
+        </div>
+        
+        {/* password row */}
+        <div className="profile-field-row">
+          <label className="profile-label">Password:</label>
+          <div className="profile-password-wrapper">
+            <input
+              type="password"
+              className="profile-input"
+              value="********"
+              readOnly
+            />
+
+            {/* eye icon placeholder */}
+            <span className="profile-eye">👁️</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
     </>
   );
     setIsActive1(true);
@@ -92,17 +133,17 @@ export default function MyApp() {
       </div>
       <div className="mainBox" id="dashboardCont">
         <div className="side">
-        <ul className='dash'>
-        <li><button className={`base-class ${isActive1 ? "activeDB" : ""}`} id="button1" onClick={updateCont1}>Profile</button></li>
-        <li><button className={`base-class ${isActive2 ? "activeDB" : ""}`} id="button2" onClick={updateCont2}>Collection</button></li>
-        <li><button className={`base-class ${isActive3 ? "activeDB" : ""}`} id="button3" onClick={updateCont3}>Account Settings</button></li>
-        <li><button className={`base-class ${isActive4 ? "activeDB" : ""}`} id="button4" onClick={updateCont4}>Transaction History</button></li>
-        <li><button onClick={logout}></button></li>
-      </ul>
+          <ul className='dash'>
+            <li><button className={`base-class ${isActive1 ? "activeDB" : ""}`} id="button1" onClick={updateCont1}>Profile</button></li>
+            <li><button className={`base-class ${isActive2 ? "activeDB" : ""}`} id="button2" onClick={updateCont2}>Collection</button></li>
+            <li><button className={`base-class ${isActive3 ? "activeDB" : ""}`} id="button3" onClick={updateCont3}>Account Settings</button></li>
+            <li><button className={`base-class ${isActive4 ? "activeDB" : ""}`} id="button4" onClick={updateCont4}>Transaction History</button></li>
+            <li><button onClick={logout}></button></li>
+          </ul>
         </div>
-      <div>
-        {content}
-      </div>
+        <div className='dashboard-content'>
+          {content}
+        </div>
       </div>
     </div>
   );
