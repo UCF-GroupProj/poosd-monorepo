@@ -94,7 +94,7 @@ export class Main extends RouteHandle {
           returnData.legendaryOwned++;
           break;
         default:
-          logger.error(`Card ${card.name} (${card._id.toHexString()}) contains invalid rarity data: ${card.rarity}`);
+          logger.error(logger.fmt`Card ${card.name} (${card._id.toHexString()}) contains invalid rarity data: ${card.rarity}`);
       }
     }
 
