@@ -38,9 +38,8 @@ export default function MyApp() {
       else {
         setOutputText(<><h2>Your email was verified!</h2><p>Redirecting...</p></>);
 
-        const returnedItem = await response.text();
         localStorage.removeItem("verifyToken");
-        localStorage.setItem("loginToken", returnedItem);
+        localStorage.setItem("verifyConfirm", "1");
         router.push("/dashboard");
       }
       } catch (error) {

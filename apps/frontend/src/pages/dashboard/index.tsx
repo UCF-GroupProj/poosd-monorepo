@@ -41,6 +41,7 @@ export default function MyApp() {
 
   const initiateReset = async () => {
     try {
+      console.log(`${localStorage.getItem("localMail") as string}`);
       const response = await fetch("http://localhost:8080/pwdreset",{ 
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -48,11 +49,10 @@ export default function MyApp() {
         "email": localStorage.getItem("localMail") as string
       })
     });
-    if (!response.ok){
+    if (!response.ok || response.status == 400){
       throw new Error(`Response status: ${response.status}`);
     }
-    const reply = await response.text();
-    console.log(reply);
+    console.log(response);
     setConent(
       <>
       <div id="passwordQuery">
