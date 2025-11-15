@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/utils/global_data.dart';
+import 'package:large_project_dart/pages/page_inspect.dart';
 
 class CollectionsPage extends StatefulWidget {
   const CollectionsPage({super.key});
@@ -55,9 +57,9 @@ class _FavoritesBarState extends State<FavoritesBar> {
         children: [
           Stack(
             children: [ 
-              Positioned.fill(child: Container(color: Colors.white)),
+              // Positioned.fill(child: Container(color: Colors.white)),
               Image(
-                image: AssetImage('images/taco.png'),
+                image: AssetImage(GlobalData.favoritesList[0]),
                 width: 80,
                 height: 100,
               ),
@@ -65,9 +67,9 @@ class _FavoritesBarState extends State<FavoritesBar> {
           ),
           Stack(
             children: [ 
-              Positioned.fill(child: Container(color: Colors.grey[200])),
+              // Positioned.fill(child: Container(color: Colors.grey[200])),
               Image(
-                image: AssetImage('images/taco.png'),
+                image: AssetImage(GlobalData.favoritesList[1]),
                 width: 80,
                 height: 100,
               ),
@@ -75,9 +77,9 @@ class _FavoritesBarState extends State<FavoritesBar> {
           ),
           Stack(
             children: [ 
-              Positioned.fill(child: Container(color: Colors.white)),
+              // Positioned.fill(child: Container(color: Colors.white)),
               Image(
-                image: AssetImage('images/taco.png'),
+                image: AssetImage(GlobalData.favoritesList[2]),
                 width: 80,
                 height: 100,
               ),
@@ -99,9 +101,13 @@ class CardsOwnedBar extends StatefulWidget {
 class _CardsOwnedBarState extends State<CardsOwnedBar> {
   @override
   Widget build(BuildContext context) {
-    // Example numbers and colors
-    final List<String> numbers = ['1/16', '0/8', '0/4', '0/2', '1/30'];  // TODO: Pull amount from DB
-    final List<Color> colors = [
+    
+    List<String> strFormat = ['${GlobalData.ownedCommon}/${GlobalData.numCommon}', 
+                              '${GlobalData.ownedRare}/${GlobalData.numRare}',
+                              '${GlobalData.ownedEpic}/${GlobalData.numEpic}',
+                              '${GlobalData.ownedLegendary}/${GlobalData.numLegendary}',
+                              '${GlobalData.totalCardsOwned}/${GlobalData.totalCards}'];
+    final List<Color> rarityColors = [
       Colors.green,
       Colors.blue,
       Colors.purple,
@@ -114,11 +120,11 @@ class _CardsOwnedBarState extends State<CardsOwnedBar> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(numbers.length, (index) {
+        children: List.generate(strFormat.length, (index) {
           return Row(
             children: [
               Text(
-                numbers[index].toString(),
+                strFormat[index],
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -129,11 +135,8 @@ class _CardsOwnedBarState extends State<CardsOwnedBar> {
               Container(
                 width: 20,
                 height: 20,
-                color: colors[index],
+                color: rarityColors[index],
               ),
-              
-              // Number
-              
             ],
           );
         }),
@@ -151,8 +154,8 @@ class CardList extends StatefulWidget {
 
 class _CardListState extends State<CardList> {
   @override
-  Widget build(BuildContext context) {
-    final List<String> images = List.generate(30, (index) => 'images/taco.png');
+  Widget build(BuildContext context) {    
+    GlobalData.isOwned[1] = true; // TODO: Just for testing
 
     return Container(
       
@@ -160,7 +163,7 @@ class _CardListState extends State<CardList> {
       child: Scrollbar(
         thumbVisibility: false,
         child: GridView.builder(
-          itemCount: images.length,
+          itemCount: GlobalData.cardImages.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             crossAxisSpacing: 25,
@@ -168,13 +171,41 @@ class _CardListState extends State<CardList> {
             childAspectRatio: .7,
           ),
           itemBuilder: (context, index) {
-            return Image.asset(
-              images[index],
+            return GestureDetector(
+              onTap: () {
+                if (GlobalData.isOwned[index])
+                {
+                  showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (_) => ImagePopout(
+                    imagePath: GlobalData.cardImages[index],
+                    ),
+                  );
+                }
+                
+              },
+              child: GlobalData.isOwned[index]
+              ? Image.asset(
+              GlobalData.cardImages[index],
               fit: BoxFit.fill,
+              )
+              : ColorFiltered(
+                colorFilter: const ColorFilter.matrix(<double>[
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0,      0,      0,      1, 0, //
+                ]),
+                child: Image.asset(
+                  GlobalData.cardImages[index],
+                  fit: BoxFit.fill
+                  ),
+                )
             );
           },
         ),
-      ),
+      )
     );
   }
 }
