@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:large_project_dart/routes/routes.dart';
-//import 'package:large_project_dart/page_collections.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -160,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: (){
                     Navigator.of(context).pop();
 
-                    Navigator.pushNamed(context, Routes.MAINAPPPAGE); //TEMPORARY
+                    Navigator.pushNamed(context, Routes.MAINAPPPAGE);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 17, 11, 75),

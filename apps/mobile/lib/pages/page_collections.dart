@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:large_project_dart/pages/custom_menu_bar.dart'; TEST Previous app bar config
-//import 'package:large_project_dart/pages/bottom_page_carousel.dart'; TEST Previous nav bar config
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -11,7 +9,6 @@ class CollectionsPage extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          //CustomMenuBar(), TEST Previous app bar config
           FavoritesBar(),
           Divider(
             color: Colors.white,   // Line color
@@ -24,10 +21,6 @@ class CollectionsPage extends StatelessWidget {
           const SizedBox(height: 10),
 
           CardList(),
-
-          //const SizedBox(height: 20), TEST Previous nav bar config
-
-          //BottomPageCarousel(), TEST Previous nav bar config
         ],
       ),
     );
@@ -45,7 +38,7 @@ class FavoritesBar extends StatelessWidget {
       width: double.infinity, // full screen width
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly, // space images evenly
-        children: const [
+        children: [
           Image(
             image: AssetImage('images/taco.png'),
             width: 100,

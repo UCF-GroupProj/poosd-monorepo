@@ -50,7 +50,7 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
         leadingWidth: 130,
         leading: Center(
           child: Container(
-            width: 90,
+            width: 50,
             height: 40,
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 48, 47, 47),
@@ -61,7 +61,7 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 5),
+                  padding: const EdgeInsets.all(5),
                   child: Container(
                     width: 31,
                     height: 31,
@@ -73,26 +73,6 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
                       icon: const Icon(Icons.person_outline, color: Color.fromARGB(255, 0, 0, 0)),
                       onPressed: () {
                         print("person pressed"); // LogOut
-                      },
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5, right: 4),
-                  child: Container(
-                    width: 31,
-                    height: 31,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 221, 221, 221),
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.settings_outlined, color: Color.fromARGB(255, 0, 0, 0)),
-                      onPressed: () {
-                        print("pressed settings");
-                        //Navigator.pushNamed(context, Routes.SETTINGSPAGE);
                       },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),

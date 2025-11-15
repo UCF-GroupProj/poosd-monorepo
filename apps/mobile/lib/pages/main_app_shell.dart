@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:large_project_dart/pages/global_appbar.dart';
 import 'package:large_project_dart/pages/page_collections.dart';
 import 'package:large_project_dart/pages/page_store.dart';
-//import 'package:large_project_dart/pages/placeholder_page.dart'; 
 
 class MainAppShell extends StatefulWidget {
   const MainAppShell({super.key});
