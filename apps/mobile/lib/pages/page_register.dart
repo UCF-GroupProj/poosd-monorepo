@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:large_project_dart/routes/routes.dart';
-//import 'package:large_project_dart/page_collections.dart';
+import 'package:large_project_dart/utils/get_api.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -10,6 +10,83 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _isLoading = false;
+  String? _errorMessage;
+  String? _successMessage;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+  
+  bool isEmailValid(String email) {
+    final bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+    return emailValid;
+  }
+
+  Future<void> _handleRegister() async{
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if(!isEmailValid(email)){ 
+      setState(() {
+        _errorMessage = "Please enter a valid email address.";
+      });
+      return;
+    }
+
+    if(password.isEmpty || confirmPassword.isEmpty){
+      setState(() {
+        _errorMessage = "Please enter a password.";
+      });
+      return;
+    }
+
+    if(password != confirmPassword){
+      setState(() {
+        _errorMessage = "Passwords do not match";
+      });
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+      _successMessage = null;
+    });
+
+    try{
+      final successResponse = await Register.register(email, password);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if(successResponse != null){
+        if(mounted){
+          setState(() {
+            _successMessage = successResponse;
+          });
+        } else{
+          throw Exception("Registration Error");
+        }
+      } else{
+        _errorMessage = "Registration Failed";
+      }
+    } catch (e){
+        setState(() {
+        _isLoading = false;
+        _errorMessage = e.toString().replaceFirst("Exception: ", "");
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +130,8 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               SizedBox(height: 8),
               TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: "Type your email",
                   hintStyle: TextStyle(color: Colors.grey),
@@ -78,6 +157,9 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               SizedBox(height: 8),
               TextField(
+                controller: _passwordController,
+                keyboardType: TextInputType.text,
+                obscureText: true,
                 decoration: InputDecoration(
                   hintText: "Type your password",
                   hintStyle: TextStyle(color: Colors.grey),
@@ -103,6 +185,9 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               SizedBox(height: 8),
               TextField(
+                controller: _confirmPasswordController,
+                keyboardType: TextInputType.text,
+                obscureText: true,
                 decoration: InputDecoration(
                   hintText: "Confirm your password",
                   hintStyle: TextStyle(color: Colors.grey),
@@ -116,6 +201,16 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(height: 10),
+              if(_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(_errorMessage!, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold), textAlign: TextAlign.center,)
+                ),
+              if(_successMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(_successMessage!, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold), textAlign: TextAlign.center,)
+                ),
               Align(
                 alignment: Alignment.center,
                 child: 
@@ -143,7 +238,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: 150,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _handleRegister,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 17, 11, 75),
                     shape: RoundedRectangleBorder(

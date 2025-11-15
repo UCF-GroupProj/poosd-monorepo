@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:large_project_dart/pages/global_appbar.dart';
 import 'package:large_project_dart/pages/page_collections.dart';
 import 'package:large_project_dart/pages/page_store.dart';
+import 'package:large_project_dart/pages/page_summon.dart';
 
 class MainAppShell extends StatefulWidget {
   const MainAppShell({super.key});
@@ -17,7 +18,7 @@ class _MainAppShellState extends State<MainAppShell> {
   final List<Widget> _pages = const [
     CollectionsPage(),
     StorePage(),
-    //TODO SummonsPage(),
+    SummonPage(),
   ];
 
   @override
