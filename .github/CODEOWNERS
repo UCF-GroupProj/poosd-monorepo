@@ -3,7 +3,7 @@ apps/backend/** @zhiyan114
 packages/eslint-config/backend.mjs @zhiyan114
 
 # Frontend
-apps/frontend/** @AlisaK13003 @HaloD-jpg
+apps/frontend/** @AlisaK13003 @HaloD-jpg @ryanschlosbon
 packages/eslint-config/frontend.mjs @AlisaK13003 @HaloD-jpg
 
 # Mobile
