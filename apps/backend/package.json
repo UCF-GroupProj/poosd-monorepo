@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/index.ts",
+    "dev": "ts-node-dev -r ./src/sentry.ts ./src/index.ts",
     "lint": "eslint",
     "build": "node build.js",
     "build:check": "npx tsc --noEmit"
