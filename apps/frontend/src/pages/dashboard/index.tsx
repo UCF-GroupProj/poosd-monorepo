@@ -11,23 +11,47 @@ export default function MyApp() {
   const [isActive2, setIsActive2] = useState(false);
   const [isActive3, setIsActive3] = useState(false);
   const [isActive4, setIsActive4] = useState(false);
-  
+  var token: string | null;
 
   useEffect(() => { 
-    // DEV BYPASS: ignore loginToken for now
-    // const token = localStorage.getItem("loginToken"); // Gets the login token
-    // if (!token){
-    //   router.push('/login'); // If no token, push to the login page.
-    // }
+    token = localStorage.getItem("loginToken"); // Gets the login token (this variable is ONLY good for checking the token's existence)
+    console.log(token);
+     if (!token){
+       router.push('/login'); // If no token, push to the login page.
+     } else {
+      updateCont1();  // just load the first tab
+     }
 
-    updateCont1();  // just load the first tab
   }, []);
 
 
 
   // Everything within these updateCont functions follows a similar pattern. You can write whatever HTML you'd like in these functions within the <> </>.
-  const updateCont1 = () => {
-    setConent(
+  const updateCont1 = async () => {
+    console.log(token);
+    try {
+    const response = await fetch(`http://localhost:8080/profile`,{ 
+        method:"GET",
+        headers:{'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
+      "Content-Type":"application/json"}
+      });
+
+      if (!response.ok){
+        throw new Error(`Response status: ${response.status}`)
+      }
+
+      const data = await response.json();
+
+      const email = localStorage.getItem("localMail");
+      if (!email){
+        throw new Error(`Failed to get email`);
+      }
+      const level = data.level;
+      const gems = data.currency.gems;
+
+      console.log(response);
+
+      setConent(
     <>
     {/* outer wrapper for the whole profile tab */}
     <div className="profile-container">
@@ -42,12 +66,7 @@ export default function MyApp() {
         {/* email row */}
         <div className="profile-field-row">
           <label className="profile-label">Email:</label>
-          <input
-            type="email"
-            className="profile-input"
-            value="loading@email.com" //placeholder
-            readOnly
-          />
+          <input type="email" className="profile-input" value={email} readOnly></input>
         </div>
         
         {/* password row */}
@@ -65,12 +84,24 @@ export default function MyApp() {
             <span className="profile-eye">👁️</span>
           </div>
         </div>
+        <div>
+            <span>Gems: {gems}</span><br></br>
+            <span>Level: {level}</span><br></br>
+          </div>
       </section>
     </div>
 
 
     </>
   );
+    } catch (error) {
+      console.log(error);
+      setConent(
+        <h2>A critical error occurred</h2>
+      );
+    }
+    
+    
     setIsActive1(true);
     setIsActive2(false);
     setIsActive3(false);
@@ -138,7 +169,7 @@ export default function MyApp() {
             <li><button className={`base-class ${isActive2 ? "activeDB" : ""}`} id="button2" onClick={updateCont2}>Collection</button></li>
             <li><button className={`base-class ${isActive3 ? "activeDB" : ""}`} id="button3" onClick={updateCont3}>Account Settings</button></li>
             <li><button className={`base-class ${isActive4 ? "activeDB" : ""}`} id="button4" onClick={updateCont4}>Transaction History</button></li>
-            <li><button onClick={logout}></button></li>
+            <li><button onClick={logout}>Log Out</button></li>
           </ul>
         </div>
         <div className='dashboard-content'>

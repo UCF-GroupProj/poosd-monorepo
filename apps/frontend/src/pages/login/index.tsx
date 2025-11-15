@@ -32,10 +32,13 @@ export default function MyApp() {
       throw new Error(`Response status: ${response.status}`);
     }
 
-    const newToken = await response.text();
+    const data = await response.json();
+    const newToken = await data.token;
 
     console.log(response);
+    console.log(newToken);
     localStorage.setItem("loginToken", newToken); // Sets the login token
+    localStorage.setItem("localMail", formData.get('Email') as string);
     router.push('/dashboard'); // Pushes the user to the dashboard on login
 
   } catch (error) {
