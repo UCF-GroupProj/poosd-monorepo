@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import resetIcon from '@/assets/reset.png';
 
 
 
@@ -15,7 +17,6 @@ export default function MyApp() {
 
   useEffect(() => { 
     token = localStorage.getItem("loginToken"); // Gets the login token (this variable is ONLY good for checking the token's existence)
-    console.log(token);
      if (!token){
        router.push('/login'); // If no token, push to the login page.
      } else {
@@ -24,11 +25,61 @@ export default function MyApp() {
 
   }, []);
 
+  const proposeReset = () => {
+    setConent(
+      <>
+      <div id="passwordQuery">
+      <h1>Do you want to reset your password?</h1>
+      <br></br>
+      <button className="buttons" onClick={initiateReset}>Yes</button>
+      <button className="buttons" onClick={updateCont1}>No</button>
+      </div>
+      </>
+    );
+  }
+
+
+  const initiateReset = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/pwdreset",{ 
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        "email": localStorage.getItem("localMail")
+      })
+    });
+    if (!response.ok){
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const reply = await response.text();
+    console.log(reply);
+    setConent(
+      <>
+      <div id="passwordQuery">
+      <h1>Password reset has been initiated.</h1>
+      <p>Check your email for a link to reset your password.</p>
+      <br></br>
+      <button className="buttons" onClick={updateCont1}>Return</button>
+      </div>
+      </>
+    );
+    } catch (error){
+      console.log(error);
+      setConent(
+      <>
+      <div id="passwordQuery">
+      <h1>Unable to initiate password reset; try again later.</h1>
+      <br></br>
+      <button className="buttons" onClick={updateCont1}>Return</button>
+      </div>
+      </>
+    );
+    }
+  }
 
 
   // Everything within these updateCont functions follows a similar pattern. You can write whatever HTML you'd like in these functions within the <> </>.
   const updateCont1 = async () => {
-    console.log(token);
     try {
     const response = await fetch(`http://localhost:8080/profile`,{ 
         method:"GET",
@@ -81,7 +132,8 @@ export default function MyApp() {
             />
 
             {/* eye icon placeholder */}
-            <span className="profile-eye">👁️</span>
+            {/*<span className="profile-eye">👁️</span>*/}
+            <Image src={resetIcon} alt="Reset Password" onClick={proposeReset}></Image>
           </div>
         </div>
         <div>

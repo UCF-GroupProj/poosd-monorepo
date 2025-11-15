@@ -273,3 +273,17 @@ h3 {
   user-select: none;
   color: #163E4E;
 }
+
+#passwordQuery {
+    background-color: white;
+    padding: 25px;
+    border: white;
+    display: block;
+    border-radius: 25px;
+    border-width: 5px;
+    margin: auto;
+    margin-top: 10%;
+    text-align: center;
+    width: 40%;
+    color: #163E4E;
+}
