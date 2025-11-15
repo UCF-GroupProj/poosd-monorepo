@@ -27,8 +27,8 @@ export class PWDReset extends RouteHandle {
   }
 
   async postHandle(req: Request<unknown, unknown, {email: string}>, res: Response) {
-    if(!req.body.email || req.body.email.trim())
-      return res.send(400).send("Missing Email Field");
+    if(!req.body.email || req.body.email.trim() === "")
+      return res.status(400).send("Missing Email Field");
 
     const ReqColl = this.coreSrv.database.collection<IAccountRequest>("ResetRequest");
     const logInDoc = this.coreSrv.database.collection<IUserDBObject>("Users");

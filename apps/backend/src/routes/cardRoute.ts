@@ -21,8 +21,10 @@ type summaryHandleResType = string | {
 
 export class Main extends RouteHandle {
   public setup() {
-    this.coreSrv.webServer.get("/card/:cardID", AuthMWGen(this.coreSrv.database), this.getHandle.bind(this));
-    this.coreSrv.webServer.get("/card/summary", AuthMWGen(this.coreSrv.database), this.summaryHandle.bind(this));
+    const AuthMW = AuthMWGen(this.coreSrv.database);
+    this.coreSrv.webServer.get("/card/:cardID", AuthMW, this.getHandle.bind(this));
+    this.coreSrv.webServer.get("/card/summary", AuthMW, this.summaryHandle.bind(this));
+    this.coreSrv.webServer.get("/roll/:count", AuthMW, this.rollHandle.bind(this));
   }
 
   async getHandle(req: Request<{cardID: string}>, res: Response<getHandleResType, tokenData>) {
@@ -92,11 +94,35 @@ export class Main extends RouteHandle {
           returnData.legendaryOwned++;
           break;
         default:
-          logger.error(`Card ${card.name} (${card._id.toHexString()}) contains invalid rarity data: ${card.rarity}`);
+          logger.error(logger.fmt`Card ${card.name} (${card._id.toHexString()}) contains invalid rarity data: ${card.rarity}`);
       }
     }
 
     logger.info(logger.fmt`Successfully generate user (${res.locals.id}) card summary`);
     return res.send(returnData);
+  }
+
+  private async rollHandle(req: Request<{count:string}>, res: Response<string, tokenData>) {
+    const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
+    const cardColl = this.coreSrv.database.collection<ICardData>("Cards");
+
+    // Param Validation
+    if(req.params.count !== "1" && req.params.count !== "10")
+      return res.status(400).send("You can only roll either 1 or 10");
+    const rollCNT = Number.parseInt(req.params.count);
+
+    // Validate User Balance
+    const userData = await userColl.findOne({ _id: new ObjectId(res.locals.id) });
+    if(!userData) {
+      logger.error(logger.fmt`${res.locals.id} user attempts to roll card but user object not in the database??`);
+      return res.status(500).send("Missing User Object From DB");
+    }
+    if(userData.currency.gems < rollCNT) {
+      logger.info(logger.fmt`${res.locals.id} user attempts to roll with insufficient fund`, {
+        rollCNT,
+        balance: userData.currency.gems
+      });
+      return res.status(403).send(`Insuffient gems to roll a ${rollCNT}`);
+    }
   }
 }
