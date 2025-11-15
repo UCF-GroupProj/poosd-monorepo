@@ -45,7 +45,7 @@ export default function MyApp() {
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
-        "email": localStorage.getItem("localMail")
+        "email": localStorage.getItem("localMail") as string
       })
     });
     if (!response.ok){

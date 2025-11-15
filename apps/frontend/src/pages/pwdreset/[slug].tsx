@@ -37,7 +37,6 @@ export default function MyApp() {
         <form onSubmit={doReset}>
           <h2>Enter your new password here</h2>
           <input type="password" className="input" name="newPass1" placeholder="Type your password" />
-
           <input type="password" className="input" name="newPass2" placeholder="Confirm your password" />
           <button type='submit' className="buttons">Complete Password Reset</button>
           </form>
@@ -60,7 +59,39 @@ export default function MyApp() {
   }
 
   const doReset = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+   
+    try {
+       if (formData.get('newPass1') as string != formData.get('newPass2') as string){
+        throw new Error('Passwords do not match');
+      }
 
+      const response = await fetch(`http://localhost:8080/pwdreset/${router.query.slug}`,{ 
+        method:"PATCH",
+       headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+        "newPassword": formData.get('newPass1') as string
+      })
+    });
+
+    if (!response.ok){
+      throw new Error(`Response status: ${response.status}`);
+    }
+    setOutputText(<>
+        <form onSubmit={doReset}>
+          <h2>Your password had been reset. You will be redirected shortly.</h2>
+          </form>
+        </>);
+
+    } catch (error){
+      console.log(error);
+        setOutputText(<>
+        <form onSubmit={doReset}>
+          <h2>Your password failed to be reset. Please try again.</h2>
+          </form>
+        </>);
+    }
   }
     
   return (
