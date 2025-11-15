@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:large_project_dart/routes/routes.dart';
+import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
 void main() {
   runApp(const SummonPage());
@@ -112,21 +112,28 @@ class _SumonsPageState extends StatelessWidget {
                   children: [
                     SizedBox(
                       height: 140,
-                      child: SingleChildScrollView(
-                        child: Text(
-                          "The heroes of Old Greece were blahblahblah blah blah blah "
-                          "blah blahblahblah blah blahblahblah blah blahblahblah "
-                          "blah blahblahblah blah blahblahblah blah blahblahblah "
-                          "blah blahblahblah blah blahblahblah blah blahblahblah "
-                          "blah blahblahblah blah blahblahblah...",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            height: 1.3,
+                      child: ScrollShadow(
+                        color: Color(0xFF1A1A1A),
+                        child: SingleChildScrollView(
+                          child: Text(
+                            "The heroes of Old Greece were blahblahblah blah blah blah "
+                            "blah blahblahblah blah blahblahblah blah blahblahblah "
+                            "blah blahblahblah blah blahblahblah blah blahblahblah "
+                            "blah blahblahblah blah blahblahblah blah blahblahblah "
+                            "blah blahblahblah blah blahblahblah...blahblahblah blah blah blah "
+                            "blah blahblahblah blah blahblahblah blah blahblahblah "
+                            "blah blahblahblah blah blahblahblah blah blahblahblah "
+                            "blah blahblahblah blah blahblahblah blah blahblahblah "
+                            "blah blahblahblah blah blahblahblah...",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              height: 1.3,
+                            ),
                           ),
                         ),
-                      ),
+                      ) 
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 5),
 
                     /// DROP RATES BUTTON
                     ElevatedButton(
@@ -138,48 +145,20 @@ class _SumonsPageState extends StatelessWidget {
                           borderRadius: BorderRadius.circular(18),
                         ),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
+                          horizontal: 12,
                           vertical: 10,
                         ),
                       ),
                       child: const Text(
                         "DROP RATES",
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            /// ---------------- SUMMON BUTTON ----------------
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: SizedBox(
-                width: 200,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: const Text(
-                    "SUMMON",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      letterSpacing: 1.5,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            )
+            const SizedBox(height: 10),
           ],
         ),
       ),

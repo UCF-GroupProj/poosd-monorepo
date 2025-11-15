@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_scroll_shadow: ^1.2.6
 
   device_preview: ^1.3.1
 
