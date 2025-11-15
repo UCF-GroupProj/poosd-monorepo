@@ -287,3 +287,42 @@ h3 {
     width: 40%;
     color: #163E4E;
 }
+
+.collection-root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.favorites-section {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  width: 90%;
+  height: 120px;
+  padding: 16px;
+  margin: 32px 0px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.favorites-scroll-container {
+  display: flex;
+  flex-direction: row;
+  scrollbar-width: thin;
+}
+
+.favorites-empty {
+  width: 100%;
+}
+
+.favorite-card {
+  
+}
+
+.favorite-card-inner {
+
+}

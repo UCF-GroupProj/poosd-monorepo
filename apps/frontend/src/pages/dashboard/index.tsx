@@ -160,12 +160,65 @@ export default function MyApp() {
     setIsActive4(false);
   }
 
-  const updateCont2 = () => {
-    setConent(
-    <>
-    <p>This is a Test 2</p>
-    </>
+  const updateCont2 = async () => {
+    try {
+    const response = await fetch(`http://localhost:8080/profile`,{ 
+        method:"GET",
+        headers:{'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
+      "Content-Type":"application/json"}
+      });
+
+      if (!response.ok){
+        throw new Error(`Response status: ${response.status}`)
+      }
+
+      const data = await response.json();
+
+      const email = localStorage.getItem("localMail");
+      if (!email){
+        throw new Error(`Failed to get email`);
+      }
+      const level = data.level;
+      const gems = data.currency.gems;
+
+      console.log(response);
+
+      const favorites: any[] = []; 
+
+      setConent(
+        <>
+          <div className='collection-root'>
+
+            { /* favorites container */ }
+            <section className='favorites-section'>
+              <div className='favorites-scroll-container'>
+                {favorites.length === 0 ? (
+                <div className="favorites-empty">
+                  You have no favorites right now.
+                </div>
+              ) : (
+                favorites.map((card, index) => (
+                  <div className="favorite-card" key={index}>
+                    {/* placeholder card */}
+                    <div className="favorite-card-inner">
+                      
+                    </div>
+                  </div>
+                ))
+              )}
+              </div>
+            </section>
+          </div>
+        </>
   );
+
+    } catch (error) {
+      console.log(error);
+      setConent(
+        <h2>A critical error occurred</h2>
+      );
+    }
+
     setIsActive1(false);
     setIsActive2(true);
     setIsActive3(false);
