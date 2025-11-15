@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:large_project_dart/routes/routes.dart';
+import 'package:large_project_dart/utils/get_api.dart';
+import 'package:large_project_dart/utils/global_data.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,6 +11,69 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void dispose(){
+    _emailController.dispose();
+    _passwordController.dispose;
+    super.dispose();
+  }
+
+  bool isEmailValid(String email) {
+    final bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+    return emailValid;
+  }
+
+  Future<void> _handleLogin() async{
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if(!isEmailValid(email)){ 
+      setState(() {
+        _errorMessage = "Please enter a valid email address.";
+      });
+      return;
+    }
+    
+    if(password.isEmpty){
+      setState(() {
+        _errorMessage = "Please enter a password.";
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try{
+      final token = await EmailLogIn.login(email, password);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if(token != null){
+        GlobalData.token = token;
+
+        if(mounted){ // Used to check if the user is still on the page
+          Navigator.pushNamedAndRemoveUntil(context, Routes.MAINAPPPAGE, (route) => false);
+        }
+      } else{
+        _errorMessage = "Wrong Credentials";
+      }
+    } catch (e){
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.toString().replaceFirst("Exception: ", "");
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +117,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 8),
               TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: "Type your email",
                   hintStyle: TextStyle(color: Colors.grey),
@@ -77,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 8),
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: "Type your password",
@@ -90,32 +158,20 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              if(_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(_errorMessage!, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                ),
               Align(
                 alignment: Alignment.center,
                 child: 
                 TextButton(
                   onPressed: (){
-                    Navigator.of(context).pop();
+                    //Navigator.of(context).pop();
 
                     Navigator.pushNamed(context, Routes.REGISTERPAGE);
                   },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    "or Sign Up",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {},
                   style: TextButton.styleFrom(
                     foregroundColor: Color.fromARGB(255, 17, 11, 75),
                     padding: EdgeInsets.zero,
@@ -134,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.topRight,
                 child: TextButton(
                   onPressed: (){
-                    Navigator.of(context).pop();
+                    //Navigator.of(context).pop();
 
                     Navigator.pushNamed(context, Routes.PASSWORDRESETPAGE);
                   },
@@ -156,11 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                 width: 150,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: (){
-                    Navigator.of(context).pop();
-
-                    Navigator.pushNamed(context, Routes.MAINAPPPAGE);
-                  },
+                  onPressed: _isLoading ? null : _handleLogin,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 17, 11, 75),
                     shape: RoundedRectangleBorder(
