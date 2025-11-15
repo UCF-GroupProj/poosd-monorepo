@@ -321,6 +321,54 @@ paths:
                 type: string
                 examples:
                   - "Database Communication Error"
+  /verifyemail:
+    post:
+      tags:
+        - Email Verification
+      summary: Re-request email verification link
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Email Verification Request Submitted Request Submitted
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "An email verification link has been resent"
+        '401':
+          description: Invalid JWT Token
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Invalid account token to submit this request"
+        '422':
+          description: Account ineligible to submit this request
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Your account is already verified, request cannot be submitted again"
+        '500':
+          description: Server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Server error"
+        '503':
+          description: Service unavailable
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - "Database is experiencing issues"
   /card/{cardID}:
     get:
       security:
@@ -458,105 +506,6 @@ paths:
                   lastPullTime:
                     type: string
                     format: date-time
-        '401':
-          description: Unauthorized
-          content:
-            text/plain:
-              schema:
-                type: string
-                examples:
-                  - "Bad Authorization Token"
-        '500':
-          description: Server error
-          content:
-            text/plain:
-              schema:
-                type: string
-    patch:
-      tags:
-        - User Profile
-      security:
-        - BearerAuth: []
-      summary: Update user profile information
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              description: Fields to update in user profile
-              properties:
-                collection:
-                  type: array
-                  items:
-                    type: string
-                    description: ObjectId
-                incCurrency:
-                  type: integer
-      responses:
-        '200':
-          description: User profile updated successfully
-          content:
-            text/plain:
-              schema:
-                type: string
-                examples:
-                  - "Profile updated successfully"
-        '400':
-          description: Malformed Body or invalid data
-          content:
-            text/plain:
-              schema:
-                type: string
-        '401':
-          description: Unauthorized
-          content:
-            text/plain:
-              schema:
-                type: string
-                examples:
-                  - "Bad Authorization Token"
-        '500':
-          description: Server error
-          content:
-            text/plain:
-              schema:
-                type: string
-  /pull/{count}:
-    get:
-      tags:
-        - Card Info
-      security:
-        - BearerAuth: []
-      summary: Pull a specified number of cards for the user
-      parameters:
-        - name: count
-          in: path
-          required: true
-          schema:
-            type: integer
-            minimum: 1
-          description: Number of cards to pull
-      responses:
-        '200':
-          description: Cards pulled successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  collections:
-                    type: array
-                    items:
-                      type: string
-                  dupCredits:
-                    type: integer
-        '400':
-          description: Invalid count parameter
-          content:
-            text/plain:
-              schema:
-                type: string
         '401':
           description: Unauthorized
           content:

@@ -12,8 +12,7 @@ import {
   DBSandbox,
   LogIn,
   emailVerification,
-  PWDReset,
-  UserProfile
+  PWDReset
 } from "./routes";
 
 export class CoreService {
@@ -43,8 +42,7 @@ export class CoreService {
       new DBSandbox(this),
       new LogIn(this),
       new emailVerification(this),
-      new PWDReset(this),
-      new UserProfile(this)
+      new PWDReset(this)
     ];
   }
 

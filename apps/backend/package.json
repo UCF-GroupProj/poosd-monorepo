@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev -r ./src/sentry.ts ./src/index.ts",
+    "dev": "ts-node-dev src/index.ts",
     "lint": "eslint",
     "build": "node build.js",
     "build:check": "npx tsc --noEmit"
@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@repo/utils": "workspace:*",
-    "@sentry/node": "^10.25.0",
+    "@sentry/node": "^10.23.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -25,8 +25,8 @@
     "@repo/typescript-config": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
-    "@types/node": "^24.10.1",
-    "esbuild": "^0.27.0",
+    "@types/node": "^24.10.0",
+    "esbuild": "^0.25.12",
     "eslint": "^9.39.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
