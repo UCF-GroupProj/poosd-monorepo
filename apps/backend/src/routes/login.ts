@@ -50,7 +50,7 @@ export class LogIn extends RouteHandle {
     const inputHashPwd = scryptSync(req.body.password, req.body.password, 64);
     const dbHashPwd = Buffer.from(userFetch.password, "base64");
 
-    if(inputHashPwd.length !== dbHashPwd.length && !timingSafeEqual(inputHashPwd, dbHashPwd)) {
+    if(inputHashPwd.length !== dbHashPwd.length || !timingSafeEqual(inputHashPwd, dbHashPwd)) {
       logger.info(logger.fmt`${req.body.email} password mismatched!`);
       return res.status(401).send("Invalid email or password");
     }
