@@ -152,7 +152,7 @@ class InspectTextbox extends StatefulWidget {
 }
 
 class _InspectTextboxState extends State<InspectTextbox> {
-  bool favorited = false;
+  bool favorited = false; // TODO: Check permanent favorited state from DB here
 
   @override
   Widget build(BuildContext context) {
