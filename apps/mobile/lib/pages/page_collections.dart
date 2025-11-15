@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/utils/global_data.dart';
+import 'package:large_project_dart/pages/page_inspect.dart';
 
-class CollectionsPage extends StatelessWidget {
+class CollectionsPage extends StatefulWidget {
   const CollectionsPage({super.key});
 
+  @override
+  State<CollectionsPage> createState() => _CollectionsPageState();
+}
+
+class _CollectionsPageState extends State<CollectionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,26 +17,35 @@ class CollectionsPage extends StatelessWidget {
       body: Column(
         children: [
           FavoritesBar(),
-          Divider(
-            color: Colors.white,   // Line color
-            thickness: 1,          // Line thickness
-            indent: 20,            // Left margin
-            endIndent: 20,         // Right margin
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Divider(
+              color: Colors.white,   // Line color
+              thickness: 1,          // Line thickness
+              indent: 20,            // Left margin
+              endIndent: 20,         // Right margin
+            ),
           ),
           CardsOwnedBar(),
 
           const SizedBox(height: 10),
 
-          CardList(),
+          Expanded(child: CardList()),
         ],
       ),
     );
   }
 }
 
-class FavoritesBar extends StatelessWidget {
+
+class FavoritesBar extends StatefulWidget {
   const FavoritesBar({super.key});
 
+  @override
+  State<FavoritesBar> createState() => _FavoritesBarState();
+}
+
+class _FavoritesBarState extends State<FavoritesBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,20 +55,35 @@ class FavoritesBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly, // space images evenly
         children: [
-          Image(
-            image: AssetImage('images/taco.png'),
-            width: 100,
-            height: 100,
+          Stack(
+            children: [ 
+              // Positioned.fill(child: Container(color: Colors.white)),
+              Image(
+                image: AssetImage(GlobalData.favoritesList[0]),
+                width: 80,
+                height: 100,
+              ),
+            ],
           ),
-          Image(
-            image: AssetImage('images/taco.png'),
-            width: 100,
-            height: 100,
+          Stack(
+            children: [ 
+              // Positioned.fill(child: Container(color: Colors.grey[200])),
+              Image(
+                image: AssetImage(GlobalData.favoritesList[1]),
+                width: 80,
+                height: 100,
+              ),
+            ],
           ),
-          Image(
-            image: AssetImage('images/taco.png'),
-            width: 100,
-            height: 100,
+          Stack(
+            children: [ 
+              // Positioned.fill(child: Container(color: Colors.white)),
+              Image(
+                image: AssetImage(GlobalData.favoritesList[2]),
+                width: 80,
+                height: 100,
+              ),
+            ],
           ),
         ],
       ),
@@ -60,14 +91,23 @@ class FavoritesBar extends StatelessWidget {
   }
 }
 
-class CardsOwnedBar extends StatelessWidget {
+class CardsOwnedBar extends StatefulWidget {
   const CardsOwnedBar({super.key});
 
   @override
+  State<CardsOwnedBar> createState() => _CardsOwnedBarState();
+}
+
+class _CardsOwnedBarState extends State<CardsOwnedBar> {
+  @override
   Widget build(BuildContext context) {
-    // Example numbers and colors
-    final List<String> numbers = ['1/16', '0/8', '0/4', '0/2', '1/30'];  // TODO: Pull amount from DB
-    final List<Color> colors = [
+    
+    List<String> strFormat = ['${GlobalData.ownedCommon}/${GlobalData.numCommon}', 
+                              '${GlobalData.ownedRare}/${GlobalData.numRare}',
+                              '${GlobalData.ownedEpic}/${GlobalData.numEpic}',
+                              '${GlobalData.ownedLegendary}/${GlobalData.numLegendary}',
+                              '${GlobalData.totalCardsOwned}/${GlobalData.totalCards}'];
+    final List<Color> rarityColors = [
       Colors.green,
       Colors.blue,
       Colors.purple,
@@ -80,11 +120,11 @@ class CardsOwnedBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(numbers.length, (index) {
+        children: List.generate(strFormat.length, (index) {
           return Row(
             children: [
               Text(
-                numbers[index].toString(),
+                strFormat[index],
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -95,11 +135,8 @@ class CardsOwnedBar extends StatelessWidget {
               Container(
                 width: 20,
                 height: 20,
-                color: colors[index],
+                color: rarityColors[index],
               ),
-              
-              // Number
-              
             ],
           );
         }),
@@ -108,50 +145,67 @@ class CardsOwnedBar extends StatelessWidget {
   }
 }
 
-class CardList extends StatelessWidget {
+class CardList extends StatefulWidget {
   const CardList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<String> images = [
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-    ];
+  State<CardList> createState() => _CardListState();
+}
+
+class _CardListState extends State<CardList> {
+  @override
+  Widget build(BuildContext context) {    
+    GlobalData.isOwned[1] = true; // TODO: Just for testing
 
     return Container(
-      height: 500, // ✅ fixed height //TODO Fixed height doesnt touch the bottom of the nav bar
+      
       padding: const EdgeInsets.all(10),
-      child: Scrollbar( //TODO Another exception was thrown: The PrimaryScrollController is attached to more than one ScrollPosition. Might be the cause for exception?
-        thumbVisibility: true, // shows vertical scrollbar
+      child: Scrollbar(
+        thumbVisibility: false,
         child: GridView.builder(
-          itemCount: images.length,
+          itemCount: GlobalData.cardImages.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,       // 3 images per row
+            crossAxisCount: 3,
             crossAxisSpacing: 25,
-            mainAxisSpacing: 10,
-            childAspectRatio: 1.25,     // square images
+            mainAxisSpacing: 20,
+            childAspectRatio: .7,
           ),
           itemBuilder: (context, index) {
-            return Image.asset(
-              images[index],
-              fit: BoxFit.cover,
+            return GestureDetector(
+              onTap: () {
+                if (GlobalData.isOwned[index])
+                {
+                  showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (_) => ImagePopout(
+                    imagePath: GlobalData.cardImages[index],
+                    ),
+                  );
+                }
+                
+              },
+              child: GlobalData.isOwned[index]
+              ? Image.asset(
+              GlobalData.cardImages[index],
+              fit: BoxFit.fill,
+              )
+              : ColorFiltered(
+                colorFilter: const ColorFilter.matrix(<double>[
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0.2126, 0.7152, 0.0722, 0, 0, //
+                0,      0,      0,      1, 0, //
+                ]),
+                child: Image.asset(
+                  GlobalData.cardImages[index],
+                  fit: BoxFit.fill
+                  ),
+                )
             );
           },
         ),
-      ),
+      )
     );
   }
 }
