@@ -20,7 +20,7 @@ type returnType = string | {
   lastPullTime: string, // Date
 }
 
-export class Main extends RouteHandle {
+export class UserProfile extends RouteHandle {
   public setup() {
     this.coreSrv.webServer.get("/profile", AuthMWGen(this.coreSrv.database), this.profileHandle.bind(this));
   }
