@@ -112,23 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    "or Sign Up",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
               SizedBox(height: 10),
               Align(
                 alignment: Alignment.topRight,
