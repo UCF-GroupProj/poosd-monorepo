@@ -7,7 +7,7 @@ sentry.init({
   dsn: process.env["BACKEND_SENTRY_DSN"],
   environment: EnvName,
   release: `${EnvName?.slice(0,4) ?? "????"}-${commitHash?.slice(0,7) ?? "???????"}`,
-  dist: commitHash,
+  dist: EnvName === "prod" ? commitHash : `${execSync('git rev-parse --abbrev-ref HEAD').toString().trim()}-${commitHash}`,
   integrations: [
     consoleLoggingIntegration({ levels: ["error"] })
   ],
