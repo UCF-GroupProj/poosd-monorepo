@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CollectionsPage extends StatelessWidget {
+class CollectionsPage extends StatefulWidget {
   const CollectionsPage({super.key});
 
+  @override
+  State<CollectionsPage> createState() => _CollectionsPageState();
+}
+
+class _CollectionsPageState extends State<CollectionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,26 +15,35 @@ class CollectionsPage extends StatelessWidget {
       body: Column(
         children: [
           FavoritesBar(),
-          Divider(
-            color: Colors.white,   // Line color
-            thickness: 1,          // Line thickness
-            indent: 20,            // Left margin
-            endIndent: 20,         // Right margin
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Divider(
+              color: Colors.white,   // Line color
+              thickness: 1,          // Line thickness
+              indent: 20,            // Left margin
+              endIndent: 20,         // Right margin
+            ),
           ),
           CardsOwnedBar(),
 
           const SizedBox(height: 10),
 
-          CardList(),
+          Expanded(child: CardList()),
         ],
       ),
     );
   }
 }
 
-class FavoritesBar extends StatelessWidget {
+
+class FavoritesBar extends StatefulWidget {
   const FavoritesBar({super.key});
 
+  @override
+  State<FavoritesBar> createState() => _FavoritesBarState();
+}
+
+class _FavoritesBarState extends State<FavoritesBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,20 +53,35 @@ class FavoritesBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly, // space images evenly
         children: [
-          Image(
-            image: AssetImage('images/taco.png'),
-            width: 100,
-            height: 100,
+          Stack(
+            children: [ 
+              Positioned.fill(child: Container(color: Colors.white)),
+              Image(
+                image: AssetImage('images/taco.png'),
+                width: 80,
+                height: 100,
+              ),
+            ],
           ),
-          Image(
-            image: AssetImage('images/taco.png'),
-            width: 100,
-            height: 100,
+          Stack(
+            children: [ 
+              Positioned.fill(child: Container(color: Colors.grey[200])),
+              Image(
+                image: AssetImage('images/taco.png'),
+                width: 80,
+                height: 100,
+              ),
+            ],
           ),
-          Image(
-            image: AssetImage('images/taco.png'),
-            width: 100,
-            height: 100,
+          Stack(
+            children: [ 
+              Positioned.fill(child: Container(color: Colors.white)),
+              Image(
+                image: AssetImage('images/taco.png'),
+                width: 80,
+                height: 100,
+              ),
+            ],
           ),
         ],
       ),
@@ -60,9 +89,14 @@ class FavoritesBar extends StatelessWidget {
   }
 }
 
-class CardsOwnedBar extends StatelessWidget {
+class CardsOwnedBar extends StatefulWidget {
   const CardsOwnedBar({super.key});
 
+  @override
+  State<CardsOwnedBar> createState() => _CardsOwnedBarState();
+}
+
+class _CardsOwnedBarState extends State<CardsOwnedBar> {
   @override
   Widget build(BuildContext context) {
     // Example numbers and colors
@@ -108,46 +142,35 @@ class CardsOwnedBar extends StatelessWidget {
   }
 }
 
-class CardList extends StatelessWidget {
+class CardList extends StatefulWidget {
   const CardList({super.key});
 
   @override
+  State<CardList> createState() => _CardListState();
+}
+
+class _CardListState extends State<CardList> {
+  @override
   Widget build(BuildContext context) {
-    final List<String> images = [
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-      'images/taco.png',
-    ];
+    final List<String> images = List.generate(30, (index) => 'images/taco.png');
 
     return Container(
-      height: 500, // ✅ fixed height //TODO Fixed height doesnt touch the bottom of the nav bar
+      
       padding: const EdgeInsets.all(10),
-      child: Scrollbar( //TODO Another exception was thrown: The PrimaryScrollController is attached to more than one ScrollPosition. Might be the cause for exception?
-        thumbVisibility: true, // shows vertical scrollbar
+      child: Scrollbar(
+        thumbVisibility: false,
         child: GridView.builder(
           itemCount: images.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,       // 3 images per row
+            crossAxisCount: 3,
             crossAxisSpacing: 25,
-            mainAxisSpacing: 10,
-            childAspectRatio: 1.25,     // square images
+            mainAxisSpacing: 20,
+            childAspectRatio: .7,
           ),
           itemBuilder: (context, index) {
             return Image.asset(
               images[index],
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             );
           },
         ),
