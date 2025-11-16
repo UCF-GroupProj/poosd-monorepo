@@ -1,4 +1,6 @@
 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { JWTManager, JWTError } from './JTWManager';
 
 describe('Test JWT Key', ()=> {
@@ -17,13 +19,11 @@ describe('Test JWT Key', ()=> {
 
   test("Expect ENV Key", ()=> {
     process.env["JWT_KEY"] = "THIS_IS_A_THROWAWAY_KEY";
-    // @ts-expect-error Testing Private Field LOL
     expect(new JWTManager().signKey).toBe("THIS_IS_A_THROWAWAY_KEY");
   });
 
   test("Expect ENV key to override param Key", ()=> {
     process.env["JWT_KEY"] = "THIS_IS_A_THROWAWAY_KEY_GOOD";
-    // @ts-expect-error Testing Private Field LOL
     expect(new JWTManager("THIS_IS_A_THROWAWAY_KEY_BAD").signKey).toBe("THIS_IS_A_THROWAWAY_KEY_GOOD");
   });
 });
