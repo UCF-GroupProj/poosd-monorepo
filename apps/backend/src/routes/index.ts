@@ -6,3 +6,4 @@ export { RouteHandle } from "./baseHandle";
 export { emailVerification } from "./emailVerification";
 export { PWDReset } from "./passwordReset";
 export { UserProfile } from "./UserProfile";
+export { cardRoute } from "./cardRoute";

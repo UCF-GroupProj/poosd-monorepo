@@ -4,7 +4,8 @@ import { RouteHandle } from "./baseHandle";
 import type { Request, Response } from "express";
 import { logger } from "@sentry/node";
 import type { ICardData, IUserInfo } from "@repo/utils/types";
-import { ObjectId } from "mongodb";
+import { ObjectId, type WithId } from "mongodb";
+import { randomInt } from "crypto";
 
 type getHandleResType = string | ICardData & {
   id: string,
@@ -19,7 +20,7 @@ type summaryHandleResType = string | {
   legendaryOwned: number
 }
 
-export class Main extends RouteHandle {
+export class cardRoute extends RouteHandle {
   public setup() {
     const AuthMW = AuthMWGen(this.coreSrv.database);
     this.coreSrv.webServer.get("/card/:cardID", AuthMW, this.getHandle.bind(this));
@@ -124,5 +125,109 @@ export class Main extends RouteHandle {
       });
       return res.status(403).send(`Insuffient gems to roll a ${rollCNT}`);
     }
+
+    // Handle rest of the cards poll algorithms
+    const pullRes = rollCard(userData.collection.map(k=>k.toHexString()), await cardColl.find().toArray(), rollCNT, userData.pullsSinceEpic >= 9);
+
+  }
+}
+
+
+
+type rollCardReturnT = {
+  collections: ObjectId[],
+  dupCredits: number,
+  pulledMinEpic: boolean;
+}
+
+// Handles the main logic to roll cards
+function rollCard(userOwned: string[], availableCards: WithId<ICardData>[], rollCnt = 1, guaranteeRare = false): rollCardReturnT {
+  // Setup the probability system
+  let maxRNGVal = 0;
+  const cardProbs = (guaranteeRare ? 
+    availableCards.filter(k=>k.rarity === "rare" || k.rarity === "legendary") :
+    availableCards).map(k=> {
+      switch(k.rarity) {
+        case "common":
+          maxRNGVal += 85;
+          break;
+        case "rare":
+          maxRNGVal += 10;
+          break;
+        case "epic":
+          maxRNGVal += 4;
+          break;
+        case "legendary":
+          maxRNGVal += 1;
+          break;
+        default:
+          throw new cardRoExcept(`Card ${k._id.toHexString()} contains invalid rarity: ${k.rarity}`);
+      }
+
+      return {
+        _id: k._id,
+        rarity: k.rarity,
+        chance: maxRNGVal
+      };
+    }).sort((a,b)=> a.chance - b.chance);
+
+  // Rolling system here
+  const data: rollCardReturnT = {
+    collections: [],
+    dupCredits: 0,
+    pulledMinEpic: guaranteeRare
+  };
+
+  for(let i=0;i<rollCnt;i++) {
+    const pulledCard = cardProbs[BSearch(cardProbs, randomInt(0, maxRNGVal+1))]!; // It's BSearch, the index is guaranteed to exist
+    if(["epic", "legendary"].includes(pulledCard.rarity))
+      data.pulledMinEpic = true;
+
+    // Card Not Owned
+    if(!userOwned.includes(pulledCard._id.toHexString())) {
+      data.collections.push(pulledCard._id);
+      continue;
+    }
+
+    // Card Owned, calculate credits
+    switch(pulledCard.rarity) {
+      case "common":
+        data.dupCredits += 2;
+        break;
+      case "rare":
+        data.dupCredits += 5;
+        break;
+      case "epic":
+        data.dupCredits += 10;
+        break;
+      case "legendary":
+        data.dupCredits += 20;
+        break;
+      default:
+        throw new cardRoExcept(`Card ${pulledCard._id.toHexString()} contains invalid rarity: ${pulledCard.rarity}`)
+    }
+  }
+
+  return data;
+}
+
+// Beloved CS1 Binary Search <3
+function BSearch(cards: {_id: ObjectId;chance: number;}[], rollRes: number) {
+  let left = 0;
+  let right = cards.length;
+  while(left < right) {
+    const mid = (left + right) >> 1;
+    if(cards[mid]!.chance < rollRes) left = mid + 1;
+    else right = mid;
+  }
+  return left < cards.length ? left : -1;
+}
+
+// Custom Exceptions
+
+class cardRoExcept extends Error {
+  constructor(msg: string) {
+    super(msg);
+    this.name = "cardRoute Exception";
   }
 }
