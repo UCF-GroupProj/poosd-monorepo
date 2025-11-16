@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
-void main() {
-  runApp(const SummonPage());
-}
-
-class SummonPage extends StatelessWidget {
+class SummonPage extends StatefulWidget {
   const SummonPage({super.key});
 
   @override
@@ -78,7 +74,7 @@ class _SumonsPageState extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: 0.4),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 )
