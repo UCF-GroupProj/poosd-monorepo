@@ -69,9 +69,7 @@ describe("SendMail Behavior", ()=> {
     const mockJson = jest.fn(async()=> jsonMockData);
     const mockTrans = jest.spyOn(main, "transport").mockImplementation(async ()=>({ status: 200, text: mockText, json: mockJson }));
 
-    const res = await main.sendMail(requestData);
-
-    expect(res).toMatchObject(jsonMockData);
+    expect(await main.sendMail(requestData)).toMatchObject(jsonMockData);
     expect(mockText).toHaveBeenCalledTimes(0);
     expect(mockJson).toHaveBeenCalledTimes(1);
     expect(mockTrans).toHaveBeenCalledTimes(1);
@@ -92,9 +90,7 @@ describe("SendMail Behavior", ()=> {
     const mockJson = jest.fn(async()=> jsonMockData);
     const mockTrans = jest.spyOn(main, "transport").mockImplementation(async ()=>({ status: 400, text: mockText, json: mockJson }));
 
-    const res = await main.sendMail(requestData);
-
-    expect(res).toBe("Mock Text");
+    expect(await main.sendMail(requestData)).toBe("Mock Text");
     expect(mockText).toHaveBeenCalledTimes(1);
     expect(mockJson).toHaveBeenCalledTimes(0);
     expect(mockTrans).toHaveBeenCalledTimes(1);
