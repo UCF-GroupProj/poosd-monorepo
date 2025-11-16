@@ -51,6 +51,52 @@ class _SummonPageState extends State<SummonPage> {
       ),
     );
   }
+}
+
+/// Helper Widget for the x1/x10 buttons, stylized to look like the image.
+Widget _buildSummonButton({
+  required String text,
+  required Color gemColor,
+  required VoidCallback onTap,
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A), // Dark background
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: gemColor.withValues(alpha: 0.8), width: 2), // Colored border
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          )
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(width: 5),
+          // Placeholder for the gem/currency icon (using a filled hexagon)
+          Icon(Icons.diamond, color: gemColor, size: 16),
+        ],
+      ),
+    ),
+  );
+}
+
+class _SumonsPageState extends StatelessWidget {
+  const _SumonsPageState({super.key});
 
   // Method to build the main Summon Card with all floating elements 
   Widget _buildInfoCard(BuildContext context) {
