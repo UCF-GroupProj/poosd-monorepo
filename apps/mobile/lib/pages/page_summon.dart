@@ -103,7 +103,80 @@ class _SummonPageState extends State<SummonPage> {
 
                 /// DROP RATES BUTTON
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          backgroundColor: const Color(0xFF1A1A1A),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text(
+                            "Drop Rates",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          // ---- COLORED DROP RATES TEXT ----
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(text: "85% ", style: TextStyle(color: Colors.white)),
+                                    TextSpan(text: "common", style: TextStyle(color: Colors.white)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(text: "10% ", style: TextStyle(color: Colors.white)),
+                                    TextSpan(text: "rare", style: TextStyle(color: Colors.blue)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(text: "4% ", style: TextStyle(color: Colors.white),),
+                                    TextSpan(text: "  epic", style: TextStyle(color: Colors.purple)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(text: "1% ", style: TextStyle(color: Colors.white)),
+                                    TextSpan(text: "  legendary", style: TextStyle(color: Colors.orange)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text(
+                                "CONFIRM",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          ],
+                        );
+                      },
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
@@ -153,66 +226,64 @@ class _SummonPageState extends State<SummonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.amber, // Simple flat background
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
+      body: Column(
+        children: [
+          const SizedBox(height: 20),
 
-            /// ---------------- TITLE ----------------
-            Column(
-              children: const [
-                Text(
-                  "OLD HEROES OF",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black45,
-                        offset: Offset(1, 1),
-                        blurRadius: 4,
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  "GREECE",
-                  style: TextStyle(
-                    fontSize: 28,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black45,
-                        offset: Offset(1, 1),
-                        blurRadius: 4,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            /// ------------ HERO IMAGE PLACEHOLDER -------------
-            Expanded(
-              child: Center(
-                child: Container(
-                  width: 260,
-                  height: 420,
+          /// ---------------- TITLE ----------------
+          Column(
+            children: const [
+              Text(
+                "OLD HEROES OF",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black45,
+                      offset: Offset(1, 1),
+                      blurRadius: 4,
+                    ),
+                  ],
                 ),
               ),
+              Text(
+                "GREECE",
+                style: TextStyle(
+                  fontSize: 28,
+                  letterSpacing: 2,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black45,
+                      offset: Offset(1, 1),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+
+          /// ------------ HERO IMAGE PLACEHOLDER -------------
+          Expanded(
+            child: Center(
+              child: Container(
+                width: 260,
+                height: 420,
+              ),
             ),
+          ),
 
-            /// ---------------- CARD + DROP RATES BUTTON + x1/x10 BUTTONS ----------------
-            _buildInfoCard(context),
+          /// ---------------- CARD + DROP RATES BUTTON + x1/x10 BUTTONS ----------------
+          _buildInfoCard(context),
 
-            const SizedBox(height: 10),
-          ],
-        ),
+          const SizedBox(height: 10),
+        ],
       ),
     );
   }
