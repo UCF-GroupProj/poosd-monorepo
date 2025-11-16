@@ -208,7 +208,6 @@ function rollCard(userOwned: string[], availableCards: WithId<ICardData>[], roll
     }
   }
 
-
   return data;
 }
 
