@@ -89,9 +89,16 @@ export class UserProfile extends RouteHandle {
       req.body.collection = Array.from(existSet.symmetricDifference<string>(newSet));
     }
 
-    if(req.body.incCurrency && req.body.incCurrency < 0) {
-      logger.warn(logger.fmt`incCurrency for ${res.locals.id} is valued below 0 (not allowed), setting value back to 0`);
-      req.body.incCurrency = 0;
+    if(req.body.incCurrency) {
+      if(!Number.isInteger(req.body.incCurrency)) {
+        logger.warn(logger.fmt`incCurrency for ${res.locals.id} is not an integer!`);
+        return res.status(400).send("incCurrency must be an integer");
+      }
+
+      if(req.body.incCurrency <= 0) {
+        logger.warn(logger.fmt`incCurrency for ${res.locals.id} is valued ${req.body.incCurrency} (not allowed).`);
+        return res.status(400).send("incCurrency must have a minimum value of 1");
+      }
     }
 
     if(req.body.favorites) {
