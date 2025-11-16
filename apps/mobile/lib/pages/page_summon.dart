@@ -52,7 +52,7 @@ Widget _buildSummonButton({
           ),
           const SizedBox(width: 5),
           // Placeholder for the gem/currency icon (using a filled hexagon)
-          Icon(Icons.hexagon, color: gemColor, size: 16),
+          Icon(Icons.diamond, color: gemColor, size: 16),
         ],
       ),
     ),

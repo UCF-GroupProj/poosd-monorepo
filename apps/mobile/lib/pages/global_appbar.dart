@@ -105,7 +105,7 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
                       Text("Placeholder", style: TextStyle(color: Color.fromARGB(255, 221, 221, 221)),),
                       Padding(
                         padding: const EdgeInsets.only(left: 3,right: 5),
-                        child: Icon(Icons.ac_unit, color: Colors.orange),
+                        child: Icon(Icons.diamond, color: Colors.orange),
                       ),
                     ],
                   ),
