@@ -63,6 +63,37 @@ class Register{
     }
   }
 }
+
+class UserProfile{
+  static Future<bool> patchUserCurrency({required String token, required int currencyChange}) async{
+    final url = Uri.parse('$_baseUrl/profile');
+
+    try{
+      final response = await http.patch(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'incCurrency': currencyChange,
+        }),
+      );
+
+      if(response.statusCode == 200){
+        print('User currency updated!');
+        return true;
+      } else{
+        print('Currency Change Failed (Status: ${response.statusCode}): ${response.body}');
+        throw Exception('Failed to update currency: ${response.body}');
+      }
+    } catch (e){
+      print('Currency Change Error: $e');
+      return false;
+    }
+  }
+}
+
 class CardsData {
   static Future<String> getJson(String url, String outgoing) async
   {

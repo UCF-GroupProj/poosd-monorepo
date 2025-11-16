@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
+
+
 class GlobalData{ //TODO 
   static int userId = -1;
   static String token = '';
-  static int currency = 0;
+  static ValueNotifier<int> currency = ValueNotifier(0);
 
   // Used by Collections
 
