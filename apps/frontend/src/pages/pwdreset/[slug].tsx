@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
@@ -6,8 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 export default function MyApp() {
   const router = useRouter();
-  var token: string | null;
-  var slug: string | string[] | undefined;
+  let slug: string | string[] | undefined;
   const checked = useRef(false);
   const [outputContent, setOutputText] = useState(<h2>Please wait...</h2>);
   

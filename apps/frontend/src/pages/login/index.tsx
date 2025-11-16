@@ -36,7 +36,6 @@ export default function MyApp() {
     const newToken = await data.token;
 
     console.log(response);
-    console.log(newToken);
     localStorage.setItem("loginToken", newToken); // Sets the login token
     localStorage.setItem("localMail", formData.get('Email') as string);
     router.push('/dashboard'); // Pushes the user to the dashboard on login
