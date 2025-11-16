@@ -208,6 +208,36 @@ export default function MyApp() {
               )}
               </div>
             </section>
+            <section className="collection-stats-section">
+              <div className="stats-row">
+
+                <div className="stat-item">
+                  <div className="stat-color common"></div>
+                  <span>0 / 16 Common</span>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-color rare"></div>
+                  <span>0 / 8 Rare</span>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-color epic"></div>
+                  <span>0 / 4 Epic</span>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-color legendary"></div>
+                  <span>0 / 2 Legendary</span>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-color total"></div>
+                  <span>0 / 30 Total</span>
+                </div>
+
+              </div>
+            </section>
           </div>
         </>
   );

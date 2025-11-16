@@ -301,7 +301,8 @@ h3 {
   width: 90%;
   height: 120px;
   padding: 16px;
-  margin: 32px 0px;
+  margin-top: 32px;
+  margin-bottom: 16px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -325,4 +326,53 @@ h3 {
 
 .favorite-card-inner {
 
+}
+
+.collection-stats-section {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+}
+
+.stats-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* each item = square + text */
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  display: inline-block;
+  background: #888;           /* fallback background in case color class fails */
+}
+
+
+
+.stat-color.common {
+  background: #48bb78;     
+}
+
+.stat-color.rare {
+  background: #4299e1;      
+}
+
+.stat-color.epic {
+  background: #9f7aea;     
+}
+
+.stat-color.legendary {
+  background: #f6e05e;      
+}
+
+.stat-color.total {
+  background: #1a1a1a;
 }
