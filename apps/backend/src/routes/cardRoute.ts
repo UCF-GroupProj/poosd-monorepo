@@ -266,7 +266,7 @@ function rollCard(userOwned: string[], availableCards: WithId<ICardData>[], roll
 // Beloved CS1 Binary Search <3
 function BSearch(cards: {_id: ObjectId;chance: number;}[], rollRes: number) {
   let left = 0;
-  let right = cards.length;
+  let right = cards.length - 1;
   while(left < right) {
     const mid = (left + right) >> 1;
     if(cards[mid]!.chance < rollRes) left = mid + 1;
