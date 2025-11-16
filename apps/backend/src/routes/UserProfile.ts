@@ -2,6 +2,7 @@ import type { tokenData } from "@repo/utils/JTWManager.ts";
 import { AuthMWGen } from "../middleman";
 import { RouteHandle } from "./baseHandle";
 import type { Request, Response } from "express";
+import { json } from "express";
 import type { IUserInfo } from "@repo/utils/types";
 import { logger } from "@sentry/node";
 import { ObjectId } from "mongodb";
@@ -37,7 +38,7 @@ export class UserProfile extends RouteHandle {
     this.coreSrv.webServer.route("/profile")
       .all(AuthMWGen(this.coreSrv.database))
       .get(this.getHandle.bind(this))
-      .patch(this.patchHandle.bind(this));
+      .patch(json({ strict: true }), this.patchHandle.bind(this));
   }
 
   private async getHandle(req: Request, res: Response<getReturnType, tokenData>) {
