@@ -4,7 +4,8 @@ import { RouteHandle } from "./baseHandle";
 import type { Request, Response } from "express";
 import { logger } from "@sentry/node";
 import type { ICardData, IUserInfo } from "@repo/utils/types";
-import { ObjectId } from "mongodb";
+import { ObjectId, type WithId } from "mongodb";
+import { randomInt } from "crypto";
 
 type getHandleResType = string | ICardData & {
   id: string,
@@ -19,12 +20,21 @@ type summaryHandleResType = string | {
   legendaryOwned: number
 }
 
-export class Main extends RouteHandle {
+type rollHandleResType = string | {
+  collections: string[],
+  dupCredits: number,
+  pulledMinEpic: boolean,
+}
+
+type AllCardHandleType = ({id: string} | ICardData)[] | string
+
+export class cardRoute extends RouteHandle {
   public setup() {
     const AuthMW = AuthMWGen(this.coreSrv.database);
     this.coreSrv.webServer.get("/card/:cardID", AuthMW, this.getHandle.bind(this));
     this.coreSrv.webServer.get("/card/summary", AuthMW, this.summaryHandle.bind(this));
     this.coreSrv.webServer.get("/roll/:count", AuthMW, this.rollHandle.bind(this));
+    this.coreSrv.webServer.get("/card", this.getAllCardHandle.bind(this));
   }
 
   async getHandle(req: Request<{cardID: string}>, res: Response<getHandleResType, tokenData>) {
@@ -55,6 +65,19 @@ export class Main extends RouteHandle {
 
     logger.info(logger.fmt`${res.locals.id} card request for ${req.params.cardID} completed!`);
     return res.send(responseData);
+  }
+
+  async getAllCardHandle(req: Request<unknown, unknown, unknown, {onlyID?: string}>, res: Response<AllCardHandleType>) {
+    const cardColl = this.coreSrv.database.collection<ICardData>("Cards");
+    const getRes = await cardColl.find({}, { projection: { _id: req.query.onlyID ? 1 : undefined } })
+      .map(k=>{
+        const data = { ...k, id: k._id.toHexString(), _id: undefined };
+        delete data._id;
+        return data;
+      }).toArray();
+
+    logger.info("getAllCard Request has been fulfilled");
+    return res.send(getRes);
   }
 
   async summaryHandle(req: Request, res: Response<summaryHandleResType, tokenData>) {
@@ -102,7 +125,7 @@ export class Main extends RouteHandle {
     return res.send(returnData);
   }
 
-  private async rollHandle(req: Request<{count:string}>, res: Response<string, tokenData>) {
+  private async rollHandle(req: Request<{count:string}>, res: Response<rollHandleResType, tokenData>) {
     const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
     const cardColl = this.coreSrv.database.collection<ICardData>("Cards");
 
@@ -124,5 +147,139 @@ export class Main extends RouteHandle {
       });
       return res.status(403).send(`Insuffient gems to roll a ${rollCNT}`);
     }
+
+    // Save the result stuff into DB and start returning
+    const pullRes = rollCard(userData.collection.map(k=>k.toHexString()), await cardColl.find().toArray(), rollCNT, userData.pullsSinceEpic >= 9);
+    const updateRes = await userColl.updateOne({ _id: userData._id }, {
+      $set: {
+        pullsSinceEpic: pullRes.pulledMinEpic ? 0 : undefined
+      },
+      $addToSet: {
+        collection: { $each: pullRes.collections },
+      },
+      $inc: {
+        "currency.gems": pullRes.dupCredits - rollCNT, // credit all the duplicate pulls and debit the rolls
+        pullsSinceEpic: (!pullRes.pulledMinEpic) ? 1 : undefined,
+      }
+    });
+
+    if(!updateRes.acknowledged) {
+      logger.error(logger.fmt`${res.locals.id} user roll update was not ack by the database`);
+      return res.status(503).send("Database fail to ack roll results");
+    }
+
+    if(updateRes.modifiedCount === 0) {
+      logger.error(logger.fmt`${res.locals.id} user roll was not updated by the database`, {
+        matchCNT: updateRes.matchedCount
+      });
+      return res.status(500).send("Potential issues preventing user's card roll status from updating???");
+    }
+
+    // Finalize to return roll data
+    logger.info(logger.fmt`${res.locals.id} successfully completed card pull!`);
+    return res.send({
+      ...pullRes,
+      collections: pullRes.collections.map(k=>k.toHexString())
+    });
+  }
+}
+
+
+
+type rollCardReturnT = {
+  collections: ObjectId[],
+  dupCredits: number,
+  pulledMinEpic: boolean;
+}
+
+// Handles the main logic to roll cards
+function rollCard(userOwned: string[], availableCards: WithId<ICardData>[], rollCnt = 1, guaranteeRare = false): rollCardReturnT {
+  // Setup the probability system
+  let maxRNGVal = 0;
+  const cardProbs = (guaranteeRare ?
+    availableCards.filter(k=>k.rarity === "rare" || k.rarity === "legendary") :
+    availableCards).map(k=> {
+    switch(k.rarity) {
+      case "common":
+        maxRNGVal += 85;
+        break;
+      case "rare":
+        maxRNGVal += 10;
+        break;
+      case "epic":
+        maxRNGVal += 4;
+        break;
+      case "legendary":
+        maxRNGVal += 1;
+        break;
+      default:
+        throw new cardRoExcept(`Card ${k._id.toHexString()} contains invalid rarity: ${k.rarity}`);
+    }
+
+    return {
+      _id: k._id,
+      rarity: k.rarity,
+      chance: maxRNGVal
+    };
+  }).sort((a,b)=> a.chance - b.chance);
+
+  // Rolling system here
+  const data: rollCardReturnT = {
+    collections: [],
+    dupCredits: 0,
+    pulledMinEpic: guaranteeRare
+  };
+
+  for(let i=0;i<rollCnt;i++) {
+    const pulledCard = cardProbs[BSearch(cardProbs, randomInt(0, maxRNGVal+1))]!; // It's BSearch, the index is guaranteed to exist
+    if(["epic", "legendary"].includes(pulledCard.rarity))
+      data.pulledMinEpic = true;
+
+    // Card Not Owned
+    if(!userOwned.includes(pulledCard._id.toHexString())) {
+      data.collections.push(pulledCard._id);
+      continue;
+    }
+
+    // Card Owned, calculate credits
+    switch(pulledCard.rarity) {
+      case "common":
+        data.dupCredits += 2;
+        break;
+      case "rare":
+        data.dupCredits += 5;
+        break;
+      case "epic":
+        data.dupCredits += 10;
+        break;
+      case "legendary":
+        data.dupCredits += 20;
+        break;
+      default:
+        throw new cardRoExcept(`Card ${pulledCard._id.toHexString()} contains invalid rarity: ${pulledCard.rarity}`);
+    }
+  }
+
+  return data;
+}
+
+// Beloved CS1 Binary Search <3
+function BSearch(cards: {_id: ObjectId;chance: number;}[], rollRes: number) {
+  let left = 0;
+  let right = cards.length;
+  while(left < right) {
+    const mid = (left + right) >> 1;
+    if(cards[mid]!.chance < rollRes) left = mid + 1;
+    else right = mid;
+  }
+  return left < cards.length ? left : -1;
+}
+
+// Custom Exceptions
+
+class cardRoExcept extends Error {
+  constructor(msg: string) {
+    super(msg);
+    this.name = "cardRoute Exception";
   }
 }
