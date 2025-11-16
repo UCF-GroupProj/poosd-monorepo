@@ -21,8 +21,15 @@ type getReturnType = string | {
 }
 
 type patchReqType = {
-  collections?: string[],
+  collection?: string[],
+  favorites?: string[]
   incCurrency?: number
+}
+
+type patchResType = string | {
+  collection: string[]
+  favorites: string[]
+  incCurrency: number
 }
 
 export class UserProfile extends RouteHandle {
@@ -65,7 +72,7 @@ export class UserProfile extends RouteHandle {
     return res.send(responseData);
   }
 
-  private async patchHandle(req: Request<unknown, unknown, patchReqType>, res: Response<string, tokenData>) {
+  private async patchHandle(req: Request<unknown, unknown, patchReqType>, res: Response<patchResType, tokenData>) {
     const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
 
     const userData = await userColl.findOne({ _id: new ObjectId(res.locals.id) });
@@ -74,10 +81,11 @@ export class UserProfile extends RouteHandle {
       return res.status(500).send("User object doesn't exist in DB but you have valid token??");
     }
 
-    if(req.body.collections) {
-      const existSet = new Set<string>(userData.collection.map(k=>k.toHexString()));
-      const newSet = new Set<string>(req.body.collections);
-      req.body.collections = Array.from(existSet.symmetricDifference<string>(newSet));
+    const userCollIDStr = userData.collection.map(k=>k.toHexString());
+    if(req.body.collection) {
+      const existSet = new Set<string>(userCollIDStr);
+      const newSet = new Set<string>(req.body.collection);
+      req.body.collection = Array.from(existSet.symmetricDifference<string>(newSet));
     }
 
     if(req.body.incCurrency && req.body.incCurrency < 0) {
@@ -85,9 +93,22 @@ export class UserProfile extends RouteHandle {
       req.body.incCurrency = 0;
     }
 
+    if(req.body.favorites) {
+      const ownedCardReq = req.body.favorites.filter(k=> {
+        const owned = userCollIDStr.includes(k);
+        if(!owned)
+          logger.warn(logger.fmt`user ${res.locals.id} attempts to favorite card they didn't own: ${k}`);
+        return owned;
+      });
+      const existSet = new Set<string>(userData.favorites.map(k=>k.toHexString()));
+      const newSet = new Set<string>(ownedCardReq);
+      req.body.favorites = Array.from(existSet.symmetricDifference<string>(newSet));
+    }
+
     const updateRes = await userColl.updateOne({ _id: userData._id }, {
       $set: {
-        collection: req.body.collections?.map(k=>new ObjectId(k))
+        collection: req.body.collection?.map(k=>new ObjectId(k)),
+        favorites: req.body.favorites?.map(k=>new ObjectId(k))
       },
       $inc: {
         "currency.gems": req.body.incCurrency
@@ -107,6 +128,10 @@ export class UserProfile extends RouteHandle {
     logger.info(logger.fmt`User Record updated for ${res.locals.id}`, {
       bodyData: req.body
     });
-    return res.send("User Request Successfully Processed");
+    return res.send({
+      collection: req.body.collection ?? [],
+      favorites: req.body.favorites ?? [],
+      incCurrency: req.body.incCurrency ?? 0
+    });
   }
 }
