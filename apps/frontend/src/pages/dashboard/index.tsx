@@ -160,12 +160,112 @@ export default function MyApp() {
     setIsActive4(false);
   }
 
-  const updateCont2 = () => {
-    setConent(
-    <>
-    <p>This is a Test 2</p>
-    </>
+  const updateCont2 = async () => {
+    try {
+    const response = await fetch(`http://localhost:8080/profile`,{ 
+        method:"GET",
+        headers:{'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
+      "Content-Type":"application/json"}
+      });
+
+      if (!response.ok){
+        throw new Error(`Response status: ${response.status}`)
+      }
+
+      const data = await response.json();
+
+      const email = localStorage.getItem("localMail");
+      if (!email){
+        throw new Error(`Failed to get email`);
+      }
+      const level = data.level;
+      const gems = data.currency.gems;
+
+      console.log(response);
+
+      const favorites: any[] = []; 
+
+      setConent(
+        <>
+          <div className='collection-root'>
+
+            { /* favorites container, change the current width to be "fit/hug contents" later instead of the 90% it is rn */ }
+            <section className='favorites-section'>
+              <div className='favorites-scroll-container'>
+                {favorites.length === 0 ? (
+                <div className="favorites-empty">
+                  You have no favorites right now.
+                </div>
+              ) : (
+                favorites.map((card, index) => (
+                  <div className="favorite-card" key={index}>
+                    {/* placeholder card */}
+                    <div className="favorite-card-inner">
+                      
+                    </div>
+                  </div>
+                ))
+              )}
+              </div>
+            </section>
+            <section className="collection-stats-section">
+              <div className="stats-row">
+
+                <div className="stat-item">
+                  <div className="stat-color common"></div>
+                  <span>0 / 16 Common</span>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-color rare"></div>
+                  <span>0 / 8 Rare</span>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-color epic"></div>
+                  <span>0 / 4 Epic</span>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-color legendary"></div>
+                  <span>0 / 2 Legendary</span>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-color total"></div>
+                  <span>0 / 30 Total</span>
+                </div>
+
+              </div>
+            </section>
+            <div className="collection-divider"></div>
+
+            {/* collections container */}
+            <section className="collections-section">
+              <div className="collections-scroll-container">
+    
+                <div className="collections-empty">
+                  Uh oh… looks like there are no cards?
+                </div>
+
+                {/* later you'll map cards here:
+                {cards.map(card => (
+                  <div className="collection-card" key={card.id}>...</div>
+                ))}
+                */}
+              </div>
+            </section>
+          </div>
+        </>
   );
+
+    } catch (error) {
+      console.log(error);
+      setConent(
+        <h2>A critical error occurred</h2>
+      );
+    }
+
     setIsActive1(false);
     setIsActive2(true);
     setIsActive3(false);
