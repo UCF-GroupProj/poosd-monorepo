@@ -76,6 +76,7 @@ class _SummonPageState extends State<SummonPage> {
             ),
             child: Column(
               children: [
+                const SizedBox(height: 5),
                 SizedBox(
                   height: 140,
                   child: ScrollShadow(
@@ -201,7 +202,7 @@ class _SummonPageState extends State<SummonPage> {
         // 2. The x1 and x10 buttons positioned at the top right of the card
         Positioned(
           right: 20,
-          top: -22, 
+          top: -18, 
           child: Row(
             children: [
               _buildSummonButton(
