@@ -12,8 +12,6 @@ export default function MyApp() {
   const [content, setConent] = useState(<p>Loading...</p>);
   const [isActive1, setIsActive1] = useState(false);
   const [isActive2, setIsActive2] = useState(false);
-  const [isActive3, setIsActive3] = useState(false);
-  const [isActive4, setIsActive4] = useState(false);
   let token: string | null;
 
   useEffect(() => {
@@ -156,8 +154,6 @@ export default function MyApp() {
 
     setIsActive1(true);
     setIsActive2(false);
-    setIsActive3(false);
-    setIsActive4(false);
   };
 
   const updateCont2 = async () => {
@@ -169,11 +165,10 @@ export default function MyApp() {
       });
 
       if (!response.ok){
-        throw new Error(`Response status: ${response.status}`);
+        throw new Error(`Response status (profile): ${response.status}`);
       }
 
       const data = await response.json();
-
       const email = localStorage.getItem("localMail");
       if (!email){
         throw new Error(`Failed to get email`);
@@ -181,9 +176,26 @@ export default function MyApp() {
       const level = data.level;
       const gems = data.currency.gems;
 
-      console.log(response);
-
       const favorites: string[] = data.favorites;
+      const cardsCollection: string[] = data.collection;
+
+      const cardsResponse = await fetch(`http://localhost:8080/card/summary`,{
+        method:"GET",
+        headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
+          "Content-Type":"application/json" }
+      });
+
+      if (!cardsResponse.ok){
+        throw new Error(`Response status (cards): ${response.status}`);
+      }
+
+      const cardsData = await cardsResponse.json();
+
+      const commons = cardsData.commonOwned;
+      const rares = cardsData.rareOwned;
+      const epics = cardsData.epicOwned;
+      const legends = cardsData.legendaryOwned;
+      const totals = cardsData.totalUniqueCards;
 
       setConent(
         <>
@@ -213,27 +225,27 @@ export default function MyApp() {
 
                 <div className="stat-item">
                   <div className="stat-color common"></div>
-                  <span>0 / 16 Common</span>
+                  <span>{commons as string} / 16 Common</span>
                 </div>
 
                 <div className="stat-item">
                   <div className="stat-color rare"></div>
-                  <span>0 / 8 Rare</span>
+                  <span>{rares as string} / 8 Rare</span>
                 </div>
 
                 <div className="stat-item">
                   <div className="stat-color epic"></div>
-                  <span>0 / 4 Epic</span>
+                  <span>{epics as string} / 4 Epic</span>
                 </div>
 
                 <div className="stat-item">
                   <div className="stat-color legendary"></div>
-                  <span>0 / 2 Legendary</span>
+                  <span>{legends as string} / 2 Legendary</span>
                 </div>
 
                 <div className="stat-item">
                   <div className="stat-color total"></div>
-                  <span>0 / 30 Total</span>
+                  <span>{totals as string} / 30 Total</span>
                 </div>
 
               </div>
@@ -268,34 +280,7 @@ export default function MyApp() {
 
     setIsActive1(false);
     setIsActive2(true);
-    setIsActive3(false);
-    setIsActive4(false);
-  };
 
-  const updateCont3 = () => {
-    setConent(
-      <>
-        <p>This is a Test 3</p>
-      </>
-    );
-    setIsActive1(false);
-    setIsActive2(false);
-    setIsActive3(true);
-    setIsActive4(false);
-  };
-
-  const updateCont4 = () => {
-    setConent(
-      <>
-        <p>
-        This is a Test 4
-        </p>
-      </>
-    );
-    setIsActive1(false);
-    setIsActive2(false);
-    setIsActive3(false);
-    setIsActive4(true);
   };
 
   const logout = () => {
@@ -318,8 +303,6 @@ export default function MyApp() {
           <ul className='dash'>
             <li><button className={`base-class ${isActive1 ? "activeDB" : ""}`} id="button1" onClick={updateCont1}>Profile</button></li>
             <li><button className={`base-class ${isActive2 ? "activeDB" : ""}`} id="button2" onClick={updateCont2}>Collection</button></li>
-            <li><button className={`base-class ${isActive3 ? "activeDB" : ""}`} id="button3" onClick={updateCont3}>Account Settings</button></li>
-            <li><button className={`base-class ${isActive4 ? "activeDB" : ""}`} id="button4" onClick={updateCont4}>Transaction History</button></li>
             <li><button onClick={logout}>Log Out</button></li>
           </ul>
         </div>
