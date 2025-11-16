@@ -56,12 +56,12 @@ export class MailService {
           throw new MailServiceExcept("one of the (only) 'replyTo' field failed validation");
 
     const res = await this.transport("/requests", "POST", JSON.stringify(opt));
-    return [200,422,503].includes(res.status) ? await res.json() : await res.text();
+    return [200,422,503].includes(res.status) ? (await res.json() as mailResType) : await res.text();
   }
 
   async getMailStat(reqID: string): Promise<mailGETResType | string> {
     const res = await this.transport(`/requests/${reqID}`, "GET");
-    return [200,422,503].includes(res.status) ? await res.json() : await res.text();
+    return [200,422,503].includes(res.status) ? (await res.json() as mailGETResType) : await res.text();
   }
 
   private async transport(path: string, method: string, jsonData?: string) {

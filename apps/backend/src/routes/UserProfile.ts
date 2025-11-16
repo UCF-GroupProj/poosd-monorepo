@@ -6,7 +6,7 @@ import type { IUserInfo } from "@repo/utils/types";
 import { logger } from "@sentry/node";
 import { ObjectId } from "mongodb";
 
-type returnType = string | {
+type getReturnType = string | {
   id: string,
   verified: boolean,
   collection: string[], // ObjectID
@@ -20,12 +20,20 @@ type returnType = string | {
   lastPullTime: string, // Date
 }
 
+type patchReqType = {
+  collections?: string[],
+  incCurrency?: number
+}
+
 export class UserProfile extends RouteHandle {
   public setup() {
-    this.coreSrv.webServer.get("/profile", AuthMWGen(this.coreSrv.database), this.profileHandle.bind(this));
+    this.coreSrv.webServer.route("/profile")
+      .all(AuthMWGen(this.coreSrv.database))
+      .get(this.getHandle.bind(this))
+      .patch(this.patchHandle.bind(this));
   }
 
-  async profileHandle(req: Request, res: Response<returnType, tokenData>) {
+  private async getHandle(req: Request, res: Response<getReturnType, tokenData>) {
     const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
 
     logger.debug(logger.fmt`Pulling user data for ${res.locals.id}`);
@@ -55,5 +63,50 @@ export class UserProfile extends RouteHandle {
 
     logger.info(logger.fmt`User ${res.locals.id} data request successfully processed`);
     return res.send(responseData);
+  }
+
+  private async patchHandle(req: Request<unknown, unknown, patchReqType>, res: Response<string, tokenData>) {
+    const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
+
+    const userData = await userColl.findOne({ _id: new ObjectId(res.locals.id) });
+    if(!userData) {
+      logger.error(logger.fmt`${res.locals.id} token is valid BUT user doesn't exist in the database??`);
+      return res.status(500).send("User object doesn't exist in DB but you have valid token??");
+    }
+
+    if(req.body.collections) {
+      const existSet = new Set<string>(userData.collection.map(k=>k.toHexString()));
+      const newSet = new Set<string>(req.body.collections);
+      req.body.collections = Array.from(existSet.symmetricDifference<string>(newSet));
+    }
+
+    if(req.body.incCurrency && req.body.incCurrency < 0) {
+      logger.warn(logger.fmt`incCurrency for ${res.locals.id} is valued below 0 (not allowed), setting value back to 0`);
+      req.body.incCurrency = 0;
+    }
+
+    const updateRes = await userColl.updateOne({ _id: userData._id }, {
+      $set: {
+        collection: req.body.collections?.map(k=>new ObjectId(k))
+      },
+      $inc: {
+        "currency.gems": req.body.incCurrency
+      }
+    });
+    if(!updateRes.acknowledged) {
+      logger.error(logger.fmt`Database didnt ack while updating record for ${res.locals.id}`);
+      return res.status(503).send("Database fail to respond correctly!");
+    }
+    if(updateRes.modifiedCount === 0) {
+      logger.warn(logger.fmt`No record has been updated for ${res.locals.id}`, {
+        matchCnt: updateRes.matchedCount
+      });
+      return res.status(400).send("No record has been updated, could be an internal issue if the body isnt empty!");
+    }
+
+    logger.info(logger.fmt`User Record updated for ${res.locals.id}`, {
+      bodyData: req.body
+    });
+    return res.send("User Request Successfully Processed");
   }
 }
