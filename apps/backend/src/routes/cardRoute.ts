@@ -276,7 +276,6 @@ function BSearch(cards: {_id: ObjectId;chance: number;}[], rollRes: number) {
 }
 
 // Custom Exceptions
-
 class cardRoExcept extends Error {
   constructor(msg: string) {
     super(msg);
