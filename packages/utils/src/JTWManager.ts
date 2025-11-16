@@ -45,7 +45,7 @@ export class JWTManager {
   }
 }
 
-class JWTError extends Error {
+export class JWTError extends Error {
   constructor(msg: string) {
     super(msg);
     this.name = "JWT Error";
