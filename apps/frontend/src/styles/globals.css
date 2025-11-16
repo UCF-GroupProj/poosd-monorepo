@@ -384,3 +384,35 @@ h3 {
   margin: 16px;
   border-radius: 8px;
 }
+
+.collections-section {
+  width: 90%;
+  height: auto;              /* how tall you want the scroll area */
+  margin: 16px 0 32px 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* inner scroll area */
+.collections-scroll-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;           /* vertical scroll */
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* empty state centered */
+.collections-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;    /* horizontal */
+  align-items: center;        /* vertical */
+  text-align: center;
+  opacity: 0.8;
+  font-size: 14px;
+}

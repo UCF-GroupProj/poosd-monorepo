@@ -189,7 +189,7 @@ export default function MyApp() {
         <>
           <div className='collection-root'>
 
-            { /* favorites container */ }
+            { /* favorites container, change the current width to be "fit/hug contents" later instead of the 90% it is rn */ }
             <section className='favorites-section'>
               <div className='favorites-scroll-container'>
                 {favorites.length === 0 ? (
@@ -239,6 +239,22 @@ export default function MyApp() {
               </div>
             </section>
             <div className="collection-divider"></div>
+
+            {/* collections container */}
+            <section className="collections-section">
+              <div className="collections-scroll-container">
+    
+                <div className="collections-empty">
+                  Uh oh… looks like there are no cards?
+                </div>
+
+                {/* later you'll map cards here:
+                {cards.map(card => (
+                  <div className="collection-card" key={card.id}>...</div>
+                ))}
+                */}
+              </div>
+            </section>
           </div>
         </>
   );
