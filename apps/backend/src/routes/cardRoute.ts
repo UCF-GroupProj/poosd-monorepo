@@ -26,12 +26,15 @@ type rollHandleResType = string | {
   pulledMinEpic: boolean,
 }
 
+type AllCardHandleType = {id: string} | ICardData
+
 export class cardRoute extends RouteHandle {
   public setup() {
     const AuthMW = AuthMWGen(this.coreSrv.database);
     this.coreSrv.webServer.get("/card/:cardID", AuthMW, this.getHandle.bind(this));
     this.coreSrv.webServer.get("/card/summary", AuthMW, this.summaryHandle.bind(this));
     this.coreSrv.webServer.get("/roll/:count", AuthMW, this.rollHandle.bind(this));
+    this.coreSrv.webServer.get("/card", this.getAllCardHandle.bind(this));
   }
 
   async getHandle(req: Request<{cardID: string}>, res: Response<getHandleResType, tokenData>) {
@@ -62,6 +65,10 @@ export class cardRoute extends RouteHandle {
 
     logger.info(logger.fmt`${res.locals.id} card request for ${req.params.cardID} completed!`);
     return res.send(responseData);
+  }
+
+  async getAllCardHandle(req: Request, res: Response<AllCardHandleType>) {
+
   }
 
   async summaryHandle(req: Request, res: Response<summaryHandleResType, tokenData>) {
