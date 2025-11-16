@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:large_project_dart/pages/global_appbar.dart';
+import 'package:large_project_dart/utils/global_data.dart';
 import 'package:large_project_dart/pages/page_collections.dart';
 import 'package:large_project_dart/pages/page_store.dart';
 import 'package:large_project_dart/pages/page_summon.dart';

@@ -53,6 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         _errorMessage = "Passwords do not match";
       });
+      return;
     }
 
     setState(() {
