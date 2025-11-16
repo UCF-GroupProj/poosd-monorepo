@@ -34,7 +34,7 @@ export class CoreService {
     if(!emailAPIStr) throw new CoreServiceExcept("Missing EMAIL_KEY env variable");
 
     // Initialize stuff
-    this._mongoCli = new MongoClient(mongoConnStr, { serverApi: ServerApiVersion.v1 });
+    this._mongoCli = new MongoClient(mongoConnStr, { serverApi: ServerApiVersion.v1, ignoreUndefined: true });
     this._JWTMGR = new JWTManager();
     this._emailSRV = new MailService(emailAPIStr);
 
