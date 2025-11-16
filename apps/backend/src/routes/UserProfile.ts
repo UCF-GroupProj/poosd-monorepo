@@ -106,7 +106,7 @@ export class UserProfile extends RouteHandle {
       req.body.favorites = Array.from(existSet.symmetricDifference<string>(newSet));
     }
 
-    logger.debug(logger.fmt`${userData._id} is changing with the data`, {
+    logger.debug(logger.fmt`Processing user ${userData._id} with the given body data`, {
       body: req.body
     });
     const updateRes = await userColl.updateOne({ _id: userData._id }, {
