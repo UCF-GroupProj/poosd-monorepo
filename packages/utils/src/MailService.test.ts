@@ -36,22 +36,22 @@ describe("SendMail Behavior", ()=> {
     const main = new MailService("SAMPLE_KEY");
     jest.spyOn(main, "transport").mockImplementation(async ()=>({ status: 400, text: async()=>"Mocked Response" }));
 
-    expect(async ()=> await main.sendMail({ from: "root@example.com", to:"root@example.com", subject: "MOCK" }))
+    expect(async ()=> await main.sendMail({ from: "root@example.com", to: "root@example.com", subject: "MOCK" }))
       .rejects.toThrow(new MailServiceExcept("sendMail missing both text and html"));
-    expect(async ()=> await main.sendMail({ from: "root@example.com", to:"root@example.com", subject: "MOCK", html: "<p>OK</p>", text: "OK" }))
+    expect(async ()=> await main.sendMail({ from: "root@example.com", to: "root@example.com", subject: "MOCK", html: "<p>OK</p>", text: "OK" }))
       .rejects.toThrow(new MailServiceExcept("sendMail contains both text and html value, only one of them is allowed!"));
 
-    expect(async ()=> await main.sendMail({ from: "@example.com", to:"root@example.com", subject: "MOCK", text: "OK" }))
+    expect(async ()=> await main.sendMail({ from: "@example.com", to: "root@example.com", subject: "MOCK", text: "OK" }))
       .rejects.toThrow(new MailServiceExcept("'from' field failed validation"));
 
-    expect(async ()=> await main.sendMail({ from: "root@example.com", to:"@example.com", subject: "MOCK", text: "OK" }))
+    expect(async ()=> await main.sendMail({ from: "root@example.com", to: "@example.com", subject: "MOCK", text: "OK" }))
       .rejects.toThrow(new MailServiceExcept("one of the (only) 'to' field failed validation"));
-    expect(async ()=> await main.sendMail({ from: "root@example.com", to:["ValidAddr@example.com", "@example.com"], subject: "MOCK", text: "OK" }))
+    expect(async ()=> await main.sendMail({ from: "root@example.com", to: ["ValidAddr@example.com", "@example.com"], subject: "MOCK", text: "OK" }))
       .rejects.toThrow(new MailServiceExcept("one of the (only) 'to' field failed validation"));
 
-    expect(async ()=> await main.sendMail({ from: "main@example.com", to:"root@example.com", subject: "MOCK", text: "OK", replyto: "bad@address" }))
+    expect(async ()=> await main.sendMail({ from: "main@example.com", to: "root@example.com", subject: "MOCK", text: "OK", replyto: "bad@address" }))
       .rejects.toThrow(new MailServiceExcept("one of the (only) 'replyTo' field failed validation"));
-    expect(async ()=> await main.sendMail({ from: "main@example.com", to:"root@example.com", subject: "MOCK", text: "OK", replyto: ["bad@address", "good@address.local"] }))
+    expect(async ()=> await main.sendMail({ from: "main@example.com", to: "root@example.com", subject: "MOCK", text: "OK", replyto: ["bad@address", "good@address.local"] }))
       .rejects.toThrow(new MailServiceExcept("one of the (only) 'replyTo' field failed validation"));
   });
 
