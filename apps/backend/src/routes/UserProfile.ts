@@ -2,9 +2,10 @@ import type { tokenData } from "@repo/utils/JTWManager.ts";
 import { AuthMWGen } from "../middleman";
 import { RouteHandle } from "./baseHandle";
 import type { Request, Response } from "express";
+import { json } from "express";
 import type { IUserInfo } from "@repo/utils/types";
 import { logger } from "@sentry/node";
-import { ObjectId } from "mongodb";
+import { ObjectId, Int32 } from "mongodb";
 
 type getReturnType = string | {
   id: string,
@@ -37,7 +38,7 @@ export class UserProfile extends RouteHandle {
     this.coreSrv.webServer.route("/profile")
       .all(AuthMWGen(this.coreSrv.database))
       .get(this.getHandle.bind(this))
-      .patch(this.patchHandle.bind(this));
+      .patch(json({ strict: true }), this.patchHandle.bind(this));
   }
 
   private async getHandle(req: Request, res: Response<getReturnType, tokenData>) {
@@ -88,9 +89,16 @@ export class UserProfile extends RouteHandle {
       req.body.collection = Array.from(existSet.symmetricDifference<string>(newSet));
     }
 
-    if(req.body.incCurrency && req.body.incCurrency < 0) {
-      logger.warn(logger.fmt`incCurrency for ${res.locals.id} is valued below 0 (not allowed), setting value back to 0`);
-      req.body.incCurrency = 0;
+    if(req.body.incCurrency) {
+      if(!Number.isInteger(req.body.incCurrency)) {
+        logger.warn(logger.fmt`incCurrency for ${res.locals.id} is not an integer!`);
+        return res.status(400).send("incCurrency must be an integer");
+      }
+
+      if(req.body.incCurrency <= 0) {
+        logger.warn(logger.fmt`incCurrency for ${res.locals.id} is valued ${req.body.incCurrency} (not allowed).`);
+        return res.status(400).send("incCurrency must have a minimum value of 1");
+      }
     }
 
     if(req.body.favorites) {
@@ -105,13 +113,16 @@ export class UserProfile extends RouteHandle {
       req.body.favorites = Array.from(existSet.symmetricDifference<string>(newSet));
     }
 
+    logger.debug(logger.fmt`Processing user ${userData._id} with the given body data`, {
+      body: req.body
+    });
     const updateRes = await userColl.updateOne({ _id: userData._id }, {
       $set: {
         collection: req.body.collection?.map(k=>new ObjectId(k)),
         favorites: req.body.favorites?.map(k=>new ObjectId(k))
       },
       $inc: {
-        "currency.gems": req.body.incCurrency
+        "currency.gems": req.body.incCurrency ? new Int32(req.body.incCurrency) : undefined
       }
     });
     if(!updateRes.acknowledged) {
