@@ -13,7 +13,8 @@ import {
   LogIn,
   emailVerification,
   PWDReset,
-  UserProfile
+  UserProfile,
+  cardRoute
 } from "./routes";
 
 export class CoreService {
@@ -44,7 +45,8 @@ export class CoreService {
       new LogIn(this),
       new emailVerification(this),
       new PWDReset(this),
-      new UserProfile(this)
+      new UserProfile(this),
+      new cardRoute(this)
     ];
   }
 
