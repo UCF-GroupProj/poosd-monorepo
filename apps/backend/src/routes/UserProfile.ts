@@ -5,7 +5,7 @@ import type { Request, Response } from "express";
 import { json } from "express";
 import type { IUserInfo } from "@repo/utils/types";
 import { logger } from "@sentry/node";
-import { ObjectId } from "mongodb";
+import { ObjectId, Int32 } from "mongodb";
 
 type getReturnType = string | {
   id: string,
@@ -115,7 +115,7 @@ export class UserProfile extends RouteHandle {
         favorites: req.body.favorites?.map(k=>new ObjectId(k))
       },
       $inc: {
-        "currency.gems": req.body.incCurrency
+        "currency.gems": req.body.incCurrency ? new Int32(req.body.incCurrency) : undefined
       }
     });
     if(!updateRes.acknowledged) {
