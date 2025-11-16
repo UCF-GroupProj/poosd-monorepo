@@ -9,7 +9,8 @@
   },
   "scripts": {
     "lint": "eslint",
-    "build:check": "tsc --noEmit"
+    "build:check": "tsc --noEmit",
+    "test": "jest"
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.2",
@@ -20,6 +21,7 @@
     "@repo/typescript-config": "workspace:*",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
-    "eslint": "^9.39.1"
+    "eslint": "^9.39.1",
+    "jest": "^30.2.0"
   }
 }

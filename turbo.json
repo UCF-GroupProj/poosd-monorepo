@@ -2,6 +2,9 @@
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
   "tasks": {
+    "test": {
+      "dependsOn": ["^test"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "env": ["*"],
