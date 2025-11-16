@@ -551,6 +551,8 @@ paths:
                       type: string
                   dupCredits:
                     type: integer
+                  pulledMinEpic:
+                    type: boolean
         '400':
           description: Invalid count parameter
           content:

@@ -20,6 +20,12 @@ type summaryHandleResType = string | {
   legendaryOwned: number
 }
 
+type rollHandleResType = string | {
+  collections: string[],
+  dupCredits: number,
+  pulledMinEpic: boolean,
+}
+
 export class cardRoute extends RouteHandle {
   public setup() {
     const AuthMW = AuthMWGen(this.coreSrv.database);
@@ -103,7 +109,7 @@ export class cardRoute extends RouteHandle {
     return res.send(returnData);
   }
 
-  private async rollHandle(req: Request<{count:string}>, res: Response<string, tokenData>) {
+  private async rollHandle(req: Request<{count:string}>, res: Response<rollHandleResType, tokenData>) {
     const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
     const cardColl = this.coreSrv.database.collection<ICardData>("Cards");
 
@@ -126,9 +132,39 @@ export class cardRoute extends RouteHandle {
       return res.status(403).send(`Insuffient gems to roll a ${rollCNT}`);
     }
 
-    // Handle rest of the cards poll algorithms
+    // Save the result stuff into DB and start returning
     const pullRes = rollCard(userData.collection.map(k=>k.toHexString()), await cardColl.find().toArray(), rollCNT, userData.pullsSinceEpic >= 9);
+    const updateRes = await userColl.updateOne({ _id: userData._id }, {
+      $set: {
+        pullsSinceEpic: pullRes.pulledMinEpic ? 0 : undefined
+      },
+      $addToSet: {
+        collection: { $each: pullRes.collections },
+      },
+      $inc: {
+        "currency.gems": pullRes.dupCredits - rollCNT, // credit all the duplicate pulls and debit the rolls
+        pullsSinceEpic: (!pullRes.pulledMinEpic) ? 1 : undefined,
+      }
+    });
 
+    if(!updateRes.acknowledged) {
+      logger.error(logger.fmt`${res.locals.id} user roll update was not ack by the database`);
+      return res.status(503).send("Database fail to ack roll results")
+    }
+
+    if(updateRes.modifiedCount === 0) {
+      logger.error(logger.fmt`${res.locals.id} user roll was not updated by the database`, {
+        matchCNT: updateRes.matchedCount
+      })
+      return res.status(500).send("Potential issues preventing user's card roll status from updating???")
+    }
+
+    // Finalize to return roll data
+    logger.info(logger.fmt`${res.locals.id} successfully completed card pull!`)
+    return res.send({
+      ...pullRes,
+      collections: pullRes.collections.map(k=>k.toHexString())
+    })
   }
 }
 
