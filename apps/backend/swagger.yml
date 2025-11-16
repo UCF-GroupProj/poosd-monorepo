@@ -330,7 +330,7 @@ paths:
         - name: onlyID
           in: query
           required: false
-          description: Whether to only return id of the cards collection)
+          description: Whether to only return id of the cards collection
           schema:
             type: boolean
             enum: [1]

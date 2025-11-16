@@ -26,7 +26,7 @@ type rollHandleResType = string | {
   pulledMinEpic: boolean,
 }
 
-type AllCardHandleType = {id: string} | ICardData
+type AllCardHandleType = ({id: string} | ICardData)[] | string
 
 export class cardRoute extends RouteHandle {
   public setup() {
@@ -67,8 +67,17 @@ export class cardRoute extends RouteHandle {
     return res.send(responseData);
   }
 
-  async getAllCardHandle(req: Request, res: Response<AllCardHandleType>) {
+  async getAllCardHandle(req: Request<unknown, unknown, unknown, {onlyID?: string}>, res: Response<AllCardHandleType>) {
+    const cardColl = this.coreSrv.database.collection<ICardData>("Cards");
+    const getRes = await cardColl.find({}, { projection: { _id: req.query.onlyID ? 1 : undefined } })
+      .map(k=>{
+        const data = { ...k, id: k._id.toHexString(), _id: undefined };
+        delete data._id;
+        return data;
+      }).toArray();
 
+    logger.info("getAllCard Request has been fulfilled");
+    return res.send(getRes);
   }
 
   async summaryHandle(req: Request, res: Response<summaryHandleResType, tokenData>) {
@@ -156,22 +165,22 @@ export class cardRoute extends RouteHandle {
 
     if(!updateRes.acknowledged) {
       logger.error(logger.fmt`${res.locals.id} user roll update was not ack by the database`);
-      return res.status(503).send("Database fail to ack roll results")
+      return res.status(503).send("Database fail to ack roll results");
     }
 
     if(updateRes.modifiedCount === 0) {
       logger.error(logger.fmt`${res.locals.id} user roll was not updated by the database`, {
         matchCNT: updateRes.matchedCount
-      })
-      return res.status(500).send("Potential issues preventing user's card roll status from updating???")
+      });
+      return res.status(500).send("Potential issues preventing user's card roll status from updating???");
     }
 
     // Finalize to return roll data
-    logger.info(logger.fmt`${res.locals.id} successfully completed card pull!`)
+    logger.info(logger.fmt`${res.locals.id} successfully completed card pull!`);
     return res.send({
       ...pullRes,
       collections: pullRes.collections.map(k=>k.toHexString())
-    })
+    });
   }
 }
 
@@ -187,32 +196,32 @@ type rollCardReturnT = {
 function rollCard(userOwned: string[], availableCards: WithId<ICardData>[], rollCnt = 1, guaranteeRare = false): rollCardReturnT {
   // Setup the probability system
   let maxRNGVal = 0;
-  const cardProbs = (guaranteeRare ? 
+  const cardProbs = (guaranteeRare ?
     availableCards.filter(k=>k.rarity === "rare" || k.rarity === "legendary") :
     availableCards).map(k=> {
-      switch(k.rarity) {
-        case "common":
-          maxRNGVal += 85;
-          break;
-        case "rare":
-          maxRNGVal += 10;
-          break;
-        case "epic":
-          maxRNGVal += 4;
-          break;
-        case "legendary":
-          maxRNGVal += 1;
-          break;
-        default:
-          throw new cardRoExcept(`Card ${k._id.toHexString()} contains invalid rarity: ${k.rarity}`);
-      }
+    switch(k.rarity) {
+      case "common":
+        maxRNGVal += 85;
+        break;
+      case "rare":
+        maxRNGVal += 10;
+        break;
+      case "epic":
+        maxRNGVal += 4;
+        break;
+      case "legendary":
+        maxRNGVal += 1;
+        break;
+      default:
+        throw new cardRoExcept(`Card ${k._id.toHexString()} contains invalid rarity: ${k.rarity}`);
+    }
 
-      return {
-        _id: k._id,
-        rarity: k.rarity,
-        chance: maxRNGVal
-      };
-    }).sort((a,b)=> a.chance - b.chance);
+    return {
+      _id: k._id,
+      rarity: k.rarity,
+      chance: maxRNGVal
+    };
+  }).sort((a,b)=> a.chance - b.chance);
 
   // Rolling system here
   const data: rollCardReturnT = {
@@ -247,7 +256,7 @@ function rollCard(userOwned: string[], availableCards: WithId<ICardData>[], roll
         data.dupCredits += 20;
         break;
       default:
-        throw new cardRoExcept(`Card ${pulledCard._id.toHexString()} contains invalid rarity: ${pulledCard.rarity}`)
+        throw new cardRoExcept(`Card ${pulledCard._id.toHexString()} contains invalid rarity: ${pulledCard.rarity}`);
     }
   }
 
