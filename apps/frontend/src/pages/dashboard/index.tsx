@@ -238,6 +238,7 @@ export default function MyApp() {
 
               </div>
             </section>
+            <div className="collection-divider"></div>
           </div>
         </>
   );

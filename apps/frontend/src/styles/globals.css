@@ -376,3 +376,11 @@ h3 {
 .stat-color.total {
   background: #1a1a1a;
 }
+
+.collection-divider {
+  width: 90%;
+  height: 2px;
+  background-color: gray;
+  margin: 16px;
+  border-radius: 8px;
+}
