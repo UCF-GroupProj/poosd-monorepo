@@ -1,5 +1,23 @@
 import 'package:flutter/material.dart';
 
+// TODO: Testing
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+Future<void> fetchUsers() async {
+  final response = await http.get(
+    Uri.parse('https://api.poosd.zhiyan114.com/profile/'),
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    print(data);   // Swagger API response
+  } else {
+    print("Error: ${response.statusCode}");
+  }
+}
+// End TODO
+
 class ImagePopout extends StatelessWidget {
   final String imagePath;
 
@@ -13,6 +31,8 @@ class ImagePopout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    fetchUsers();
 
     return Dialog(
       backgroundColor: Colors.transparent,  // make popup fullscreen

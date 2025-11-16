@@ -185,7 +185,7 @@ class _CardListState extends State<CardList> {
                 }
                 
               },
-              child: GlobalData.isOwned[index]
+              child: GlobalData.isOwned[index]  // This checks if card is owned, prints color or greyscale
               ? Image.asset(
               GlobalData.cardImages[index],
               fit: BoxFit.fill,
