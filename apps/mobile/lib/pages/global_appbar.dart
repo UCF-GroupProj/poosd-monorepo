@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/pages/page_login.dart';
+import 'package:large_project_dart/utils/global_data.dart';
 
 class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
   final PageController pageController;
@@ -72,7 +74,8 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
                     child: IconButton(
                       icon: const Icon(Icons.person_outline, color: Color.fromARGB(255, 0, 0, 0)),
                       onPressed: () {
-                        print("person pressed"); // LogOut
+                        GlobalData.token = '';
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginPage()), (Route route) => false);
                       },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),

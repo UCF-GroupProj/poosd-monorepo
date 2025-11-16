@@ -3,8 +3,8 @@ import 'package:large_project_dart/routes/routes.dart';
 
 
 // This library and code below allows us to preview the looks on many device without much configuration. Just plug the code in runApp rather than MyApp.
-/* import 'package:device_preview/device_preview.dart';
- */
+//import 'package:device_preview/device_preview.dart';
+//DevicePreview(builder: (context) => MyApp())
 
 void main() {
   runApp(MyApp());
