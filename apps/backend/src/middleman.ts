@@ -37,7 +37,7 @@ export function AuthMWGen(database: Db) {
       }
 
       // Software Timestamp validation in-case database doesn't have this implemented
-      if(getRes.lastLogin.getTime() < Date.now() - 1000*60*60*24) {
+      if(getRes.lastLogin.getTime() < Date.now() - 1000*60*20) {
         logger.info(logger.fmt`${data.id} token expired in the SessionState collection`, { referenceID });
         const delRes = await StateColl.deleteOne({ userToken: hashedToken });
 
