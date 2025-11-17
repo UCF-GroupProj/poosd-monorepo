@@ -19,35 +19,6 @@ class _SummonPageState extends State<SummonPage> {
       builder: (BuildContext dialogContext) {
         final isNewCard = pulledCards.isNotEmpty;
 
-        /* final pulledCount = result.collections.length;
-        final uniqueMessage = pulledCount > 0  ? 'Congratulations! You pulled $pulledCount new card(s).' : 'Roll complete. No new unique cards';
-        final refundMessage = result.dupCredits > 0 ? 'You received ${result.dupCredits} gem(s) back as duplicate credit.' : ''; */
-
-        /* return AlertDialog(
-          title: const Text("Summon Results"),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(uniqueMessage, style: const TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                if (result.dupCredits > 0) Text(refundMessage),
-                const SizedBox(height: 12),
-                const Text("Pulled Card IDs:", style: TextStyle(decoration: TextDecoration.underline)),
-                // Display the IDs of all pulled cards (new and duplicates)
-                ...result.collections.map((id) => Text('- ID: $id')).toList(),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text("Close"),
-            ),
-          ],
-        ); */
-
         return Dialog(
           backgroundColor: Colors.transparent,
           insetPadding: const EdgeInsets.all(16),
