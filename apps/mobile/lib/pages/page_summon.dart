@@ -151,8 +151,6 @@ class _SummonPageState extends State<SummonPage> {
                 ],
               ),
             ),
-            // Short Description/Flavor Text (You can add this if needed)
-            // Text(card.description, style: TextStyle(color: Colors.white54)), 
           ],
         ),
       ),
