@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/utils/get_api.dart';
 
 class ResetPage extends StatefulWidget {
   const ResetPage({super.key});
@@ -8,11 +9,41 @@ class ResetPage extends StatefulWidget {
 }
 
 class _ResetPageState extends State<ResetPage> {
-  final emailController = TextEditingController();
+  final _emailController = TextEditingController();
+  bool _isLoading = false;
+  final String _successMessage = 'Email will be sent momentarily if it exist';
+
+  bool isEmailValid(String email) {
+    final bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+    return emailValid;
+  }
+
+  Future<void> _handleReset() async{
+    final email = _emailController.text;
+    final context = this.context;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try{
+      await Reset.reset(email);
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_successMessage), backgroundColor: Colors.green, duration: const Duration(seconds: 2)));
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e){
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   void dispose(){
-    emailController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -28,10 +59,6 @@ class _ResetPageState extends State<ResetPage> {
         
           Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              elevation: 0,
-              backgroundColor: Colors.white,
-            ),
             body: Center(
               child: Container(
                 width: screenWidth * .8,
@@ -55,7 +82,7 @@ class _ResetPageState extends State<ResetPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 15, right: 15),
                       child: TextField(
-                        controller: emailController,
+                        controller: _emailController,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.transparent),
@@ -77,9 +104,7 @@ class _ResetPageState extends State<ResetPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
-                          onPressed: (){
-                            print("button 1");
-                          },
+                          onPressed: _isLoading ? null : _handleReset,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(255, 17, 11, 75),
                             shape: RoundedRectangleBorder(
@@ -87,17 +112,10 @@ class _ResetPageState extends State<ResetPage> {
                             ),
                             padding: EdgeInsets.symmetric(vertical: 14, horizontal: 20),
                           ),
-                          child: Text(
-                            "Confirm",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: Text("Confirm", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 )
               )
