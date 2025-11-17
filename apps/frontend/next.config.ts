@@ -43,6 +43,15 @@ const nextConfig: NextConfig = {
     });
 
     return config;
+  },
+  // Added for image functionality for cards
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'poosd.zhiyan114.com'
+      }
+    ]
   }
 };
 

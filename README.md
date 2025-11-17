@@ -1,3 +1,5 @@
+https://docs.google.com/presentation/d/1CUfod2HlLWnzYPBgxBslwANia4onzo_R0gAnx2tD2zU/edit?usp=sharing
+
 ### Web Dev Setup:
 1. Ensure pnpm is installed, otherwise run `npm install -g pnpm`
 2. Install Packages in the root directory: `pnpm install`
