@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("images/background.png"),
+            image: AssetImage("images/background(mobile).png"),
             fit: BoxFit.cover, // Cover the entire screen
           ),
         ),
