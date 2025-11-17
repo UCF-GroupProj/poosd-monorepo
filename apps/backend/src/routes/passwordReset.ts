@@ -39,6 +39,7 @@ export class PWDReset extends RouteHandle {
       return res.send("Verification email has been sent, if there's an account associated with this email");
     }
 
+    logger.info(logger.fmt`Starting password reset for ${req.body.email}`);
     const reqID = randomUUID();
     const record = await ReqColl.findOneAndUpdate({ userId: userPro._id }, {
       $set: {
