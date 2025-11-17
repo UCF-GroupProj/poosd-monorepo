@@ -3,7 +3,6 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import resetIcon from '@/assets/reset.png';
 import Link from 'next/link';
 
 interface cardProperties {
@@ -140,7 +139,7 @@ export default function MyApp() {
 
                   {/* eye icon placeholder */}
                   {/* <span className="profile-eye">👁️</span>*/}
-                  <Image src={resetIcon} alt="Reset Password" onClick={proposeReset}></Image>
+                  <Image src='@/assets/reset.png' alt="Reset Password" onClick={proposeReset}></Image>
                 </div>
               </div>
               <div>
