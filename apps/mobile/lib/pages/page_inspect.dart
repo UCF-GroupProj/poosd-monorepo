@@ -29,7 +29,7 @@ class ImagePopout extends StatelessWidget {
           child: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
-              color: Colors.black.withOpacity(0.70),
+              color: Colors.black..withValues(alpha: .7),
               child: Center(
                 child: Column(
                   children: [

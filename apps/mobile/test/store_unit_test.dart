@@ -44,7 +44,6 @@ void main() {
     }) async {
       expect(token, "fake-token");
       expect(currencyChange, 10);
-      print("fake success");
       return true; // Fake success
     };
 
