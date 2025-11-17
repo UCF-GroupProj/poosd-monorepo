@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:large_project_dart/utils/get_api.dart';
+import 'package:large_project_dart/routes/routes.dart';
 
 class ResetPage extends StatefulWidget {
   const ResetPage({super.key});
@@ -62,7 +63,7 @@ class _ResetPageState extends State<ResetPage> {
             body: Center(
               child: Container(
                 width: screenWidth * .8,
-                height: screenWidth * .6,
+                height: screenWidth * .7,
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: .8),
                   borderRadius: BorderRadius.circular(15)
@@ -93,11 +94,33 @@ class _ResetPageState extends State<ResetPage> {
                             borderRadius: BorderRadius.circular(12)
                           ),
                           hintText: "example@gmail.com",
-                          fillColor: Colors.grey[200],
+                          fillColor: Colors.white,
                           filled: true,
                           labelText: "Type your email",
                           floatingLabelBehavior: FloatingLabelBehavior.never
                         )
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20, top: 5),   // ⭐ Add this
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, Routes.LOGINPAGE);
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Color.fromARGB(255, 17, 11, 75),
+                            padding: EdgeInsets.zero,
+                          ),
+                          child: Text(
+                            "back to Log In",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     Center(

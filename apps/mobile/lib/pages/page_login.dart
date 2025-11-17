@@ -176,7 +176,6 @@ class _LoginPageState extends State<LoginPage> {
                   child: 
                   TextButton(
                     onPressed: (){
-                      //Navigator.of(context).pop();
 
                       Navigator.pushNamed(context, Routes.REGISTERPAGE);
                     },
