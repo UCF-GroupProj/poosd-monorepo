@@ -214,8 +214,11 @@ export default function MyApp() {
           headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
             "Content-Type":"application/json" }
         });
-        if (!cardDex.ok){
+        if (!cardDex.ok && response.status !== 404){
           throw new Error(`Response status (card info): ${cardDex.status}`);
+        }
+        if (response.status === 404){
+          continue;
         }
         const cardData = await cardDex.json();
         const newCard: cardProperties = {
