@@ -26,21 +26,19 @@ class GlobalData{ //TODO
 
 // Card Data
   static List<CardData> cardsList = [];
-  cardsListInit(){
-    cardsList = List.generate(20, (index) => CardData('card$index', 'A tasty taco card.', 'images/taco.png', 'Taco', 'Common'));
-  }
     // Images Data
-      static List<String> cardImages = List.generate(20, (index) => 'images/taco.png');
+  static List<String> cardImages = [];
+//      static List<String> cardImages = List.generate(20, (index) => 'images/taco.png');
       static List<bool> isOwned = List.generate(20, (index) => false);
       static List<String> favoritesList = List.generate(3, (index) => 'images/taco.png');
 }
 
 class CardData{
-  String cardID = '';
-  String description = '';
-  String imageURL = '';
   String name = '';
   String rarity = '';
+  String description = '';
+  String imageURL = '';
+  String cardID = '';
 
-  CardData(this.cardID, this.description, this.imageURL, this.name, this.rarity);
+  CardData(this.name, this.rarity, this.description, this.imageURL, this.cardID);
 }
