@@ -91,8 +91,17 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber[400],
-      body: Center(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/background(mobile).png"),
+            fit: BoxFit.cover, // Cover the entire screen
+          ),
+        ),
+
+      child: Center(
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 24),
           padding: EdgeInsets.all(24),
@@ -260,6 +269,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

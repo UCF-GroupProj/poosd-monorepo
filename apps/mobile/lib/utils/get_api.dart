@@ -65,6 +65,37 @@ class Register{
   }
 }
 
+class Reset{
+  static Future<void> reset(String email) async{
+    final url = Uri.parse('$_baseUrl/pwdreset');
+
+    try{
+      final response = await http.post(
+        url,
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+        }),
+      );
+
+      if(response.statusCode == 200){
+        return;
+      } else if(response.statusCode == 400){
+        throw Exception(response.body);
+      } else if(response.statusCode == 500){
+        throw Exception(response.body);
+      } else{
+        throw Exception('Registration Failed: ${response.body}');
+      }
+    } catch (e){
+      print('Register Error $e');
+      return null;
+    }
+  }
+}
+
 class UserProfile{
   static Future<bool> patchUserCurrency({required String token, required int currencyChange}) async{
     final url = Uri.parse('$_baseUrl/profile');
