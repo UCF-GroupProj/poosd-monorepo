@@ -107,8 +107,6 @@ export class LogIn extends RouteHandle {
       return res.status(409).send("Email already existed in the database");
     }
 
-    // Send Email
-
     // Add user and send verification email
     logger.debug(logger.fmt`adding ${req.body.email} to database`);
     const userInsert = await userColl.insertOne({
@@ -164,7 +162,7 @@ export class LogIn extends RouteHandle {
     const ReqDBColl = this.coreSrv.database.collection<IAccountRequest>("ResetRequest");
 
     // Check verification status
-    const veriReq = await AccDBColl.findOne({ _id: new ObjectId(userID), requestType: "email" });
+    const veriReq = await AccDBColl.findOne({ _id: new ObjectId(userID) });
     if(!veriReq) {
       // This shouldn't ever happen...
       logger.error(logger.fmt`User ${userID} not found in DB??`);
