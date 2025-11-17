@@ -47,8 +47,6 @@ export class PWDReset extends RouteHandle {
       },
       $setOnInsert: {
         userId: userPro._id,
-        requestId: reqID,
-        createdAt: new Date(),
         requestType: "password"
       }
     }, { upsert: true, returnDocument: "before" });

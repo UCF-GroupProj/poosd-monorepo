@@ -2,9 +2,10 @@ import type { tokenData } from "@repo/utils/JTWManager.ts";
 import { AuthMWGen } from "../middleman";
 import { RouteHandle } from "./baseHandle";
 import type { Request, Response } from "express";
+import { json } from "express";
 import type { IUserInfo } from "@repo/utils/types";
 import { logger } from "@sentry/node";
-import { ObjectId } from "mongodb";
+import { ObjectId, Int32 } from "mongodb";
 
 type getReturnType = string | {
   id: string,
@@ -21,8 +22,15 @@ type getReturnType = string | {
 }
 
 type patchReqType = {
-  collections?: string[],
+  collection?: string[],
+  favorites?: string[]
   incCurrency?: number
+}
+
+type patchResType = string | {
+  collection: string[]
+  favorites: string[]
+  incCurrency: number
 }
 
 export class UserProfile extends RouteHandle {
@@ -30,7 +38,7 @@ export class UserProfile extends RouteHandle {
     this.coreSrv.webServer.route("/profile")
       .all(AuthMWGen(this.coreSrv.database))
       .get(this.getHandle.bind(this))
-      .patch(this.patchHandle.bind(this));
+      .patch(json({ strict: true }), this.patchHandle.bind(this));
   }
 
   private async getHandle(req: Request, res: Response<getReturnType, tokenData>) {
@@ -65,7 +73,7 @@ export class UserProfile extends RouteHandle {
     return res.send(responseData);
   }
 
-  private async patchHandle(req: Request<unknown, unknown, patchReqType>, res: Response<string, tokenData>) {
+  private async patchHandle(req: Request<unknown, unknown, patchReqType>, res: Response<patchResType, tokenData>) {
     const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
 
     const userData = await userColl.findOne({ _id: new ObjectId(res.locals.id) });
@@ -74,23 +82,47 @@ export class UserProfile extends RouteHandle {
       return res.status(500).send("User object doesn't exist in DB but you have valid token??");
     }
 
-    if(req.body.collections) {
-      const existSet = new Set<string>(userData.collection.map(k=>k.toHexString()));
-      const newSet = new Set<string>(req.body.collections);
-      req.body.collections = Array.from(existSet.symmetricDifference<string>(newSet));
+    const userCollIDStr = userData.collection.map(k=>k.toHexString());
+    if(req.body.collection) {
+      const existSet = new Set<string>(userCollIDStr);
+      const newSet = new Set<string>(req.body.collection);
+      req.body.collection = Array.from(existSet.symmetricDifference<string>(newSet));
     }
 
-    if(req.body.incCurrency && req.body.incCurrency < 0) {
-      logger.warn(logger.fmt`incCurrency for ${res.locals.id} is valued below 0 (not allowed), setting value back to 0`);
-      req.body.incCurrency = 0;
+    if(req.body.incCurrency) {
+      if(!Number.isInteger(req.body.incCurrency)) {
+        logger.warn(logger.fmt`incCurrency for ${res.locals.id} is not an integer!`);
+        return res.status(400).send("incCurrency must be an integer");
+      }
+
+      if(req.body.incCurrency <= 0) {
+        logger.warn(logger.fmt`incCurrency for ${res.locals.id} is valued ${req.body.incCurrency} (not allowed).`);
+        return res.status(400).send("incCurrency must have a minimum value of 1");
+      }
     }
 
+    if(req.body.favorites) {
+      const ownedCardReq = req.body.favorites.filter(k=> {
+        const owned = userCollIDStr.includes(k);
+        if(!owned)
+          logger.warn(logger.fmt`user ${res.locals.id} attempts to favorite card they didn't own: ${k}`);
+        return owned;
+      });
+      const existSet = new Set<string>(userData.favorites.map(k=>k.toHexString()));
+      const newSet = new Set<string>(ownedCardReq);
+      req.body.favorites = Array.from(existSet.symmetricDifference<string>(newSet));
+    }
+
+    logger.debug(logger.fmt`Processing user ${userData._id} with the given body data`, {
+      body: req.body
+    });
     const updateRes = await userColl.updateOne({ _id: userData._id }, {
       $set: {
-        collection: req.body.collections?.map(k=>new ObjectId(k))
+        collection: req.body.collection?.map(k=>new ObjectId(k)),
+        favorites: req.body.favorites?.map(k=>new ObjectId(k))
       },
       $inc: {
-        "currency.gems": req.body.incCurrency
+        "currency.gems": req.body.incCurrency ? new Int32(req.body.incCurrency) : undefined
       }
     });
     if(!updateRes.acknowledged) {
@@ -107,6 +139,10 @@ export class UserProfile extends RouteHandle {
     logger.info(logger.fmt`User Record updated for ${res.locals.id}`, {
       bodyData: req.body
     });
-    return res.send("User Request Successfully Processed");
+    return res.send({
+      collection: req.body.collection ?? [],
+      favorites: req.body.favorites ?? [],
+      incCurrency: req.body.incCurrency ?? 0
+    });
   }
 }

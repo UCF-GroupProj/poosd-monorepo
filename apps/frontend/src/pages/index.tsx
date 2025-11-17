@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 
 export default function Home() {
   const router = useRouter();
-   useEffect(() => {
+  useEffect(() => {
     router.push('/login');
-    }, []);
+  }, []);
   return (
     <div
       className="mainBox"

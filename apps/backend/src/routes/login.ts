@@ -145,7 +145,7 @@ export class LogIn extends RouteHandle {
       from: "Olympull <noreply@zhiyan114.com>",
       to: req.body.email,
       subject: "Account Verification",
-      text: `Please verify your email at https://poosd.zhiyan114.com/verify/${reqID}`
+      text: `Please verify your email at https://poosd.zhiyan114.com/verifyemail/${reqID}`
     });
     if(typeof(mailRes) === "string" || mailRes.success === false) {
       // User account isnt register if email fails
@@ -202,7 +202,7 @@ export class LogIn extends RouteHandle {
       from: "Olympull <noreply@zhiyan114.com>",
       to: email,
       subject: "Account Verification",
-      text: `Please verify your email at https://poosd.zhiyan114.com/verify/${reqID}`
+      text: `Please verify your email at https://poosd.zhiyan114.com/verifyemail/${reqID}`
     });
 
     if(typeof(mailRes) === "string" || mailRes.success === false) {
