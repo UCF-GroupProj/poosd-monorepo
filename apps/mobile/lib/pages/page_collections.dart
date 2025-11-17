@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:large_project_dart/utils/global_data.dart';
 import 'package:large_project_dart/pages/page_inspect.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CollectionsPage extends StatefulWidget {
   const CollectionsPage({super.key});
@@ -48,6 +49,7 @@ class FavoritesBar extends StatefulWidget {
 class _FavoritesBarState extends State<FavoritesBar> {
   @override
   Widget build(BuildContext context) {
+    print(GlobalData.favoritesListAsInt.length);
     return Container(
       color: Colors.black, // background color for the bar
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -58,30 +60,54 @@ class _FavoritesBarState extends State<FavoritesBar> {
           Stack(
             children: [ 
               // Positioned.fill(child: Container(color: Colors.white)),
-              Image(
-                image: AssetImage(GlobalData.favoritesList[0]),
+              GlobalData.favoritesListAsInt.length >= 1 ?
+              Image.network(
+                GlobalData.cardsList[GlobalData.favoritesListAsInt[0]].imageURL,
                 width: 80,
                 height: 100,
+                fit: BoxFit.cover,
+              ) :
+              Image(
+                image: AssetImage('images/taco.png'),
+                width: 80,
+                height: 100,
+                fit: BoxFit.cover,
               ),
             ],
           ),
           Stack(
             children: [ 
               // Positioned.fill(child: Container(color: Colors.grey[200])),
-              Image(
-                image: AssetImage(GlobalData.favoritesList[1]),
+              GlobalData.favoritesListAsInt.length >= 2 ?
+              Image.network(
+                GlobalData.cardsList[GlobalData.favoritesListAsInt[1]].imageURL,
                 width: 80,
                 height: 100,
+                fit: BoxFit.cover,
+              ) :
+              Image(
+                image: AssetImage('images/taco.png'),
+                width: 80,
+                height: 100,
+                fit: BoxFit.cover,
               ),
             ],
           ),
           Stack(
             children: [ 
               // Positioned.fill(child: Container(color: Colors.white)),
-              Image(
-                image: AssetImage(GlobalData.favoritesList[2]),
+              GlobalData.favoritesListAsInt.length >= 3 ?
+              Image.network(
+                GlobalData.cardsList[GlobalData.favoritesListAsInt[2]].imageURL,
                 width: 80,
                 height: 100,
+                fit: BoxFit.cover,
+              ) :
+              Image(
+                image: AssetImage('images/taco.png'),
+                width: 80,
+                height: 100,
+                fit: BoxFit.cover,
               ),
             ],
           ),
@@ -154,9 +180,7 @@ class CardList extends StatefulWidget {
 
 class _CardListState extends State<CardList> {
   @override
-  Widget build(BuildContext context) {    
-    GlobalData.isOwned[1] = true; // TODO: Just for testing
-
+  Widget build(BuildContext context) {
     return Container(
       
       padding: const EdgeInsets.all(10),
@@ -178,18 +202,23 @@ class _CardListState extends State<CardList> {
                   showDialog(
                   context: context,
                   barrierDismissible: true,
-                  builder: (_) => ImagePopout(
-                    imagePath: GlobalData.cardImages[index],
-                    ),
+                  builder: (_) => ImagePopout(card: GlobalData.cardsList[index]),
                   );
                 }
                 
               },
-              child: GlobalData.isOwned[index]
-              ? Image.asset(
-              GlobalData.cardImages[index],
-              fit: BoxFit.fill,
+              child: GlobalData.isOwned[index]  // This checks if card is owned, prints color or greyscale
+              ? CachedNetworkImage(
+                imageUrl: GlobalData.cardImages[index],
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fadeInDuration: const Duration(milliseconds: 500),
+                fit: BoxFit.cover,
               )
+//              ? Image.network(
+//              GlobalData.cardImages[index],
+//              fit: BoxFit.cover,
+//              )
               : ColorFiltered(
                 colorFilter: const ColorFilter.matrix(<double>[
                 0.2126, 0.7152, 0.0722, 0, 0, //
@@ -197,10 +226,17 @@ class _CardListState extends State<CardList> {
                 0.2126, 0.7152, 0.0722, 0, 0, //
                 0,      0,      0,      1, 0, //
                 ]),
-                child: Image.asset(
-                  GlobalData.cardImages[index],
-                  fit: BoxFit.fill
-                  ),
+                child: CachedNetworkImage(
+                imageUrl: GlobalData.cardImages[index],
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fadeInDuration: const Duration(milliseconds: 500),
+                fit: BoxFit.cover,
+              ),
+//                child: Image.network(
+//                  GlobalData.cardImages[index],
+//                  fit: BoxFit.cover
+//                  ),
                 )
             );
           },

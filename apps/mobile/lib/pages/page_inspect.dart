@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/pages/page_collections.dart';
+import 'package:large_project_dart/utils/get_api.dart';
+import 'package:large_project_dart/utils/global_data.dart';
 
 class ImagePopout extends StatelessWidget {
-  final String imagePath;
+  final CardData card;
 
-  const ImagePopout({required this.imagePath});
+  const ImagePopout({required this.card});
 
-  // TODO: Update from DB
-  static String cardName = "Naiad";
-  static String rarity = "Common";
-  static String flavorText = "This is the flavor text";
-  // End TODO
+  static String cardName = "";
+  static String rarity = "";  
+  static String flavorText = "";
 
   @override
   Widget build(BuildContext context) {
+    cardName = card.name;
+    rarity = card.rarity;
+    flavorText = card.description;
 
     return Dialog(
       backgroundColor: Colors.transparent,  // make popup fullscreen
@@ -45,8 +49,8 @@ class ImagePopout extends StatelessWidget {
                         ),
                         child: ClipRRect(
                         borderRadius: BorderRadius.circular(12), // same as borderRadius
-                        child: Image.asset(
-                          imagePath,
+                        child: Image.network(
+                          card.imageURL,
                           width: 250,
                           height: 400,
                           fit: BoxFit.scaleDown,
@@ -71,22 +75,12 @@ class ImagePopout extends StatelessWidget {
 
             color: Colors.black.withOpacity(0.70),
             child: Center(
-              child: InspectTextbox(),
+              child: InspectTextbox(card),
             ),
           ),
         ),
       ],
-    )
-      
-/*      Column(
-        children: [
-          InspectNameBar(),
-          InspectPicture(),
-          InspectFavorite(),
-          InspectTextbox(),
-        ]
-      )
-*/      
+    )     
     );
   }
 }
@@ -96,6 +90,7 @@ class InspectNameBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min, // shrink to content
@@ -146,16 +141,26 @@ class InspectNameBar extends StatelessWidget {
 }
 
 class InspectTextbox extends StatefulWidget {
+  final CardData card;  
+
+  InspectTextbox(this.card);
+
   @override
   _InspectTextboxState createState() =>
       _InspectTextboxState();
 }
 
 class _InspectTextboxState extends State<InspectTextbox> {
-  bool favorited = false; // TODO: Check permanent favorited state from DB here
+  bool favorited = false;
 
   @override
   Widget build(BuildContext context) {
+//    for (int i = 0; i < GlobalData.favoritesList.length; i++) {
+//      if (GlobalData.cardsList[GlobalData.favoritesListAsID[i]].cardID == widget.card.cardID) {
+//        favorited = true;
+//      }
+//    }
+
     return Column(
       children: [
         // --- Button at the top ---
@@ -167,6 +172,10 @@ class _InspectTextboxState extends State<InspectTextbox> {
             icon: Icon(favorited ? Icons.star : Icons.star_border),
             onPressed: () {
               setState(() {
+                CardsData.updateFavorite(widget.card, !favorited);
+//                favorited ? GlobalData.favoritesList.removeWhere((id) => GlobalData.cardsList[id].cardID == widget.card.cardID)
+//                : GlobalData.favoritesList.add(widget.card.cardID);
+
                 favorited = !favorited;
 
                 // TODO: Set global favorited flag here

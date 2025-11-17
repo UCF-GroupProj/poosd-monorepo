@@ -4,6 +4,7 @@ import 'package:large_project_dart/utils/global_data.dart';
 import 'package:large_project_dart/pages/page_collections.dart';
 import 'package:large_project_dart/pages/page_store.dart';
 import 'package:large_project_dart/pages/page_summon.dart';
+import 'package:large_project_dart/utils/get_api.dart';
 
 class MainAppShell extends StatefulWidget {
   const MainAppShell({super.key});
@@ -26,6 +27,9 @@ class _MainAppShellState extends State<MainAppShell> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _selectedIndex);
+
+    // Initialize the API
+    API.initAPI();
   }
 
   @override
