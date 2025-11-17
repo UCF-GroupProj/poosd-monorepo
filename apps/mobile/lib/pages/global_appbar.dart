@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:large_project_dart/pages/page_login.dart';
 import 'package:large_project_dart/utils/global_data.dart';
@@ -76,6 +75,7 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
                       icon: const Icon(Icons.person_outline, color: Color.fromARGB(255, 0, 0, 0)),
                       onPressed: () {
                         GlobalData.token = '';
+                        GlobalData.currency.value = 0;
                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginPage()), (Route route) => false);
                       },
                       padding: EdgeInsets.zero,

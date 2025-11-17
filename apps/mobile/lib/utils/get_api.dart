@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 const String _baseUrl = 'https://api.poosd.zhiyan114.com';
 
@@ -116,5 +117,104 @@ class CardsData {
       print(e.toString());
     }
     return ret;
+  }
+}
+
+class RollResult{
+  final List<String> collections;
+  final int dupCredits;
+  final bool pulledMinEpic;
+
+  RollResult({
+    required this.collections,
+    required this.dupCredits,
+    required this.pulledMinEpic,
+  });
+
+  factory RollResult.fromJson(Map<String, dynamic> json){
+    return RollResult(
+      collections: List<String>.from(json['collections'] ?? []),
+      dupCredits: json['dupCredits'] ?? 0,
+      pulledMinEpic: json['pulledMinEpic'] ?? false
+    );
+  }
+}
+
+class CardModel {
+  final String id;
+  final String name;
+  final String rarity;
+  final String description;
+  final String imageUrl;
+  
+  CardModel({
+    required this.id,
+    required this.name,
+    required this.rarity,
+    required this.description,
+    required this.imageUrl,
+  });
+  
+  factory CardModel.fromJson(Map<String, dynamic> json) {
+    return CardModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      rarity: json['rarity'] as String,
+      description: json['description'] as String,
+      imageUrl: json['imageUrl'] as String,
+    );
+  }
+}
+
+class CardAPI{
+  static Future<RollResult?> rollCards({required String token, required int count}) async{
+    final url = Uri.parse('$_baseUrl/roll/$count');
+
+    try{
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        print('Card roll successful for $count pull(s).');
+        return RollResult.fromJson(responseBody);
+      } else if (response.statusCode == 403) {
+        throw Exception("Insufficient gems to roll. Status: 403");
+      } else {
+        print('Roll Failed (Status: ${response.statusCode}): ${response.body}');
+        throw Exception('Failed to roll cards: ${response.body}');
+      }
+    } catch(e){
+      print('Roll Error: $e');
+      return null;
+    }
+  }
+
+  static Future<CardModel?> getCardDetails({required String token, required String cardID}) async {
+    final url = Uri.parse('$_baseUrl/card/$cardID');
+
+    try{
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        return CardModel.fromJson(responseBody);
+      } else {
+        print('Get card details failed (Status: ${response.statusCode}): ${response.body}');
+        throw Exception('Failed to roll cards: ${response.body}');
+      }
+    } catch(e){
+      print('Get Card Details Error: $e');
+      return null;
+    }
   }
 }
