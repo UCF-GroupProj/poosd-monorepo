@@ -257,19 +257,12 @@ class _SummonPageState extends State<SummonPage> {
                   child: ScrollShadow(
                     color: const Color(0xFF1A1A1A),
                     child: SingleChildScrollView(
-                      child: Text(
-                        "The heroes of Old Greece were blahblahblah blah blah blah "
-                        "blah blahblahblah blah blahblahblah blah blahblahblah "
-                        "blah blahblahblah blah blahblahblah blah blahblahblah "
-                        "blah blahblahblah blah blahblahblah blah blahblahblah "
-                        "blah blahblahblah blah blahblahblah...blahblahblah blah blah blah "
-                        "blah blahblahblah blah blahblahblah blah blahblahblah "
-                        "blah blahblahblah blah blahblahblah blah blahblahblah "
-                        "blah blahblahblah blah blahblahblah blah blahblahblah "
-                        "blah blahblahblah blah blahblahblah...",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          height: 1.3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "From the high thrones of myth and the far reaches of legend, these ancient powers stir once more. Their footsteps echo across the ages… and now, they answer your call.",
+                          style: const TextStyle(color: Colors.white, height: 1.3, fontSize: 18),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
