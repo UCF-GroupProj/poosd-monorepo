@@ -17,9 +17,8 @@ const compat = new FlatCompat({
 export default defineConfig([globalIgnores([
   "**/node_modules/",
   "**/dist/",
-  "src/utils/youtube-notifier/**/*",
   "**/build.js",
-  "**/*.spec.ts",
+//  "**/*.test.ts",
   "jest.config.js",
   "eslint.config.mjs"
 ]), {
