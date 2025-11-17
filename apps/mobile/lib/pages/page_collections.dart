@@ -203,7 +203,7 @@ class _CardListState extends State<CardList> {
               child: GlobalData.isOwned[index]  // This checks if card is owned, prints color or greyscale
               ? Image.network(
               GlobalData.cardImages[index],
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
               )
               : ColorFiltered(
                 colorFilter: const ColorFilter.matrix(<double>[
@@ -214,7 +214,7 @@ class _CardListState extends State<CardList> {
                 ]),
                 child: Image.network(
                   GlobalData.cardImages[index],
-                  fit: BoxFit.fill
+                  fit: BoxFit.cover
                   ),
                 )
             );
