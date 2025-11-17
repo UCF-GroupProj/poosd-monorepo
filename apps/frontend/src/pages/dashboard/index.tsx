@@ -169,6 +169,7 @@ export default function MyApp() {
       }
 
       const data = await response.json();
+      console.log(data);
       const email = localStorage.getItem("localMail");
       if (!email){
         throw new Error(`Failed to get email`);
@@ -178,8 +179,29 @@ export default function MyApp() {
 
       const favorites: string[] = data.favorites;
       const cardsCollection: string[] = data.collection;
+      /*
+      let cardsInfo: [{
+        name: string;
+        id: string;
 
-      const cardsResponse = await fetch(`http://localhost:8080/card/summary`,{
+      }] = [];
+      let counter = 0;
+
+      cardsCollection.forEach(async card => {
+        const cardDex = await fetch(`http://localhost:8080/card/${card}`,{
+        method:"GET",
+        headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
+          "Content-Type":"application/json" }
+      });
+      if (!cardDex.ok){
+        throw new Error(`Response status (card info): ${cardDex.status}`);
+      }
+      const cardData = await cardDex.json();
+      cardsInfo[counter].name = cardData.name;
+      });
+      */
+     
+      const cardsResponse = await fetch(`http://localhost:8080/summary`,{
         method:"GET",
         headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
           "Content-Type":"application/json" }
@@ -190,12 +212,14 @@ export default function MyApp() {
       }
 
       const cardsData = await cardsResponse.json();
+      console.log(cardsData);
 
       const commons = cardsData.commonOwned;
       const rares = cardsData.rareOwned;
       const epics = cardsData.epicOwned;
       const legends = cardsData.legendaryOwned;
       const totals = cardsData.totalUniqueCards;
+
 
       setConent(
         <>
@@ -255,16 +279,16 @@ export default function MyApp() {
             {/* collections container */}
             <section className="collections-section">
               <div className="collections-scroll-container">
-
-                <div className="collections-empty">
+                {cardsCollection.length === 0 ? (
+                  <div className="collections-empty">
                   Uh oh… looks like there are no cards?
-                </div>
-
-                {/* later you'll map cards here:
-                {cards.map(card => (
-                  <div className="collection-card" key={card.id}>...</div>
-                ))}
-                */}
+                 </div>
+                ) : (
+                  cardsCollection.map((card) => (
+                  <div className="collection-card" key={card}>...</div>
+                ))
+                )}
+                
               </div>
             </section>
           </div>
