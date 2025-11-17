@@ -1,12 +1,13 @@
-'use client'
+'use client';
 
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
 export default function MyApp() {
   const router = useRouter();
-  var token: string | null;
-  var slug: string | string[] | undefined;
+  let token: string | null;
+  let slug: string | string[] | undefined;
   const checked = useRef(false);
   const [outputContent, setOutputText] = useState(<h2>Please wait...</h2>);
 
@@ -20,7 +21,7 @@ export default function MyApp() {
 
   const checkReset = async (code: string | string[] | undefined) => {
     try {
-      const response = await fetch(`http://localhost:8080/pwdreset/${code}`, {
+      const response = await fetch(`https://api.poosd.zhiyan114.com/pwdreset/${code}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" }
       });
@@ -33,7 +34,9 @@ export default function MyApp() {
             <form onSubmit={doReset}>
               <h2>Enter your new password here</h2>
               <input type="password" className="input" name="newPass1" placeholder="Type your password" />
+              <br></br><br></br>
               <input type="password" className="input" name="newPass2" placeholder="Confirm your password" />
+              <br></br><br></br>
               <button type='submit' className="buttons">Complete Password Reset</button>
             </form>
           </>
@@ -43,11 +46,11 @@ export default function MyApp() {
       console.log(error);
       let bodyText = "Unknown Error Occurred";
       if (error instanceof Error) {
-        if (error.message == "Response status: 404") {
+        if (error.message === "Response status: 404") {
           bodyText = "Provided verification code was not found or expired.";
-        } else if (error.message == "Response status: 500") {
+        } else if (error.message === "Response status: 500") {
           bodyText = "A server error occurred, please try again later.";
-        } else if (error.message == "Response status: 503") {
+        } else if (error.message === "Response status: 503") {
           bodyText = "The database failed to respond.";
         }
         setOutputText(
@@ -58,18 +61,18 @@ export default function MyApp() {
         );
       }
     }
-  }
+  };
 
   const doReset = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
     try {
-      if (formData.get('newPass1') as string != formData.get('newPass2') as string) {
+      if (formData.get('newPass1') as string !== formData.get('newPass2') as string) {
         throw new Error('Passwords do not match');
       }
 
-      const response = await fetch(`http://localhost:8080/pwdreset/${router.query.slug}`, {
+      const response = await fetch(`https://api.poosd.zhiyan114.com/pwdreset/${router.query.slug}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,16 +107,15 @@ export default function MyApp() {
         </>
       );
     }
-  }
+  };
 
   return (
     <div>
       <div className="topBar">
         <ul className="navBar">
           <li id="navTitle"><h1>OLYMPULL</h1></li>
-          <li><a href="/account">Account</a></li>
-          <li><a href="/support">Support</a></li>
-          <li><a href="/dashboard">About</a></li>
+          <li><Link href="/dashboard">Account</Link></li>
+          <li><Link href="/about">About</Link></li>
         </ul>
       </div>
       <div className="mainBox">

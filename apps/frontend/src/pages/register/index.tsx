@@ -19,7 +19,7 @@ export default function MyApp() {
         throw new Error('Passwords do not match');
       }
 
-      const response = await fetch("http://localhost:8080/register",{ // Passes the registration information to the API
+      const response = await fetch("https://api.poosd.zhiyan114.com/register",{ // Passes the registration information to the API
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({

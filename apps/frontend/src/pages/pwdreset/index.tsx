@@ -11,7 +11,7 @@ export default function PasswordResetRequestPage() {
       const formData = new FormData(event.currentTarget);
       const email = formData.get('Email') as string;
 
-      const response = await fetch('http://localhost:8080/pwdreset', {
+      const response = await fetch('https://api.poosd.zhiyan114.com/pwdreset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -54,15 +54,8 @@ export default function PasswordResetRequestPage() {
           <li id="navTitle">
             <h1>OLYMPULL</h1>
           </li>
-          <li>
-            <a href="/dashboard">Account</a>
-          </li>
-          <li>
-            <a href="/support">Support</a>
-          </li>
-          <li>
-            <a href="/about">About</a>
-          </li>
+          <li><Link href="/dashboard">Account</Link></li>
+          <li><Link href="/about">About</Link></li>
         </ul>
       </div>
 

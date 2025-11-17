@@ -28,7 +28,7 @@ export default function MyApp() {
 
   const tryVerify = async (code: string | string[] | undefined) => {
     try {
-      const response = await fetch(`http://localhost:8080/verifyemail/${code}`,{
+      const response = await fetch(`https://api.poosd.zhiyan114.com/verifyemail/${code}`,{
         method:"PATCH",
         headers:{ "Content-Type":"application/json" }
       });

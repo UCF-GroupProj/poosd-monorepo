@@ -38,6 +38,10 @@ input[type='text'] {
     appearance: textfield;
 }
 
+html {
+  height: 100%;
+}
+
 body {
     background-image: url('@/assets/BKG.png');
     background-size: cover;
@@ -46,6 +50,7 @@ body {
     font-size: 12px;
     margin: 0;
     padding: 0;
+    min-height: 100dvh;
   }
 
 .topBar {
@@ -75,15 +80,19 @@ body {
     background-color: white;
     padding: 25px;
     border: white;
-    display: block;
+    display: flow-root;
     border-radius: 25px;
     border-width: 5px;
     margin: auto;
-    margin-top: 10%;
+    margin-top: 9%;
     text-align: center;
-    width: 40%;
+    min-width: 40%;
+    width: fit-content;
     color: #163E4E;
     opacity: 0.8;
+    height: fit-content;
+    min-height: fit-content;
+    flex-shrink: 0;
 }
 
 h1 {
@@ -184,7 +193,7 @@ h3 {
   display: flex;
   padding: 0;
   width: 70%;
-  height: 400px;
+  min-height: 400px;
 }
 
 .dash li .activeDB {
@@ -196,10 +205,12 @@ h3 {
 }
 
 .dashboard-content {
-  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  height: auto;
 }
 
 .profile-container {
@@ -293,6 +304,8 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 0;
+  flex-shrink: 1;
 }
 
 .favorites-section {
@@ -318,14 +331,6 @@ h3 {
 
 .favorites-empty {
   width: 100%;
-}
-
-.favorite-card {
-  
-}
-
-.favorite-card-inner {
-
 }
 
 .collection-stats-section {
@@ -388,22 +393,27 @@ h3 {
 .collections-section {
   width: 90%;
   height: auto;              /* how tall you want the scroll area */
+  max-height: 450px;
+  min-height: 250px;
   margin: 16px 0 32px 0;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   padding: 16px;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 /* inner scroll area */
 .collections-scroll-container {
   width: 100%;
-  height: 100%;
+  height: fit-content;
   overflow-y: auto;           /* vertical scroll */
-  overflow-x: hidden;
+  overflow-x: auto;
   display: flex;
   flex-direction: column;
+  list-style-type: none;
 }
+
 
 /* empty state centered */
 .collections-empty {
@@ -415,4 +425,38 @@ h3 {
   text-align: center;
   opacity: 0.8;
   font-size: 14px;
+}
+
+.collectionsList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.collectionsList li {
+  float: left;
+  padding-left: 40px;
+}
+
+.favoritesList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.favoritesList li {
+  float: left;
+  padding-left: 40px;
+}
+
+#aboutList {
+  list-style-type: none;
+  text-align: center;
+}
+
+#aboutPage {
+  margin-left: 20%;
+  margin-right: 20%;
 }

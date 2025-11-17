@@ -1,10 +1,17 @@
+'use client';
+
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import resetIcon from '@/assets/reset.png';
 import Link from 'next/link';
 
-
+interface cardProperties {
+  name: string;
+  description: string;
+  owned: boolean;
+  url: string;
+}
 
 
 export default function MyApp() {
@@ -12,6 +19,8 @@ export default function MyApp() {
   const [content, setConent] = useState(<p>Loading...</p>);
   const [isActive1, setIsActive1] = useState(false);
   const [isActive2, setIsActive2] = useState(false);
+  const [cardsInfo, setCardsInfo] = useState<cardProperties[]>([]);
+  const [favoritesInfo, setFavoritesInfo] = useState<cardProperties[]>([]);
   let token: string | null;
 
   useEffect(() => {
@@ -40,7 +49,7 @@ export default function MyApp() {
 
   const initiateReset = async () => {
     try {
-      const response = await fetch("http://localhost:8080/pwdreset",{
+      const response = await fetch("https://api.poosd.zhiyan114.com/pwdreset",{
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({
@@ -79,7 +88,7 @@ export default function MyApp() {
   // Everything within these updateCont functions follows a similar pattern. You can write whatever HTML you'd like in these functions within the <> </>.
   const updateCont1 = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/profile`,{
+      const response = await fetch(`https://api.poosd.zhiyan114.com/profile`,{
         method:"GET",
         headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
           "Content-Type":"application/json" }
@@ -158,7 +167,7 @@ export default function MyApp() {
 
   const updateCont2 = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/profile`,{
+      const response = await fetch(`https://api.poosd.zhiyan114.com/profile`,{
         method:"GET",
         headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
           "Content-Type":"application/json" }
@@ -179,29 +188,49 @@ export default function MyApp() {
 
       const favorites: string[] = data.favorites;
       const cardsCollection: string[] = data.collection;
-      /*
-      let cardsInfo: [{
-        name: string;
-        id: string;
 
-      }] = [];
-      let counter = 0;
+      favorites.forEach(async card => {
+        const cardDex = await fetch(`https://api.poosd.zhiyan114.com/card/${card}`,{
+          method:"GET",
+          headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
+            "Content-Type":"application/json" }
+        });
+        if (!cardDex.ok){
+          throw new Error(`Response status (card info): ${cardDex.status}`);
+        }
+        const cardData = await cardDex.json();
+        const newCard: cardProperties = {
+          name: cardData.name,
+          description: cardData.description,
+          owned: cardData.owned,
+          url: cardData.imgURI
+        };
+
+        setFavoritesInfo(prevCards => [...prevCards, newCard]);
+      });
 
       cardsCollection.forEach(async card => {
-        const cardDex = await fetch(`http://localhost:8080/card/${card}`,{
-        method:"GET",
-        headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
-          "Content-Type":"application/json" }
+        const cardDex = await fetch(`https://api.poosd.zhiyan114.com/card/${card}`,{
+          method:"GET",
+          headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
+            "Content-Type":"application/json" }
+        });
+        if (!cardDex.ok){
+          throw new Error(`Response status (card info): ${cardDex.status}`);
+        }
+        const cardData = await cardDex.json();
+        const newCard: cardProperties = {
+          name: cardData.name,
+          description: cardData.description,
+          owned: cardData.owned,
+          url: cardData.imgURI
+        };
+
+        setCardsInfo(prevCards => [...prevCards, newCard]);
       });
-      if (!cardDex.ok){
-        throw new Error(`Response status (card info): ${cardDex.status}`);
-      }
-      const cardData = await cardDex.json();
-      cardsInfo[counter].name = cardData.name;
-      });
-      */
-     
-      const cardsResponse = await fetch(`http://localhost:8080/summary`,{
+
+
+      const cardsResponse = await fetch(`https://api.poosd.zhiyan114.com/summary`,{
         method:"GET",
         headers:{ 'Authorization':`Bearer ${localStorage.getItem("loginToken")}`,
           "Content-Type":"application/json" }
@@ -234,12 +263,14 @@ export default function MyApp() {
                   </div>
                 ) : (
                   favorites.map((card, index) => (
-                    <div className="favorite-card" key={index}>
-                      {/* placeholder card */}
-                      <div className="favorite-card-inner">
-
+                    <>
+                      <div>
+                        <ul className='favoritesList'>
+                          <li><Image className="cardsLoaded" src={cardsInfo[Number(card)].url} alt={cardsInfo[Number(card)].name} width={173} height={242}></Image></li>
+                          <li><p>{cardsInfo[Number(card)].description}</p></li>
+                        </ul>
                       </div>
-                    </div>
+                    </>
                   ))
                 )}
               </div>
@@ -281,14 +312,21 @@ export default function MyApp() {
               <div className="collections-scroll-container">
                 {cardsCollection.length === 0 ? (
                   <div className="collections-empty">
-                  Uh oh… looks like there are no cards?
-                 </div>
+                  You have no cards right now. Get collecting on the mobile app!
+                  </div>
                 ) : (
                   cardsCollection.map((card) => (
-                  <div className="collection-card" key={card}>...</div>
-                ))
+                    <>
+                      <div className="collection-card">
+                        <h3>{cardsInfo[Number(card)].name}</h3>
+                        <ul className='collectionsList'>
+                          <li><Image className="cardsLoaded" src={cardsInfo[Number(card)].url} alt={cardsInfo[Number(card)].name} width={173} height={242}></Image></li>
+                          <li><p>{cardsInfo[Number(card)].description}</p></li>
+                        </ul>
+                      </div>
+                    </>
+                  ))
                 )}
-                
               </div>
             </section>
           </div>
