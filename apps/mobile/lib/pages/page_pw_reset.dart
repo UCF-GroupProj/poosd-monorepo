@@ -23,21 +23,21 @@ class _ResetPageState extends State<ResetPage> {
     return Stack(
         children:[
           Positioned.fill(
-            child: Image.asset("images/taco.png", fit: BoxFit.fill),
+            child: Image.asset("images/background(mobile).png", fit: BoxFit.fill),
           ),
         
           Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.white,
             ),
             body: Center(
               child: Container(
                 width: screenWidth * .8,
                 height: screenWidth * .6,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 120, 156, 173),
+                  color: Colors.white.withValues(alpha: .8),
                   borderRadius: BorderRadius.circular(15)
                 ),
                 child: Column(
@@ -45,7 +45,7 @@ class _ResetPageState extends State<ResetPage> {
                   children: [
                     SizedBox(height: 10),
                     Center(
-                      child: Text("Password Reset", style: TextStyle(fontSize: 24.0, color: Colors.white, fontWeight: FontWeight.w500),),
+                      child: Text("Password Reset", style: TextStyle(fontSize: 24.0, color: Color.fromARGB(255, 17, 11, 75), fontWeight: FontWeight.w500),),
                     ),
                     SizedBox(height: 20),
                     Padding(
@@ -62,7 +62,7 @@ class _ResetPageState extends State<ResetPage> {
                             borderRadius: BorderRadius.circular(15)
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
+                            borderSide: BorderSide(color: Color.fromARGB(255, 17, 11, 75),),
                             borderRadius: BorderRadius.circular(12)
                           ),
                           hintText: "example@gmail.com",
@@ -80,8 +80,22 @@ class _ResetPageState extends State<ResetPage> {
                           onPressed: (){
                             print("button 1");
                           },
-                          child: const Text("confirm")
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 17, 11, 75),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 14, horizontal: 20),
                           ),
+                          child: Text(
+                            "Confirm",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     )
                   ],

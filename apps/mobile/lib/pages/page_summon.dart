@@ -226,65 +226,74 @@ class _SummonPageState extends State<SummonPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber, // Simple flat background
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-
-          /// ---------------- TITLE ----------------
-          Column(
-            children: const [
-              Text(
-                "OLD HEROES OF",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black45,
-                      offset: Offset(1, 1),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                "GREECE",
-                style: TextStyle(
-                  fontSize: 28,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black45,
-                      offset: Offset(1, 1),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/background(mobile).png"),
+            fit: BoxFit.cover, // Cover the entire screen
           ),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
 
-          const SizedBox(height: 20),
+            /// ---------------- TITLE ----------------
+            Column(
+              children: const [
+                Text(
+                  "OLD HEROES OF",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black45,
+                        offset: Offset(1, 1),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  "GREECE",
+                  style: TextStyle(
+                    fontSize: 28,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black45,
+                        offset: Offset(1, 1),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
 
-          /// ------------ HERO IMAGE PLACEHOLDER -------------
-          Expanded(
-            child: Center(
-              child: Container(
-                width: 260,
-                height: 420,
+            const SizedBox(height: 20),
+
+            /// ------------ HERO IMAGE PLACEHOLDER -------------
+            Expanded(
+              child: Center(
+                child: Container(
+                  width: 260,
+                  height: 420,
+                ),
               ),
             ),
-          ),
 
-          /// ---------------- CARD + DROP RATES BUTTON + x1/x10 BUTTONS ----------------
-          _buildInfoCard(context),
+            /// ---------------- CARD + DROP RATES BUTTON + x1/x10 BUTTONS ----------------
+            _buildInfoCard(context),
 
-          const SizedBox(height: 10),
-        ],
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }
