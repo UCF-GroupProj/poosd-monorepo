@@ -77,162 +77,170 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber[400],
-      body: Center(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 24),
-          padding: EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: .8),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: .2),
-                blurRadius: 10,
-                offset: Offset(0, 5),
-              ),
-            ],
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset("images/Background(mobile).png", fit: BoxFit.fill),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Welcome, Traveler!",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 17, 11, 75), 
-                ),
-              ),
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  "Email",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Color.fromARGB(255, 17, 11, 75),
+          // The login form
+          Center(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: Offset(0, 5),
                   ),
-                ),
+                ],
               ),
-              SizedBox(height: 8),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: "Type your email",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),    
-                    borderSide: BorderSide.none,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Welcome, Traveler!",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 17, 11, 75),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 16),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  "Password",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Color.fromARGB(255, 17, 11, 75),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Email",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromARGB(255, 17, 11, 75),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(height: 8),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Type your password",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: BorderSide.none,
+                  SizedBox(height: 8),
+                  TextField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: "Type your email",
+                      hintStyle: TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),    
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              if(_errorMessage != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(_errorMessage!, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                ),
-              Align(
-                alignment: Alignment.center,
-                child: 
-                TextButton(
-                  onPressed: (){
-                    //Navigator.of(context).pop();
+                  SizedBox(height: 16),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      "Password",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromARGB(255, 17, 11, 75),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: "Type your password",
+                      hintStyle: TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  if(_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(_errorMessage!, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: 
+                    TextButton(
+                      onPressed: (){
+                        //Navigator.of(context).pop();
 
-                    Navigator.pushNamed(context, Routes.REGISTERPAGE);
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    "or Sign Up",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w600,
+                        Navigator.pushNamed(context, Routes.REGISTERPAGE);
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Color.fromARGB(255, 17, 11, 75),
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: Text(
+                        "or Sign Up",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Align(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                  onPressed: (){
-                    //Navigator.of(context).pop();
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: TextButton(
+                      onPressed: (){
+                        //Navigator.of(context).pop();
 
-                    Navigator.pushNamed(context, Routes.PASSWORDRESETPAGE);
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 17, 11, 75),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(
-                    "Forgot your password?",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.w600,
+                        Navigator.pushNamed(context, Routes.PASSWORDRESETPAGE);
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Color.fromARGB(255, 17, 11, 75),
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: Text(
+                        "Forgot your password?",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 12),
+                  SizedBox(
+                    width: 150,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _handleLogin,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 17, 11, 75),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 12),
-              SizedBox(
-                width: 150,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 17, 11, 75),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ]
       ),
     );
   }
