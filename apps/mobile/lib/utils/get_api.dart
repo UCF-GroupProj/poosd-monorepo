@@ -1,97 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:large_project_dart/utils/global_data.dart';
+
 const String _baseUrl = 'https://api.poosd.zhiyan114.com';
-
-
-class API{
-  static void initAPI(){
-    CardsData.getAllCards();
-    CardsData.getUserCardSummary();
-//    UserData.getUserProfile();
-  }
-}
-
-class CardsData {
-  
-  // Fetch all cards from the API
-  static Future<void> getAllCards() async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/card/'),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      for (int i = 0; i < data.length; i++) {
-        var card = data[i];
-        GlobalData.cardsList.add(
-          CardData(card["name"], card["rarity"], card["description"], card["imageUrl"], card["id"].toString()),
-        );
-        GlobalData.cardImages.add(card["imageUrl"]);
-      }
-    } else {
-    print("Error: ${response.statusCode}");
-  }
-}
-  // Fetch card collection statistics
-  static Future<void> getUserCardSummary() async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/summary/'), 
-      headers:{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${GlobalData.token}',
-        },
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print(data);   // Swagger API response
-    } else {
-    print("Error: ${response.statusCode}");
-  }
-}
-}
-
-class UserData {
-  static Future<void> getUserProfile() async {
-    final response = await http.get(
-      Uri.parse('$_baseUrl/profile/'),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print(data);   // Swagger API response
-    } else {
-    print("Error: ${response.statusCode}");
-  }
-}
-
-/*
-  static Future<String> getJson(String url, String outgoing) async
-  {
-    String ret = "";
-    try
-    {
-      http.Response response = await http.post(Uri.parse(url),
-        body: utf8.encode(outgoing),
-        headers:
-        {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        encoding: Encoding.getByName("utf-8")
-      );
-      ret = response.body;
-    }
-    catch (e)
-    {
-      print(e.toString());
-    }
-    return ret;
-  }
-*/
-}
 
 class EmailLogIn{
   static Future<String?> login(String email, String password) async{
@@ -183,8 +94,71 @@ class UserProfile{
     }
   }
 }
-/*
+
+
+class API{
+  static void initAPI(){
+    CardsData.getAllCards();
+    CardsData.getUserCardSummary();
+//    UserData.getUserProfile();
+  }
+}
+
 class CardsData {
+  
+  // Fetch all cards from the API
+  static Future<void> getAllCards() async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/card/'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      for (int i = 0; i < data.length; i++) {
+        var card = data[i];
+        GlobalData.cardsList.add(
+          CardData(card["name"], card["rarity"], card["description"], card["imageUrl"], card["id"].toString()),
+        );
+        GlobalData.cardImages.add(card["imageUrl"]);
+      }
+    } else {
+    print("Error: ${response.statusCode}");
+  }
+}
+  // Fetch card collection statistics
+  static Future<void> getUserCardSummary() async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/summary/'), 
+      headers:{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${GlobalData.token}',
+        },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print(data);   // Swagger API response
+    } else {
+    print("Error: ${response.statusCode}");
+  }
+}
+}
+
+class UserData {
+  static Future<void> getUserProfile() async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/profile/'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print(data);   // Swagger API response
+    } else {
+    print("Error: ${response.statusCode}");
+  }
+}
+
+/*
   static Future<String> getJson(String url, String outgoing) async
   {
     String ret = "";
@@ -207,5 +181,6 @@ class CardsData {
     }
     return ret;
   }
-}
 */
+}
+

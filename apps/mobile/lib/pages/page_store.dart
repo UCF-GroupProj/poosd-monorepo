@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/utils/get_api.dart';
+import 'package:large_project_dart/utils/global_data.dart';
 
 class StorePage extends StatefulWidget{
   const StorePage({super.key});
@@ -8,6 +10,23 @@ class StorePage extends StatefulWidget{
 }
 
 class _StorePageState extends State<StorePage>{
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
 
   void _showPurchaseConfirmation(BuildContext context, {required String itemName, required String itemPrice}){
     showDialog(
@@ -25,8 +44,28 @@ class _StorePageState extends State<StorePage>{
               child: Text("Cancel"),
             ),
             TextButton(
-              onPressed: (){
+              onPressed: () async {
                 Navigator.of(dialogContext).pop();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing purchase...')));
+                int amount = 0;
+                
+                if(itemName == 'Gems x10') amount = 10;
+                else if(itemName == 'Gems x50') amount = 50;
+                else if(itemName == 'Gems x100') amount = 100;
+                else print("Error: Invalid Amount of Gems");
+
+                try{
+                  final success = await UserProfile.patchUserCurrency(token: GlobalData.token, currencyChange: amount);
+                  GlobalData.currency.value += amount;
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  if(success){
+                    _showSuccessSnackBar('Purchase successful. Enjoy your gems!');
+                  } else{
+                    _showErrorSnackBar('Purchase failed. Please try again.');
+                  }
+                } catch(e){
+                  _showErrorSnackBar('Purchase failed: ${e.toString().split(':').last.trim()}');
+                }
               },
               child: Text("Confirm"),
             )
@@ -65,7 +104,7 @@ class _StorePageState extends State<StorePage>{
                     borderRadius: BorderRadius.circular(15)
                   ),
                   child: const Center(
-                    child: Icon(Icons.ac_unit, color: Colors.orange, size: 100,)
+                    child: Icon(Icons.diamond, color: Colors.orange, size: 100,)
                   ),         
                 ),
                 if(isPopular)
@@ -144,11 +183,11 @@ class _StorePageState extends State<StorePage>{
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const SizedBox(height: 20),
-                    _buildStoreItem(context, title: "Ambrosia x10", description: "Get yourself started with 10 summons! Rare guaranteed!", price: "\$5.99", isPopular: true, color: Colors.red),
+                    _buildStoreItem(context, title: "Gems x10", description: "Get yourself started with 10 summons! Rare guaranteed!", price: "\$5.99", isPopular: true, color: Colors.red),
                     const SizedBox(height: 15),
-                    _buildStoreItem(context, title: "Ambrosia x50", description: "Great Value!", price: "\$25.99", isPopular: false, color: Colors.green),
+                    _buildStoreItem(context, title: "Gems x50", description: "Great Value!", price: "\$25.99", isPopular: false, color: Colors.green),
                     const SizedBox(height: 15),
-                    _buildStoreItem(context, title: "Ambrosia x100", description: "Great value! Epic guaranteed!", price: "\$45.99", isPopular: false, color: Colors.green),
+                    _buildStoreItem(context, title: "Gems x100", description: "Great value! Epic guaranteed!", price: "\$45.99", isPopular: false, color: Colors.green),
                     const SizedBox(height: 20),
                   ],
                 ),

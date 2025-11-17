@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
+
+
 class GlobalData{ //TODO 
 // User Info
   static String userId = '';
-  static int currency = 0;
+  static ValueNotifier<int> currency = ValueNotifier(0);
   static int gems = 0;
   static String email = '';
   static int exp = 0;

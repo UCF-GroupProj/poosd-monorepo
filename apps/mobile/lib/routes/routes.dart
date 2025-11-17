@@ -4,6 +4,7 @@ import 'package:large_project_dart/pages/page_register.dart';
 import 'package:large_project_dart/pages/page_collections.dart';
 import 'package:large_project_dart/pages/page_pw_reset.dart';
 import 'package:large_project_dart/pages/page_store.dart';
+import 'package:large_project_dart/pages/page_summon.dart';
 import 'package:large_project_dart/pages/main_app_shell.dart';
 
 class Routes{
@@ -25,7 +26,7 @@ class Routes{
         PASSWORDRESETPAGE: (context) => ResetPage(),
         STOREPAGE: (context) => StorePage(),
         // SETTINGSPAGE: (context) => SettingsPage(),
-        // SUMMONSPAGE: (context) => SummonsPage(),
+        SUMMONSPAGE: (context) => SummonPage(),
         MAINAPPPAGE: (context) => MainAppShell()
     };
   }

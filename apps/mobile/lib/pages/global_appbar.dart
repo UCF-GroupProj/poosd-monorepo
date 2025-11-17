@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:large_project_dart/pages/page_login.dart';
+import 'package:large_project_dart/utils/global_data.dart';
 
 class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
   final PageController pageController;
@@ -72,7 +75,8 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
                     child: IconButton(
                       icon: const Icon(Icons.person_outline, color: Color.fromARGB(255, 0, 0, 0)),
                       onPressed: () {
-                        print("person pressed"); // LogOut
+                        GlobalData.token = '';
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginPage()), (Route route) => false);
                       },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -89,7 +93,7 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
             child: GestureDetector(
               onTap: () {_getMoreGems(context);},
               child: Container(
-                width: 120,
+                width: 76,
                 height: 40,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 48, 47, 47),
@@ -99,10 +103,15 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget{
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("Placeholder", style: TextStyle(color: Color.fromARGB(255, 221, 221, 221)),),
+                      ValueListenableBuilder(
+                        valueListenable: GlobalData.currency,
+                        builder: (context, currentCurrency, child){
+                          return Text('$currentCurrency', style: TextStyle(color: Color.fromARGB(255, 221, 221, 221)),);
+                        }
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(left: 3,right: 5),
-                        child: Icon(Icons.ac_unit, color: Colors.orange),
+                        child: Icon(Icons.diamond, color: Colors.orange),
                       ),
                     ],
                   ),

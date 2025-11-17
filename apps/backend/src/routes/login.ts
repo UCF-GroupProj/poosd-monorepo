@@ -3,7 +3,8 @@ import type { NextFunction, Request, Response } from "express";
 import { json } from "express";
 import { logger } from "@sentry/node";
 import { scryptSync, timingSafeEqual, createHash, randomUUID } from "node:crypto";
-import type { IUserCred, IUserDBObject, IStoredUser, ISessionState, IAccountRequest } from "@repo/utils/types";
+import type { IUserCred, IUserDBObject, IStoredUser, ISessionState, IAccountRequest, IUserInfo } from "@repo/utils/types";
+import { ObjectId } from "mongodb";
 
 
 
@@ -49,14 +50,16 @@ export class LogIn extends RouteHandle {
     const inputHashPwd = scryptSync(req.body.password, req.body.password, 64);
     const dbHashPwd = Buffer.from(userFetch.password, "base64");
 
-    if(inputHashPwd.length !== dbHashPwd.length && !timingSafeEqual(inputHashPwd, dbHashPwd)) {
+    if(inputHashPwd.length !== dbHashPwd.length || !timingSafeEqual(inputHashPwd, dbHashPwd)) {
       logger.info(logger.fmt`${req.body.email} password mismatched!`);
       return res.status(401).send("Invalid email or password");
     }
 
     if(!userFetch.verified) {
       logger.warn(logger.fmt`User ${req.body.email} attempted login but email is not verified`);
-      return res.status(403).send("Email verification required");
+      const mailSendState = await this.sendVerifyEmail(userFetch._id.toHexString(), req.body.email);
+      const mailMsg = mailSendState ? "Another verification email has been sent in-case you lost them." : "Another link cannot be sent to your inbox, please submit a support case";
+      return res.status(403).send(`Email verification required. ${mailMsg}`);
     }
 
     // Generate JWT Token
@@ -142,7 +145,7 @@ export class LogIn extends RouteHandle {
       from: "Olympull <noreply@zhiyan114.com>",
       to: req.body.email,
       subject: "Account Verification",
-      text: `Please verify your email at https://poosd.zhiyan114.com/verify/${reqID}`
+      text: `Please verify your email at https://poosd.zhiyan114.com/verifyemail/${reqID}`
     });
     if(typeof(mailRes) === "string" || mailRes.success === false) {
       // User account isnt register if email fails
@@ -154,6 +157,63 @@ export class LogIn extends RouteHandle {
     // Done
     logger.info(`account ${req.body.email} successfully registered`);
     return res.send("Registered successfully, please review your inbox to verify your account");
+  }
+
+  private async sendVerifyEmail(userID: string, email: string) {
+    const AccDBColl = this.coreSrv.database.collection<IUserInfo>("Users");
+    const ReqDBColl = this.coreSrv.database.collection<IAccountRequest>("ResetRequest");
+
+    // Check verification status
+    const veriReq = await AccDBColl.findOne({ _id: new ObjectId(userID), requestType: "email" });
+    if(!veriReq) {
+      // This shouldn't ever happen...
+      logger.error(logger.fmt`User ${userID} not found in DB??`);
+      return false;
+    }
+    if(veriReq.verified) {
+      logger.warn(logger.fmt`User ${userID} already verified but verification request still received`);
+      return false;
+    }
+
+    // Delete existing Request
+    const delReqs = await ReqDBColl.deleteMany({ userId: new ObjectId(userID), requestType: "email" });
+    if(!delReqs.acknowledged) {
+      logger.error(logger.fmt`User ${userID} email verification delete request failed to be acknowleged`);
+      return false;
+    }
+    if(delReqs.deletedCount > 1)
+      logger.warn(logger.fmt`User ${userID} found to have multiple email verification request...`);
+
+    // Submit Request
+    logger.info(logger.fmt`User ${userID} requesting a new verification email!`, { delExistReq: delReqs.deletedCount > 0 ? true : false });
+    const reqID = randomUUID();
+    const newReq = await ReqDBColl.insertOne({
+      userId: new ObjectId(userID),
+      requestId: reqID,
+      createdAt: new Date(),
+      requestType: "email",
+    });
+    if(!newReq.acknowledged) {
+      logger.error(logger.fmt`User ${userID} verification request cannot be submitted to database`, { reqID });
+      return false;
+    }
+
+    const mailRes = await this.coreSrv.emailAPI.sendMail({
+      from: "Olympull <noreply@zhiyan114.com>",
+      to: email,
+      subject: "Account Verification",
+      text: `Please verify your email at https://poosd.zhiyan114.com/verifyemail/${reqID}`
+    });
+
+    if(typeof(mailRes) === "string" || mailRes.success === false) {
+      // User account isnt register if email fails
+      const ErrMSG = typeof(mailRes) === "string" ? mailRes : mailRes.message;
+      logger.error(`${email} verification email failed: ${ErrMSG}`);
+      return false;
+    }
+
+    logger.info(logger.fmt`Request ${reqID} Successfully submitted!`);
+    return true;
   }
 
 }
