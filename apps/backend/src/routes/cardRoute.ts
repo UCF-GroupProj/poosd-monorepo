@@ -41,6 +41,10 @@ export class cardRoute extends RouteHandle {
     const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
     const cardColl = this.coreSrv.database.collection<ICardData>("Cards");
 
+    // Check param input
+    if(req.params.cardID.length !== 24 || !(/[0-9A-Fa-f]{24}/g).test(req.params.cardID))
+      return res.status(400).send("Invalid cardID, must be a valid MongoDB ObjectID hex");
+
     // Pull card data
     logger.debug(logger.fmt`Pulling card info for ${req.params.cardID}`);
     const cardData = await cardColl.findOne({ _id: new ObjectId(req.params.cardID) });
