@@ -48,6 +48,7 @@ class FavoritesBar extends StatefulWidget {
 class _FavoritesBarState extends State<FavoritesBar> {
   @override
   Widget build(BuildContext context) {
+    print(GlobalData.favoritesListAsInt.length);
     return Container(
       color: Colors.black, // background color for the bar
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -58,8 +59,14 @@ class _FavoritesBarState extends State<FavoritesBar> {
           Stack(
             children: [ 
               // Positioned.fill(child: Container(color: Colors.white)),
+              GlobalData.favoritesListAsInt.length >= 1 ?
+              Image.network(
+                GlobalData.cardsList[GlobalData.favoritesListAsInt[0]].imageURL,
+                width: 80,
+                height: 100,
+              ) :
               Image(
-                image: AssetImage(GlobalData.favoritesList[0]),
+                image: AssetImage('images/taco.png'),
                 width: 80,
                 height: 100,
               ),
@@ -68,8 +75,14 @@ class _FavoritesBarState extends State<FavoritesBar> {
           Stack(
             children: [ 
               // Positioned.fill(child: Container(color: Colors.grey[200])),
+              GlobalData.favoritesListAsInt.length >= 2 ?
+              Image.network(
+                GlobalData.cardsList[GlobalData.favoritesListAsInt[1]].imageURL,
+                width: 80,
+                height: 100,
+              ) :
               Image(
-                image: AssetImage(GlobalData.favoritesList[1]),
+                image: AssetImage('images/taco.png'),
                 width: 80,
                 height: 100,
               ),
@@ -78,8 +91,14 @@ class _FavoritesBarState extends State<FavoritesBar> {
           Stack(
             children: [ 
               // Positioned.fill(child: Container(color: Colors.white)),
+              GlobalData.favoritesListAsInt.length >= 3 ?
+              Image.network(
+                GlobalData.cardsList[GlobalData.favoritesListAsInt[2]].imageURL,
+                width: 80,
+                height: 100,
+              ) :
               Image(
-                image: AssetImage(GlobalData.favoritesList[2]),
+                image: AssetImage('images/taco.png'),
                 width: 80,
                 height: 100,
               ),
@@ -154,9 +173,7 @@ class CardList extends StatefulWidget {
 
 class _CardListState extends State<CardList> {
   @override
-  Widget build(BuildContext context) {    
-    GlobalData.isOwned[1] = true; // TODO: Just for testing
-
+  Widget build(BuildContext context) {
     return Container(
       
       padding: const EdgeInsets.all(10),
@@ -178,15 +195,13 @@ class _CardListState extends State<CardList> {
                   showDialog(
                   context: context,
                   barrierDismissible: true,
-                  builder: (_) => ImagePopout(
-                    imagePath: GlobalData.cardImages[index],
-                    ),
+                  builder: (_) => ImagePopout(card: GlobalData.cardsList[index]),
                   );
                 }
                 
               },
               child: GlobalData.isOwned[index]  // This checks if card is owned, prints color or greyscale
-              ? Image.asset(
+              ? Image.network(
               GlobalData.cardImages[index],
               fit: BoxFit.fill,
               )
@@ -197,7 +212,7 @@ class _CardListState extends State<CardList> {
                 0.2126, 0.7152, 0.0722, 0, 0, //
                 0,      0,      0,      1, 0, //
                 ]),
-                child: Image.asset(
+                child: Image.network(
                   GlobalData.cardImages[index],
                   fit: BoxFit.fill
                   ),

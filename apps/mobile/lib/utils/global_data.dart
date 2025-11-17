@@ -32,8 +32,9 @@ class GlobalData{ //TODO
     // Images Data
   static List<String> cardImages = [];
 //      static List<String> cardImages = List.generate(20, (index) => 'images/taco.png');
-      static List<bool> isOwned = List.generate(20, (index) => false);
-      static List<String> favoritesList = List.generate(3, (index) => 'images/taco.png');
+      static List<bool> isOwned = List.generate(50, (index) => false);
+      static List<int> favoritesListAsInt = [];
+      static List<String> favoritesListAsID = [];
 }
 
 class CardData{
