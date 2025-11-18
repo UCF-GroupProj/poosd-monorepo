@@ -3,5 +3,7 @@
     {
       "mode": "auto"
     }
-  ]
+  ],
+  "cmake.sourceDirectory": "D:/VsCode/MERN Stack UCF/poosd-monorepo/apps/mobile/windows",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }
