@@ -1,26 +1,462 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: 'GFS Neohellenic';
+  src: url('@/assets/GFSNeohellenic-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+  font-family: 'Elms Sans';
+  src: url('@/assets/ElmsSans-VariableFont_wght.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='text'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+html {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-image: url('@/assets/BKG.png');
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: 'Elms Sans';
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    min-height: 100dvh;
+  }
+
+.topBar {
+    background-color: white;
+    padding: 5px;
+    padding-left: 45px;
+}
+
+.buttons {
+    background-color: #163E4E;
+    border-color: #163E4E;
+    border-radius: 25px;
+    color: white;
+    width: 150px;
+    margin: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+}
+
+.buttons:hover {
+  background-color: white;
+  color: #163E4E;
+}
+
+.mainBox {
+    background-color: white;
+    padding: 25px;
+    border: white;
+    display: flow-root;
+    border-radius: 25px;
+    border-width: 5px;
+    margin: auto;
+    margin-top: 9%;
+    text-align: center;
+    min-width: 40%;
+    width: fit-content;
+    color: #163E4E;
+    opacity: 0.8;
+    height: fit-content;
+    min-height: fit-content;
+    flex-shrink: 0;
+}
+
+h1 {
+    font-size: 36px;
+    font-family: 'GFS Neohellenic';
+}
+
+h2 {
+  font-size: 24px;
+  font-family: 'GFS Neohellenic';
+  text-align: left;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+.input {
+  width: 95%;
+  border-radius: 15px;
+  height: 30px;
+  padding: 8px;
+}
+
+.navBar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  background-color: white;
+}
+
+.navBar li {
+  float: right;
+  height: 90px;
+  border-width: 5px;
+  border-color: #163E4E;
+}
+
+.navBar li a {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 16px;
+  vertical-align: top;
+  margin-top: 15px;
+}
+
+.navBar li a:hover {
+  text-decoration: underline;
+}
+
+#ulText {
+  text-decoration: underline;
+}
+
+#navTitle {
+  float: left;
+}
+
+.dash {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 30%;
+}
+
+
+.dash li button {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 16px;
+  vertical-align: bottom;
+  width: 120px;
+  background-color: #81A2AC;
+  border-color: white;
+  height: 70px;
+}
+
+.dash li button:hover {
+  text-decoration: underline;
+}
+
+.side {
+  flex: 0 0 10%; 
+  background-color: #ADC1C1;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+
+
+#dashboardCont {
+  display: flex;
+  padding: 0;
+  width: 70%;
+  min-height: 400px;
+}
+
+.dash li .activeDB {
+  background-color: #163E4E;
+}
+
+#button1 {
+  border-top-left-radius: 25px;
+}
+
+.dashboard-content {
+  flex-grow: 1;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: auto;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-avatar {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background-color: black;
+  border: 4px solid #163E4E;
+  overflow: hidden;
+}
+
+.profile-fields {
+  margin-top: 32px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-field-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  gap: 12px;
+}
+
+.profile-label {
+  width: 90px;                  
+  text-align: left;
+  font-size: 14px;
+  color: #163E4E;
+}
+
+.profile-input {
+  flex: 1;
+  height: 24px;
+  border-radius: 20px;
+  padding: 0px 16px;
+  font-size: 14px;
+  font-family: 'Elms Sans';
+  color: #163E4E;
+}
+
+.profile-password-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.profile-eye {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-55%);
+  cursor: pointer;
+  font-size: 14px;
+  user-select: none;
+  color: #163E4E;
+}
+
+#passwordQuery {
+    background-color: white;
+    padding: 25px;
+    border: white;
+    display: block;
+    border-radius: 25px;
+    border-width: 5px;
+    margin: auto;
+    margin-top: 10%;
+    text-align: center;
+    width: 40%;
+    color: #163E4E;
+}
+
+.collection-root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+  flex-shrink: 1;
+}
+
+.favorites-section {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  width: 90%;
+  height: 120px;
+  padding: 16px;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.favorites-scroll-container {
+  display: flex;
+  flex-direction: row;
+  scrollbar-width: thin;
+}
+
+.favorites-empty {
+  width: 100%;
+}
+
+.collection-stats-section {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+}
+
+.stats-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* each item = square + text */
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  display: inline-block;
+  background: #888;           /* fallback background in case color class fails */
+}
+
+
+
+.stat-color.common {
+  background: #48bb78;     
+}
+
+.stat-color.rare {
+  background: #4299e1;      
+}
+
+.stat-color.epic {
+  background: #9f7aea;     
+}
+
+.stat-color.legendary {
+  background: #f6e05e;      
+}
+
+.stat-color.total {
+  background: #1a1a1a;
+}
+
+.collection-divider {
+  width: 90%;
+  height: 2px;
+  background-color: gray;
+  margin: 16px;
+  border-radius: 8px;
+}
+
+.collections-section {
+  width: 90%;
+  height: auto;              /* how tall you want the scroll area */
+  max-height: 450px;
+  min-height: 250px;
+  margin: 16px 0 32px 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+/* inner scroll area */
+.collections-scroll-container {
+  width: 100%;
+  height: fit-content;
+  overflow-y: auto;           /* vertical scroll */
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+}
+
+
+/* empty state centered */
+.collections-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;    /* horizontal */
+  align-items: center;        /* vertical */
+  text-align: center;
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.collectionsList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.collectionsList li {
+  float: left;
+  padding-left: 40px;
+}
+
+.favoritesList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.favoritesList li {
+  float: left;
+  padding-left: 40px;
+}
+
+#aboutList {
+  list-style-type: none;
+  text-align: center;
+}
+
+#aboutPage {
+  margin-left: 20%;
+  margin-right: 20%;
 }

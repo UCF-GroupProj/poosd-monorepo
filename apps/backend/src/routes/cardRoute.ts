@@ -41,6 +41,10 @@ export class cardRoute extends RouteHandle {
     const userColl = this.coreSrv.database.collection<IUserInfo>("Users");
     const cardColl = this.coreSrv.database.collection<ICardData>("Cards");
 
+    // Check param input
+    if(req.params.cardID.length !== 24 || !(/[0-9A-Fa-f]{24}/g).test(req.params.cardID))
+      return res.status(400).send("Invalid cardID, must be a valid MongoDB ObjectID hex");
+
     // Pull card data
     logger.debug(logger.fmt`Pulling card info for ${req.params.cardID}`);
     const cardData = await cardColl.findOne({ _id: new ObjectId(req.params.cardID) });
@@ -266,7 +270,7 @@ function rollCard(userOwned: string[], availableCards: WithId<ICardData>[], roll
 // Beloved CS1 Binary Search <3
 function BSearch(cards: {_id: ObjectId;chance: number;}[], rollRes: number) {
   let left = 0;
-  let right = cards.length;
+  let right = cards.length - 1;
   while(left < right) {
     const mid = (left + right) >> 1;
     if(cards[mid]!.chance < rollRes) left = mid + 1;
@@ -276,7 +280,6 @@ function BSearch(cards: {_id: ObjectId;chance: number;}[], rollRes: number) {
 }
 
 // Custom Exceptions
-
 class cardRoExcept extends Error {
   constructor(msg: string) {
     super(msg);

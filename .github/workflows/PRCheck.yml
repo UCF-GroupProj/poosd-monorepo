@@ -27,8 +27,11 @@ jobs:
     - name: Install pnpm PKG MGR
       run: npm install -g pnpm
     - name: install package
-      run: pnpm install
+      run: pnpm install --frozen-lockfile
     - name: lint check
       run: npm run lint
     - name: Type Checks
       run: npm run build:check
+    - name: Unit Test
+
+      run: npm run test
