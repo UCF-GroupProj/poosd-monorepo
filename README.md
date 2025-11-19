@@ -98,4 +98,4 @@ could be used to spin up your own copy of the backend server (*COMMAND UNTESTED)
 
 
 #### Email Not working??
-Well yeah, you'll have to modify the source and replace my `MailService` with another email provider if you want that back. Good news, you only have to modify the backend source for this. Plz dont ask me for an API email, this is literally my personal email server..
+Well yeah, you'll have to modify the source and replace my `MailService` with another email provider if you want that back. Good news, you only have to modify the backend source for this. Plz dont ask me for an API Key, this is literally my personal email server..
